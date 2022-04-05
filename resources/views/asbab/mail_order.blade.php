@@ -141,11 +141,11 @@
             <div class="col-12">
                 <p style="color: #fff; font-size: 17px">For more information, please contact us at the website: <a
                         href="{{ route('asbab.contact.index') }}">asbab.com</a>, or contact the hotline:
-                    0988041615. Thank you for your order in our shop !</p>
+                    0123456789. Thank you for your order in our shop !</p>
             </div>
-            <div class="col-12">
-                <a style="display: block; padding: 10px 20px; border-radius: 4px; background: #00A8B3; color: #fff; text-transform: uppercase; font-weight: 900"
-                   href="{{ route('asbab.checkout.confirm_order')  }}">Confirm Order</a>
+            <div class="col-12" style="width: 100%">
+                <a style="text-decoration: none; right: 50%; transform: translateX(-50%); display: block; max-width: max-content; padding: 10px 20px; border-radius: 4px; background: #00A8B3; color: #fff; text-transform: uppercase; font-weight: 900"
+                   href="{{ route('asbab.checkout.confirm_order', ['id' => $order->id])  }}">Confirm Order</a>
             </div>
         </div>
     </div>

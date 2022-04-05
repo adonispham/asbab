@@ -56,8 +56,8 @@ Route::namespace('Guest')->group(function () {
     // Route about page checkout
     Route::get('checkout/coupon', 'CheckoutController@coupon')->name('asbab.checkout.coupon');
     Route::get('checkout/calc_fee_ship', 'CheckoutController@calc_fee_ship')->name('asbab.checkout.calc_fee_ship');
-    Route::get('checkout/cash_on_delivery', 'CheckoutController@cash_on_delivery')->name('asbab.checkout.cash_on_delivery');
-    Route::get('checkout/confirm_order', 'CheckoutController@confirm_order')->name('asbab.checkout.confirm_order');
+    Route::get('checkout/payment', 'CheckoutController@payment')->name('asbab.checkout.payment');
+    Route::get('checkout/confirm_order/{id}', 'CheckoutController@confirm_order')->name('asbab.checkout.confirm_order');
 
     // Route about page news
     Route::get('news', 'NewsController@index')->name('asbab.news.index');

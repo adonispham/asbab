@@ -3,30 +3,30 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Bill;
 use App\Models\Coupon;
 use App\Models\Delivery;
-use App\Models\Product;
 use App\Models\Order;
-use App\Models\Bill;
-use App\Models\User;
+use App\Models\Product;
 use App\Models\Sell;
+use App\Models\User;
+use DB;
+use Hash;
+use Illuminate\Http\Request;
+use Log;
 use Mail;
 use Role;
-use Hash;
-use Log;
-use DB;
 
 class CheckoutController extends Controller
 {
     public function coupon(Request $request)
     {
-        if(trim($request->coupon_code) !== '') {
+        if (trim($request->coupon_code) !== '') {
             $coupon = Coupon::where('code', $request->coupon_code)->first();
             if (isset($coupon)) {
-                if(strtotime($coupon->time_out_of) >= time()) {
-                    $couponAuth = Coupon::where('code', $request->coupon_code)->where('used','LIKE', '%'.auth()->id().'%')->first();
-                    if(isset($couponAuth)) {
+                if (strtotime($coupon->time_out_of) >= time()) {
+                    $couponAuth = Coupon::where('code', $request->coupon_code)->where('used', 'LIKE', '%' . auth()->id() . '%')->first();
+                    if (isset($couponAuth)) {
                         return response()->json([
                             'message' => 'Coupon code is used!'
                         ], 422);
@@ -59,14 +59,14 @@ class CheckoutController extends Controller
         $validator = $request->validate([
             'province_id' => 'required',
             'district_id' => 'required',
-            'ward_id'=> 'required',
+            'ward_id' => 'required',
             'details_address' => 'required'
         ]);
 
         try {
             DB::beginTransaction();
             $feeDelivery = Delivery::where('province_id', $request->province_id)->where('district_id', $request->district_id)->where('ward_id', $request->ward_id)->first();
-            if(isset($wardFee)) {
+            if (isset($wardFee)) {
                 $fee = $feeDelivery->feeship;
             } else {
                 $fee = 50;
@@ -89,7 +89,7 @@ class CheckoutController extends Controller
             ], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()
@@ -97,10 +97,36 @@ class CheckoutController extends Controller
         }
     }
 
-    public function cash_on_delivery(Request $request)
+    public function payment(Request $request)
+    {
+        $paymethod = $request->paymethod;
+
+        switch ($paymethod) {
+            case '0':
+                $data = $this->paypal($request);
+                break;
+            case '1':
+                $data = $this->cash_on_delivery($request);
+                break;
+            default:
+                $data = $this->cash_on_delivery($request);
+        }
+
+        return response()->json($data['bill'], $data['code']);
+    }
+
+    public function paypal($request)
+    {
+        return [
+            'bill' => $request,
+            'code' => 200
+        ];
+    }
+
+    public function cash_on_delivery($request)
     {
         $fee_ship = session()->get('fee_ship');
-        if($fee_ship === null) {
+        if ($fee_ship === null) {
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => [
@@ -108,7 +134,7 @@ class CheckoutController extends Controller
                 ]
             ], 422);
         } else {
-            if($request->create_account == 1) {
+            if ($request->create_account == 1) {
                 $validator = $request->validate([
                     'customer_name' => 'required',
                     'customer_mail' => 'bail|required|email|unique:users,email',
@@ -125,7 +151,7 @@ class CheckoutController extends Controller
             }
             try {
                 DB::beginTransaction();
-                if($request->create_account == 1) {
+                if ($request->create_account == 1) {
                     $user = User::create([
                         'name' => $request->customer_name,
                         'email' => $request->customer_mail,
@@ -140,15 +166,15 @@ class CheckoutController extends Controller
                     $id = $request->user_id;
                 }
 
-                if(session()->get('coupon') !== null) {
-                    Coupon::find(session()->get('coupon')->id                                                                                                                                                                                                                                                                                                                                                                                                                   )->update([
+                if (session()->get('coupon') !== null) {
+                    Coupon::find(session()->get('coupon')->id)->update([
                         'quantity' => session()->get('coupon')->quantity - 1,
-                        'used' => session()->get('coupon')->used !== null ? get('coupon')->used.','.$id : $id
+                        'used' => session()->get('coupon')->used !== null ? get('coupon')->used . ',' . $id : $id
                     ]);
                 }
 
                 $order = Order::create([
-                    'code' => substr(md5(microtime()),rand(0,26),6),
+                    'code' => substr(md5(microtime()), rand(0, 26), 6),
                     'name' => $request->customer_name,
                     'phone' => $request->customer_phone,
                     'mail' => $request->customer_mail,
@@ -160,7 +186,7 @@ class CheckoutController extends Controller
                     'paymethod' => $request->paymethod
                 ]);
 
-                $title = 'The order has been confirmed at '.date('d/m/Y');
+                $title = 'The order has been confirmed at ' . date('d/m/Y');
                 $cus_mail = $request->customer_mail;
 
                 foreach (session()->get('cart') as $key => $cart) {
@@ -183,7 +209,6 @@ class CheckoutController extends Controller
                     ]);
                 }
 
-//                return response()->json($order, 200);
                 Mail::send('asbab.mail_order', ['order' => $order], function ($message) use ($title, $cus_mail) {
                     $message->from('cuong.pq.haui@gmail.com', 'Asbab Furniture Shop');
                     $message->to($cus_mail, $title);
@@ -194,20 +219,24 @@ class CheckoutController extends Controller
                 session()->forget('fee_ship');
 
                 DB::commit();
-                return response()->json($bill, 200);
+                return ['bill' => $bill, 'code' => 200];
             } catch (\Exception $exception) {
                 DB::rollBack();
-                Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
-                return response()->json([
+                Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
+                return ['bill' => [
                     'message' => 'There are incorrect values in the form !',
                     'errors' => $validator->getMessageBag()->toArray()
-                ], 422);
+                ], 'code' => 422];
             }
         }
     }
 
-    public function confirm_order()
+    public function confirm_order($id)
     {
+        Order::find($id)->update([
+            'status' => 1
+        ]);
 
+        return redirect()->route('asbab.home');
     }
 }

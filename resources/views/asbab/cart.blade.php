@@ -275,7 +275,7 @@
                                     </li>
                                 </ul>
                                 <div class="payment-btn">
-                                    <a href="#" class="fr-btn">Place Order</a>
+                                    <a href="#"  data-url="{{ route('asbab.checkout.payment') }}" class="fr-btn">Place Order</a>
                                     <div class="method-pay">
                                         <div class="form-group">
                                             <label>
@@ -283,7 +283,7 @@
                                                 Paypal
                                             </label>
                                         </div>
-                                        <div class="form-group" data-url="{{ route('asbab.checkout.cash_on_delivery') }}">
+                                        <div class="form-group">
                                             <label>
                                                 <input checked type="radio" name="paymethod" value="1" />
                                                 Cash on delievery

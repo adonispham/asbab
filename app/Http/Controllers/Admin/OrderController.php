@@ -23,7 +23,7 @@ class OrderController extends Controller
 
     public function data()
     {
-        $orders = Order::get();
+        $orders = Order::orderBy('id', 'DESC')->get();
         return DataTables::of($orders)
             ->addColumn('check', function ($order) {
                 return '<input type="checkbox" name="order_id[]" class="item" value="'.$order->id.'" />';
@@ -63,14 +63,14 @@ class OrderController extends Controller
                         'status' => $status,
                         'ship_id' => $request->ship_id,
                         'note' => $request->note
-                    ]); 
+                    ]);
                 } else {
                     Order::find($id)->update([
                         'status' => $status
                     ]);
                 }
             }
-            
+
             return response()->json([
                 'message' => 'success',
                 'code' => 200

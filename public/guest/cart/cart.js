@@ -1,6 +1,8 @@
 (function ($) {
     'use strict';
 
+    var baseUrl = $('meta[name="base-url"]')[0].content
+
     function format(n) {
         return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     }
@@ -38,16 +40,16 @@
                         cartItems += `<div class="shp-single-prd">
                                             <div class="shp-prd-infor d-flex">
                                                 <div class="shp-prd-thumb">
-                                                    <a href="#"><img src="${ c.image_path }" alt="" /></a>
+                                                    <a href="#"><img src="${c.image_path}" alt="" /></a>
                                                 </div>
                                                 <div class="shp-prd-details">
-                                                    <a href="#">${ c.name }</a>
-                                                    <span class="quantity">QTY: ${ c.quantity }</span>
-                                                    <span class="shp-price">$${ format(c.price) }</span>
+                                                    <a href="#">${c.name}</a>
+                                                    <span class="quantity">QTY: ${c.quantity}</span>
+                                                    <span class="shp-price">$${format(c.price)}</span>
                                                 </div>
                                             </div>
                                             <div class="prd-btn-remove">
-                                                <a data-href="${ respon.baseUrl + '/product/removecart/' + c.id }" class="btn-remove-cart"><i
+                                                <a data-href="${respon.baseUrl + '/product/removecart/' + c.id}" class="btn-remove-cart"><i
                                                         class="fa fa-times"></i></a>
                                             </div>
                                         </div>`;
@@ -303,63 +305,62 @@
 
     // Click Button Confirm Order
     $(document).on('click', '.shop-cart-total .payment-btn .fr-btn', function (e) {
+        e.preventDefault();
         let that = $(this);
         let parentEl = that.parents('#checkout-area');
-        if (parentEl.find('.shop-cart-total [name="paymethod"]:checked').val() == 1) {
-            e.preventDefault();
-            let url = parentEl.find('[name="paymethod"]:checked').parents('.form-group').data('url');
-            let total_price = parseFloat(parentEl.find('.cart-total-price').text().split('$')[1].split(',').join(''));
-            let user_id = parentEl.find('[name="user_id"]').val();
-            let customer_name = parentEl.find('[name="customer_name"]').val();
-            let customer_mail = parentEl.find('[name="customer_mail"]').val();
-            let customer_phone = parentEl.find('[name="customer_phone"]').val();
-            let create_account = parentEl.find('[name="account"]:checked').val();
-            let agreeTerm = parentEl.find('[name="agreeTerm"]:checked').val();
-            let customer_password = create_account == 1 ? parentEl.find('[name="customer_password"]').val() : null;
-            $.ajax({
-                type: 'get',
-                url: url,
-                dataType: 'json',
-                data: {
-                    'user_id': user_id,
-                    'amount': total_price,
-                    'customer_name': customer_name,
-                    'customer_mail': customer_mail,
-                    'customer_phone': customer_phone,
-                    'customer_password': customer_password,
-                    'paymethod': 1,
-                    'create_account': create_account,
-                    'agreeTerm': agreeTerm
-                },
-                success: function (data) {
-                    console.log(data)
-                    // parentEl.find('.error').remove();
-                    // parentEl.find('.alert-danger').removeClass('alert-danger');
-                    // Swal.fire(
-                    //     'Added!',
-                    //     'Your order has been send.',
-                    //     'success'
-                    // )
-                    //     .then(function () {
-                    //         location.reload()
-                    //     })
-                },
-                error: function (respon) {
-                    if (respon.status === 422) {
-                        let errors = respon.responseJSON.errors;
-                        parentEl.find('[name]').each(function (ind, elem) {
-                            if (errors[elem.name]) {
-                                $(elem).parents('.form-group').find('.error').remove();
-                                $(elem).addClass('alert-danger').parents('.form-group').append('<div class="error">' + errors[elem.name] + '</div>');
-                            } else {
-                                $(elem).parents('.form-group').find('.error').remove();
-                                $(elem).removeClass('alert-danger')
-                            }
-                        });
-                    }
+        let url = that.data('url');
+        let paymethod = parentEl.find('.shop-cart-total [name="paymethod"]:checked').val();
+        let total_price = parseFloat(parentEl.find('.cart-total-price').text().split('$')[1].split(',').join(''));
+        let user_id = parentEl.find('[name="user_id"]').val();
+        let customer_name = parentEl.find('[name="customer_name"]').val();
+        let customer_mail = parentEl.find('[name="customer_mail"]').val();
+        let customer_phone = parentEl.find('[name="customer_phone"]').val();
+        let create_account = parentEl.find('[name="account"]:checked').val();
+        let agreeTerm = parentEl.find('[name="agreeTerm"]:checked').val();
+        let customer_password = create_account == 1 ? parentEl.find('[name="customer_password"]').val() : null;
+        $.ajax({
+            type: 'get',
+            url: url,
+            dataType: 'json',
+            data: {
+                'user_id': user_id,
+                'amount': total_price,
+                'customer_name': customer_name,
+                'customer_mail': customer_mail,
+                'customer_phone': customer_phone,
+                'customer_password': customer_password,
+                'paymethod': paymethod,
+                'create_account': create_account,
+                'agreeTerm': agreeTerm
+            },
+            success: function (data) {
+                console.log(data)
+                // parentEl.find('.error').remove();
+                // parentEl.find('.alert-danger').removeClass('alert-danger');
+                // Swal.fire(
+                //     'Added!',
+                //     'Your order has been send.',
+                //     'success'
+                // )
+                //     .then(function () {
+                //         location.href = baseUrl + '/shop'
+                //     })
+            },
+            error: function (respon) {
+                if (respon.status === 422) {
+                    let errors = respon.responseJSON.errors;
+                    parentEl.find('[name]').each(function (ind, elem) {
+                        if (errors[elem.name]) {
+                            $(elem).parents('.form-group').find('.error').remove();
+                            $(elem).addClass('alert-danger').parents('.form-group').append('<div class="error">' + errors[elem.name] + '</div>');
+                        } else {
+                            $(elem).parents('.form-group').find('.error').remove();
+                            $(elem).removeClass('alert-danger')
+                        }
+                    });
                 }
-            })
-        }
+            }
+        })
     });
 
 })(jQuery);
