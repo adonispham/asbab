@@ -2293,6 +2293,8 @@ function () {
 
 (function ($) {
     'use strict';
+    var baseUrl = $('meta[name="base-url"]')[0].content
+
     /*-----------------------------------------------
     1.0 Product Masory Layout
     -----------------------------------------------*/

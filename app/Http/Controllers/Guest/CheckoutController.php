@@ -20,7 +20,7 @@ use DB;
 class CheckoutController extends Controller
 {
     public function coupon(Request $request)
-    {   
+    {
         if(trim($request->coupon_code) !== '') {
             $coupon = Coupon::where('code', $request->coupon_code)->first();
             if (isset($coupon)) {
@@ -71,7 +71,7 @@ class CheckoutController extends Controller
             } else {
                 $fee = 50;
             }
-            
+
             session()->put('fee_ship', [
                 'fee' => $fee,
                 'province_id' => $request->province_id,
@@ -139,14 +139,14 @@ class CheckoutController extends Controller
                 } else {
                     $id = $request->user_id;
                 }
-                
+
                 if(session()->get('coupon') !== null) {
                     Coupon::find(session()->get('coupon')->id                                                                                                                                                                                                                                                                                                                                                                                                                   )->update([
                         'quantity' => session()->get('coupon')->quantity - 1,
                         'used' => session()->get('coupon')->used !== null ? get('coupon')->used.','.$id : $id
                     ]);
                 }
-                
+
                 $order = Order::create([
                     'code' => substr(md5(microtime()),rand(0,26),6),
                     'name' => $request->customer_name,
@@ -162,7 +162,7 @@ class CheckoutController extends Controller
 
                 $title = 'The order has been confirmed at '.date('d/m/Y');
                 $cus_mail = $request->customer_mail;
-                
+
                 foreach (session()->get('cart') as $key => $cart) {
                     $bill[] = Bill::create([
                         'order_id' => $order->id,
@@ -171,7 +171,7 @@ class CheckoutController extends Controller
                         'product_price' => $cart['price'],
                         'quantity' => $cart['quantity']
                     ]);
-                    
+
                     Product::find($key)->update([
                         'sell' => Product::find($key)->sell + $cart['quantity']
                     ]);
@@ -182,16 +182,17 @@ class CheckoutController extends Controller
                         'amount' => $cart['price'] * $cart['quantity']
                     ]);
                 }
-                
+
+//                return response()->json($order, 200);
                 Mail::send('asbab.mail_order', ['order' => $order], function ($message) use ($title, $cus_mail) {
-                    $message->from('admin.asbabfurniture@gmail.com', 'Asbab Furniture Shop');
+                    $message->from('cuong.pq.haui@gmail.com', 'Asbab Furniture Shop');
                     $message->to($cus_mail, $title);
                 });
 
                 session()->forget('cart');
                 session()->forget('coupon');
                 session()->forget('fee_ship');
-                
+
                 DB::commit();
                 return response()->json($bill, 200);
             } catch (\Exception $exception) {
@@ -203,5 +204,10 @@ class CheckoutController extends Controller
                 ], 422);
             }
         }
+    }
+
+    public function confirm_order()
+    {
+
     }
 }

@@ -1,6 +1,7 @@
 (function ($) {
     'use strict';
 
+    var baseUrl = $('meta[name="base-url"]')[0].content
     function format(n) {
         return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     }
@@ -265,7 +266,7 @@
 
             return $.ajax({
                 type: 'get',
-                url: compares[0].baseUrl + '/compare/data',
+                url: baseUrl + '/compare/data',
                 data: {
                     'data': arrID,
                 },

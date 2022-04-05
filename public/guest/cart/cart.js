@@ -63,10 +63,10 @@
                     if (respon.coupon) {
                         if (respon.coupon.type == 0) {
                             $('#checkout-area .shop-cart-total .coupon-cart').text('(- $' + format(respon.coupon.discount) + ')');
-                        } 
+                        }
                         if (respon.coupon.type == 1) {
                             $('#checkout-area .shop-cart-total .coupon-cart').text('(- $' + format(totalsub * respon.coupon.discount / 100) + ')');
-                        } 
+                        }
                     }
 
                     Swal.fire(
@@ -101,7 +101,7 @@
 
                     if (respon.coupon.type == 0) {
                         $('.shop-cart-total .coupon-cart').text('(- $' + respon.coupon.discount + ')');
-                    } 
+                    }
                     if (respon.coupon.type == 1) {
                         $('.shop-cart-total .coupon-cart').text('(- $' + format(respon.coupon.discount * totalFee / 100) + ')');
                     }
@@ -316,7 +316,6 @@
             let create_account = parentEl.find('[name="account"]:checked').val();
             let agreeTerm = parentEl.find('[name="agreeTerm"]:checked').val();
             let customer_password = create_account == 1 ? parentEl.find('[name="customer_password"]').val() : null;
-
             $.ajax({
                 type: 'get',
                 url: url,
@@ -333,16 +332,17 @@
                     'agreeTerm': agreeTerm
                 },
                 success: function (data) {
-                    parentEl.find('.error').remove();
-                    parentEl.find('.alert-danger').removeClass('alert-danger');
-                    Swal.fire(
-                            'Added!',
-                            'Your order has been send.',
-                            'success'
-                        )
-                        .then(function () {
-                            location.reload()
-                        })
+                    console.log(data)
+                    // parentEl.find('.error').remove();
+                    // parentEl.find('.alert-danger').removeClass('alert-danger');
+                    // Swal.fire(
+                    //     'Added!',
+                    //     'Your order has been send.',
+                    //     'success'
+                    // )
+                    //     .then(function () {
+                    //         location.reload()
+                    //     })
                 },
                 error: function (respon) {
                     if (respon.status === 422) {

@@ -1,5 +1,7 @@
 (function ($) {
     'use strict';
+    var baseUrl = $('meta[name="base-url"]')[0].content
+
     $(document).on('click', '[href="#"]', function (e) {
         e.preventDefault();
     })
@@ -212,7 +214,7 @@
         let that = $(this);
         $.ajax({
             type: "get",
-            url: compares[0].baseUrl + '/wishlist/add',
+            url: baseUrl + '/wishlist/add',
             data: that.data('info'),
             dataType: "json",
             success: function (data) {
