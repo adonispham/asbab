@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\SocialAuth;
 use GuzzleHttp\Client;
@@ -21,6 +20,7 @@ class SocialteController extends Controller
 
     public function callback($provider)
     {
+        dd('hahhaah');
         $getInfor = Socialite::driver($provider)->user();
         $user = $this->createOrGetUser($getInfor, $provider);
         auth()->login($user);
@@ -30,7 +30,7 @@ class SocialteController extends Controller
             $client = new Client([
                 'verify' => false
             ]);
-    
+
             $res = $client->request('GET', $getInfor->getAvatar(), [
                 'sink' => public_path($path)
             ]);
@@ -38,7 +38,7 @@ class SocialteController extends Controller
                 'avatar' => $path
             ]);
         }
-        
+
         return redirect()->route('asbab.home');
     }
 
@@ -58,7 +58,7 @@ class SocialteController extends Controller
                         'password' => Hash::make('123456')
                     ]);
                 }
-                
+
                 SocialAuth::create([
                     'provider' => $provider,
                     'provider_user_id' => $getInfor->getId(),
