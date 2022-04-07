@@ -24,49 +24,52 @@
             order: [0, 'desc'],
             ajax: urlAjax,
             columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'province_id',
-                    name: 'province_id'
-                },
-                {
-                    data: 'district_id',
-                    name: 'district_id'
-                },
-                {
-                    data: 'ward_id',
-                    name: 'ward_id'
-                },
-                {
-                    data: 'feeship',
-                    name: 'feeship',
-                    class: 'text-center'
-                }
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'province_id',
+                name: 'province_id'
+            },
+            {
+                data: 'district_id',
+                name: 'district_id'
+            },
+            {
+                data: 'ward_id',
+                name: 'ward_id'
+            },
+            {
+                data: 'feeship',
+                name: 'feeship',
+                class: 'text-center'
+            }
             ]
         });
 
         $('#delivery-table').on('click', function (e) {
-            if ($(e.target).is($('input'))) {
-                let that = $(e.target);
-                that.attr('disabled', false)
-                that.on('keyup', function (e) {
-                    if (e.which === 13) {
-                        let editUrl = that.data('url');
-                        $.ajax({
-                            type: 'post',
-                            url: editUrl,
-                            dataType: 'JSON',
-                            data: {
-                                'feeship': that.val()
-                            },
-                            success: function (data) {
-                                $('#delivery-table').DataTable().ajax.reload();
-                            }
-                        });
-                    }
-                })
+            let permission = $('#delivery-table').data('edit');
+            if (permission == 1) {
+                if ($(e.target).is($('input'))) {
+                    let that = $(e.target);
+                    that.attr('disabled', false)
+                    that.on('keyup', function (e) {
+                        if (e.which === 13) {
+                            let editUrl = that.data('url');
+                            $.ajax({
+                                type: 'post',
+                                url: editUrl,
+                                dataType: 'JSON',
+                                data: {
+                                    'feeship': that.val()
+                                },
+                                success: function (data) {
+                                    $('#delivery-table').DataTable().ajax.reload();
+                                }
+                            });
+                        }
+                    })
+                }
             }
         })
     }
@@ -88,6 +91,7 @@
                 }
             });
         })
+
         $('#delivery-form [name]').each(function (i, e) {
             let districtEl = $(this).parents('form').find('[name="district_id"]');
             if ($(e).is($('[name="province_id"]'))) {
@@ -142,6 +146,7 @@
         $('#delivery-form').on('submit', function (e) {
             e.preventDefault();
             let that = $(this);
+            console.log('hahahah')
             $.ajax({
                 type: 'post',
                 url: that.data('action'),

@@ -6,8 +6,52 @@
     });
 
     if ($('#sliders-table').length) {
-        var urlAjax = $('#sliders-table').data('url');
-        var oTable = $('#sliders-table').DataTable({
+        let urlAjax = $('#sliders-table').data('url');
+        let columns;
+        if (urlAjax.split('data/')[1] == 0) {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'image_path',
+                name: 'image_path',
+                class: 'text-center image'
+            },
+            {
+                data: 'description',
+                name: 'description'
+            }];
+        } else {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'image_path',
+                name: 'image_path',
+                class: 'text-center image'
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }];
+        }
+        $('#sliders-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -23,30 +67,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'image_path',
-                    name: 'image_path',
-                    class: 'text-center image'
-                },
-                {
-                    data: 'description',
-                    name: 'description'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
+            columns: columns
         });
         $(document).on('click', '.action-delete', actionDelete);
     }
@@ -60,9 +81,10 @@
         $(this).find('.view-item').remove();
     })
 
-    $('#editSlider').on('show.bs.modal', function (e) {
-        let editUrl = $(e.relatedTarget).data('href');
-        let that = $(this);
+    $(document).on('click','#sliders-table .action-edit', function (e) {
+        let editUrl = $(this).data('href');
+        let that = $('#editSlider');
+        that.find('[name="description"]').text('');
         $.ajax({
             type: 'GET',
             url: editUrl,
@@ -70,8 +92,8 @@
             success: function (data) {
                 that.find('.modal-title').text(data.slider.name);
                 that.find('[name="name"]').val(data.slider.name);
-                that.find('form .view-item img').attr('src', data.slider.image_path);
-                that.find('[name="description"]').append(data.slider.description);
+                that.find('form .view-item img').attr('src', data.updateUrl.split('admin')[0] + data.slider.image_path);
+                that.find('[name="description"]').text(data.slider.description);
                 that.find('[type="submit"]').attr('data-url', data.updateUrl);
             }
         });

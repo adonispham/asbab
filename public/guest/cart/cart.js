@@ -1,10 +1,8 @@
 (function ($) {
     'use strict';
 
-    var baseUrl = $('meta[name="base-url"]')[0].content
-
     function format(n) {
-        return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+        return parseFloat(n).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     }
 
     // Click Button Update Cart Shopping
@@ -40,7 +38,7 @@
                         cartItems += `<div class="shp-single-prd">
                                             <div class="shp-prd-infor d-flex">
                                                 <div class="shp-prd-thumb">
-                                                    <a href="#"><img src="${c.image_path}" alt="" /></a>
+                                                    <a href="#"><img src="${ respon.baseUrl + '/' + c.image_path }" alt="" /></a>
                                                 </div>
                                                 <div class="shp-prd-details">
                                                     <a href="#">${c.name}</a>
@@ -286,7 +284,7 @@
         }
 
         if (province && district && ward) {
-            currentEl.parents(parentSelector).find('[name="basic_address"]').val(province + ', ' + district + ', ' + ward)
+            currentEl.parents(parentSelector).find('[name="basic_address"]').val(ward + ', ' + district + ', ' + province)
         }
     }
 
@@ -309,7 +307,6 @@
         let that = $(this);
         let parentEl = that.parents('#checkout-area');
         let url = that.data('url');
-        let paymethod = parentEl.find('.shop-cart-total [name="paymethod"]:checked').val();
         let total_price = parseFloat(parentEl.find('.cart-total-price').text().split('$')[1].split(',').join(''));
         let user_id = parentEl.find('[name="user_id"]').val();
         let customer_name = parentEl.find('[name="customer_name"]').val();
@@ -317,6 +314,7 @@
         let customer_phone = parentEl.find('[name="customer_phone"]').val();
         let create_account = parentEl.find('[name="account"]:checked').val();
         let agreeTerm = parentEl.find('[name="agreeTerm"]:checked').val();
+        let paymethod = parentEl.find('[name="paymethod"]:checked').val();
         let customer_password = create_account == 1 ? parentEl.find('[name="customer_password"]').val() : null;
         $.ajax({
             type: 'get',
@@ -334,17 +332,9 @@
                 'agreeTerm': agreeTerm
             },
             success: function (data) {
-                console.log(data)
-                // parentEl.find('.error').remove();
-                // parentEl.find('.alert-danger').removeClass('alert-danger');
-                // Swal.fire(
-                //     'Added!',
-                //     'Your order has been send.',
-                //     'success'
-                // )
-                //     .then(function () {
-                //         location.href = baseUrl + '/shop'
-                //     })
+                parentEl.find('.error').remove();
+                parentEl.find('.alert-danger').removeClass('alert-danger');
+                location.replace(data)
             },
             error: function (respon) {
                 if (respon.status === 422) {
@@ -362,5 +352,4 @@
             }
         })
     });
-
 })(jQuery);

@@ -6,8 +6,64 @@
     });
 
     if ($('#coupons-table').length) {
-        var urlAjax = $('#coupons-table').data('url');
-        var oTable = $('#coupons-table').DataTable({
+        let urlAjax = $('#coupons-table').data('url');
+        let columns;
+        if (urlAjax.split('data/')[1] == 0) {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'code',
+                name: 'code',
+                class: 'text-center'
+            },
+            {
+                data: 'discount',
+                name: 'discount',
+                class: 'text-center'
+            },
+            {
+                data: 'quantity',
+                name: 'quantity',
+                class: 'text-center'
+            }];
+        } else {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'code',
+                name: 'code',
+                class: 'text-center'
+            },
+            {
+                data: 'discount',
+                name: 'discount',
+                class: 'text-center'
+            },
+            {
+                data: 'quantity',
+                name: 'quantity',
+                class: 'text-center'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }];
+        }
+        $('#coupons-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -23,36 +79,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'code',
-                    name: 'code',
-                    class: 'text-center'
-                },
-                {
-                    data: 'discount',
-                    name: 'discount',
-                    class: 'text-center'
-                },
-                {
-                    data: 'quantity',
-                    name: 'quantity',
-                    class: 'text-center'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
+            columns: columns
         });
         $(document).on('click', '.action-delete', actionDelete);
     }

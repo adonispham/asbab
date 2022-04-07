@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ProductComment;
 use App\Models\Product;
-use App\Models\NewsPaper;
+use App\Models\ProductComment;
+use App\Models\News;
 use App\Models\NewsComment;
-use Datatables;
+use DataTables;
 use Storage;
 use Log;
 use DB;
@@ -85,16 +85,16 @@ class CommentController extends Controller
         $comment = ProductComment::find($request->id);
         $comments = ProductComment::all();
         $comment->likes()->delete();
-        $uploadDir = 'public/upload/product_comment/'.$id;
+        $uploadDir = 'images/upload/product_comment/'.$id;
         
-        Storage::deleteDirectory($uploadDir);
+        Storage::disk('public')->deleteDirectory($uploadDir);
 
         foreach ($comments->where('parent_id', '>', 0) as $comm) 
         {
            if (id_parent($comm->parent_id, $comments, 'parent_id', 'id', $comment->parent_id) == $request->id)  
            {
-                $uploadDirSub = 'public/upload/product_comment/'.$comm->id;
-                Storage::deleteDirectory($uploadDirSub);
+                $uploadDirSub = 'images/upload/product_comment/'.$comm->id;
+                Storage::disk('public')->deleteDirectory($uploadDirSub);
                 array_push($dataID, $comm->id);
                 $comm->likes()->delete();
            }
@@ -111,7 +111,7 @@ class CommentController extends Controller
     {
         $posts = [];
         $incre = 0;
-        foreach (NewsPaper::all() as $n) {
+        foreach (News::all() as $n) {
             if ($n->comments->count() > 0) {
                 $incre++;
                 $n->incre = $incre;
@@ -144,8 +144,8 @@ class CommentController extends Controller
 
     public function NEWScommDT($slug)
     {
-        $post = NewsPaper::where('slug', $slug)->first();
-        $comments = NewsComment::where('news_paper_id', $post->id)->orderBy('created_at', 'desc')->paginate(9);
+        $post = News::where('slug', $slug)->first();
+        $comments = NewsComment::where('news_id', $post->id)->orderBy('created_at', 'desc')->paginate(9);
         foreach ($comments->where('parent_id', '>', 0) as $comm) {
             foreach ($comments as $comment) {
                 if ($comment->id === $comm->parent_id) {
@@ -160,7 +160,7 @@ class CommentController extends Controller
     public function NEWSreply(Request $request, $slug)
     {
         $comment = NewsComment::create([
-            'news_paper_id' => NewsPaper::where('slug', $slug)->first()->id,
+            'news_id' => News::where('slug', $slug)->first()->id,
             'user_id' => 0,
             'comment' => $request->reply,
             'parent_id' => $request->parent_id
@@ -180,16 +180,16 @@ class CommentController extends Controller
         $comment = NewsComment::find($request->id);
         $comments = NewsComment::all();
         $comment->likes()->delete();
-        $uploadDir = 'public/upload/blog_comment/'.$id;
+        $uploadDir = 'images/upload/news_comment/'.$id;
         
-        Storage::deleteDirectory($uploadDir);
+        Storage::disk('public')->deleteDirectory($uploadDir);
 
         foreach ($comments->where('parent_id', '>', 0) as $comm) 
         {
            if (id_parent($comm->parent_id, $comments, 'parent_id', 'id', $comment->parent_id) == $request->id)  
            {
-                $uploadDirSub = 'public/upload/blog_comment/'.$comm->id;
-                Storage::deleteDirectory($uploadDirSub);
+                $uploadDirSub = 'images/upload/news_comment/'.$comm->id;
+                Storage::disk('public')->deleteDirectory($uploadDirSub);
                 array_push($dataID, $comm->id);
                 $comm->likes()->delete();
            }

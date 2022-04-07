@@ -934,7 +934,7 @@ ul.top-menu>li>a:focus {
     }
 }
 
-.dropdown-menu.extended li p {
+.dropdown-menu.extended .notify-inbox-count p {
     background-color: #F1F2F7;
     color: #666666;
     margin: 0;
@@ -943,17 +943,17 @@ ul.top-menu>li>a:focus {
     -webkit-border-radius: 4px 4px 0px 0px;
 }
 
-.dropdown-menu.extended li p.green {
+.dropdown-menu.extended .notify-inbox-count p.green {
     background-color: #a9d86e;
     color: #fff;
 }
 
-.dropdown-menu.extended li p.red {
+.dropdown-menu.extended .notify-inbox-count p.red {
     background-color: #ff6c60;
     color: #fff;
 }
 
-.dropdown-menu.extended li p.yellow {
+.dropdown-menu.extended .notify-inbox-count p.yellow {
     background-color: #fcb322;
     color: #fff;
 }
@@ -1008,13 +1008,19 @@ ul.top-menu>li>a:focus {
     font-size: 11px;
 }
 
-.dropdown-toggle img {
-    height: 2em;
+.dropdown-menu.extended .notify-inbox-content {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-menu.extended .notify-inbox-btn {
+    text-align: center;
+    display: block;
+    padding: 10px 0;
 }
 
 .top-nav {
     margin-top: 7px;
-    position: relative;
 }
 
 .top-nav ul.top-menu>li .dropdown-menu.logout {
@@ -1109,6 +1115,49 @@ ul.top-menu>li>a:focus {
     display: block;
 }
 
+.top-nav .user-login {
+    position: relative;
+    border: 1px solid #eee;
+    display: flex;
+    border-radius: 4px;
+    line-height: 40px;
+    padding-left: 5px;
+}
+
+.top-nav .user-login img {
+    position: relative;
+    height: 100%;
+}
+
+.top-nav .user-login .username {
+    position: relative;
+    padding-right: 5px;
+}
+
+.top-nav .user-login a {
+    position: absolute;
+    width: max-content;
+    border: none !important;
+    top: 0;
+    right: 0;
+    line-height: 40px;
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+    background-color: #eee;
+    display: none;
+}
+
+.top-nav .user-login .username:hover a {
+    display: inline-block;
+}
+
+.top-nav .user-login img {
+    height: 30px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
 .top-nav .username {
     font-size: 13px;
     color: #555555;
@@ -1190,6 +1239,7 @@ ul.top-menu>li>a:focus {
     height: 100%;
     position: fixed;
     background: #2a3542;
+    overflow: auto;
 }
 
 #sidebar ul li {

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use App\Traits\StorageImageTrait;
-use Datatables;
+use DataTables;
 use Storage;
 use Log;
 use DB;
@@ -14,32 +14,48 @@ use DB;
 class BrandController extends Controller
 {
     use StorageImageTrait;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index($permission)
     {
         $brands = Brand::get();
-        return DataTables::of($brands)
-            ->editColumn('image_path', function ($brand) {
-                return '<image src="'.$brand->image_path.'" alt="" />';
-            })
-            ->addColumn('action', function ($brand) {
-                return '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Edit</a>
-                        <a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Delete</a>';
-            })
-            ->rawColumns(['image_path','action'])
-            ->make(true);
+        foreach ($brands as $e) {
+            $e->auth_permission = $permission;
+        }
+        if ($permission != 0) {
+            return DataTables::of($brands)
+                ->editColumn('image_path', function ($brand) {
+                    return '<image src="'.asset($brand->image_path).'" alt="" />';
+                })
+                ->addColumn('action', function ($brand) {
+                    switch ($brand->auth_permission) {
+                        case '1':
+                            $action = '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Edit</a>
+                                        <a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                        case '2':
+                            $action = $action = '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Edit</a>';
+                            break;
+                        case '3':
+                            $action = '<a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                    }
+                    return $action;
+                })
+                ->rawColumns(['image_path','action'])
+                ->make(true);
+        } else {
+            return DataTables::of($brands)
+                ->editColumn('link', function ($brand) {
+                    return '<div class="text-justify">'.$brand->link.'</div>';
+                })
+                ->editColumn('image_path', function ($brand) {
+                    return '<image src="'.asset($brand->image_path).'" alt="" />';
+                })
+                ->rawColumns(['link','image_path'])
+                ->make(true);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = $request->validate([
@@ -71,12 +87,6 @@ class BrandController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $brand = Brand::find($id);
@@ -87,13 +97,6 @@ class BrandController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $brand = Brand::find($id);
@@ -133,13 +136,7 @@ class BrandController extends Controller
             ], 422);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         $brand = Brand::find($id);

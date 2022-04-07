@@ -6,34 +6,48 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Components\CategoryRecusive;
-use Datatables;
+use DataTables;
 use Log;
 use DB;
 use Str;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($permission)
     {
-        $categories = Category::get();
-        return DataTables::of($categories)
-            ->addColumn('action', function ($category) {
-                return '<a data-href="'.route('admin.category.edit', ['id' => $category->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Edit</a>
-                        <a data-href="'.route('admin.category.delete', ['id' => $category->id]).'" class="btn btn-danger action-delete">Delete</a>';
-            })
-            ->make(true);
+        $categories = Category::all();
+        foreach ($categories as $e) {
+            $e->auth_permission = $permission;
+        }
+
+        if ($permission != 0) {
+            return DataTables::of($categories)
+                ->addColumn('action', function ($category) {
+                    switch ($category->auth_permission) {
+                        case '1':
+                            $action = '<a data-href="'.route('admin.category.edit', ['id' => $category->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Edit</a>
+                                        <a data-href="'.route('admin.category.delete', ['id' => $category->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                        case '2':
+                            $action = $action = '<a data-href="'.route('admin.category.edit', ['id' => $category->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Edit</a>';
+                            break;
+                        case '3':
+                            $action = '<a data-href="'.route('admin.category.delete', ['id' => $category->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                    }
+                    return $action;
+                })
+                ->make(true);
+        } else {
+            return DataTables::of($categories)
+                ->editColumn('name', function ($category) {
+                    return '<div class="text-justify">'.$category->name.'</div>';
+                })
+                ->rawColumns(['name'])
+                ->make(true);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $recusive = new CategoryRecusive(Category::get());
@@ -41,12 +55,6 @@ class CategoryController extends Controller
         return response()->json($htmloptions);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = $request->validate([
@@ -74,12 +82,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $category = Category::find($id);
@@ -93,13 +95,6 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $validator = $request->validate([
@@ -127,12 +122,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $category = Category::find($id)->delete();

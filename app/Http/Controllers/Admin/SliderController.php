@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slider;
 use App\Traits\StorageImageTrait;
-use Datatables;
+use DataTables;
 use Storage;
 use Log;
 use DB;
@@ -15,32 +15,49 @@ use Str;
 class SliderController extends Controller
 {
     use StorageImageTrait;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    
+    public function index($permission)
     {
         $sliders = Slider::get();
-        return DataTables::of($sliders)
-            ->editColumn('image_path', function ($slider) {
-                return '<img src="'.$slider->image_path.'" />';
-            })
-            ->addColumn('action', function ($slider) {
-                return '<a data-href="'.route('admin.slider.edit', ['id' => $slider->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Edit</a>
-                        <a data-href="'.route('admin.slider.delete', ['id' => $slider->id]).'" class="btn btn-danger action-delete">Delete</a>';
-            })
-            ->rawColumns(['image_path', 'action'])
-            ->make(true);
+        foreach ($sliders as $s) {
+            $s->auth_permission = $permission;
+        }
+
+        if ($permission != 0) {
+            return DataTables::of($sliders)
+                ->editColumn('image_path', function ($slider) {
+                    return '<img src="'.asset($slider->image_path).'" />';
+                })
+                ->addColumn('action', function ($slider) {
+                    switch ($slider->auth_permission) {
+                        case '1':
+                            $action = '<a data-href="'.route('admin.slider.edit', ['id' => $slider->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Edit</a>
+                                        <a data-href="'.route('admin.slider.delete', ['id' => $slider->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                        case '2':
+                            $action = $action = '<a data-href="'.route('admin.slider.edit', ['id' => $slider->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Edit</a>';
+                            break;
+                        case '3':
+                            $action = '<a data-href="'.route('admin.slider.delete', ['id' => $slider->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                    }
+                    return $action;
+                })
+                ->rawColumns(['image_path', 'action'])
+                ->make(true);
+        } else {
+            return DataTables::of($sliders)
+                ->editColumn('description', function ($slider) {
+                    return '<div class="text-justify">'.$slider->description.'</div>';
+                })
+                ->editColumn('image_path', function ($slider) {
+                    return '<img src="'.asset($slider->image_path).'" />';
+                })
+                ->rawColumns(['description','image_path'])
+                ->make(true);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = $request->validate([
@@ -73,12 +90,6 @@ class SliderController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $slider = Slider::find($id);
@@ -89,13 +100,6 @@ class SliderController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $slider = Slider::find($id);
@@ -135,22 +139,13 @@ class SliderController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $slider = Slider::find($id);
-
         if(file_exists(public_path($slider->image_path))) {
             unlink(public_path($slider->image_path));
         }
-
         $slider->delete();
-
         return response()->json($slider);
     }
 }

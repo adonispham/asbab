@@ -17,36 +17,39 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        </li>
                         <li class="active">Setting</li>
                     </ul>
                 </div>
             </div>
-
-            <section class="form-admin">
-                <form id="setting-form" data-action="{{ route('admin.setting.store') }}" method="post" class="row flex-center">
-                    @csrf
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>Config Key:</label>
-                            <input type="text" name="config_key" class="form-control" />
+            @can('add setting')
+                <section class="form-admin">
+                    <form id="setting-form" data-action="{{ route('admin.setting.store') }}" method="post"
+                        class="row flex-center">
+                        @csrf
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Config Key:</label>
+                                <input type="text" name="config_key" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Config Value:</label>
+                                <input type="text" name="config_value" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-success text-uppercase" type="submit">Add</button>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Config Value:</label>
-                            <input type="text" name="config_value" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-success text-uppercase" type="submit">Add</button>
-                        </div>
-                    </div>
-                </form>
-            </section>
+                    </form>
+                </section>
+            @endcan
 
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        
                         <table class="table table-bordered table-striped" id="setting-table"
+                            @can('edit setting') data-edit="1" @endcan
                             data-url="{{ route('admin.setting.data') }}">
                             <thead>
                                 <tr>

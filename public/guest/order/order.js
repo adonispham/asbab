@@ -2,7 +2,7 @@
     'use strict';
 
     function format(n) {
-        return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+        return parseFloat(n).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     }
 
     if ($('#orders-table').length) {
@@ -38,14 +38,13 @@
                 }
                 return t;
             }
-
             const template = `<tr class="order-abstract">
-                                <td class="text-uppercase"><span class="weight-700">Code:</span> ${order.code}</td>
-                                <td><span class="weight-700">Date:</span> ${formatTime(day) + '.' + formatTime(month) + '.' + date.getFullYear()}</td>
-                                <td><span class="weight-700">Amount:</span> $${format(order.amount)}</td>
-                                <td class="text-right">${statusEl}</td>
+                                <td class="text-uppercase"><span class="weight-700">Code:</span> ${ order.code }</td>
+                                <td><span class="weight-700">Date:</span> ${ formatTime(day) + '.' + formatTime(month) + '.' + date.getFullYear() }</td>
+                                <td><span class="weight-700">Amount:</span> $${ format(order.amount) }</td>
+                                <td class="text-right">${ statusEl }</td>
                             </tr>
-                            <tr class="order-detail" data-id="${order.id}">
+                            <tr class="order-detail" data-id="${ order.id }">
                                 <td colspan="4">
                                     <div class="d-flex btn-order justify-content-end"><a class="order-btn-detail" href="#">Details <i class="fa fa-caret-down"></i></a></div>
                                 </td>
@@ -98,7 +97,7 @@
                         $('#pagination').append(data.pagination);
                     } else {
                         $('#orders-table').children().remove();
-                        $('#orders-table').append('<div class="alert alert-danger">Not have order on the database.</div>');
+                        $('#orders-table').append('<div class="alert alert-danger">Not have product on wishlist.</div>');
                     }
                 });
         }
@@ -148,26 +147,26 @@
                         statusOrder = item.orders.status;
                         dateOrder = item.orders.updated_at;
                         let itemEl = $(`<tr class="text-center">
-                                            <td>${incre}</td>
+                                            <td>${ incre }</td>
                                             <td class="prd-ord-info text-justify">
                                                 <div class="infor-thumb">
-                                                    <img src="${item.images.feature_image_path}" alt="" />
+                                                    <img src="${  data.baseUrl + '/' + item.images.feature_image_path }" alt="" />
                                                 </div>
                                                 <div class="d-flex align-items-center">
-                                                    <div class="infor-text">${item.product_name}</div>
+                                                    <div class="infor-text">${ item.product_name }</div>
                                                 </div>
                                             </td>
-                                            <td>$${format(item.product_price)}</td>
-                                            <td>${item.quantity}</td>
-                                            <td>$${format(item.product_price * item.quantity)}</td>
+                                            <td>$${ format(item.product_price) }</td>
+                                            <td>${ item.quantity }</td>
+                                            <td>$${ format(item.product_price * item.quantity) }</td>       
                                         </tr>`);
                         containBody.append(itemEl)
                     });
                     let timeout = ((new Date()).getTime() - (new Date(dateOrder)).getTime()) / (24 * 60 * 60 * 1000);
-                    let cancelEl = timeout < 7 && statusOrder < 3 ? '<div class="btn-order text-left"><a class="order-btn-cancel" href="#"><i class="fa fa-times mr-2"></i> Cancel order</a></div>' : '';
-                    let classEl = timeout < 7 && statusOrder < 3 ? 'justify-content-between' : 'justify-content-end';
+                    let cancelEl = timeout < 7 && statusOrder != 4 ? '<div class="btn-order text-left"><a class="order-btn-cancel" href="#"><i class="fa fa-times mr-2"></i> Cancel order</a></div>' : '';
+                    let classEl = timeout < 7 && statusOrder != 4 ? 'justify-content-between' : 'justify-content-end';
                     that.parents('td').append($(`<div class="d-flex ${classEl} mb-5">
-                                                    ${cancelEl}
+                                                    ${ cancelEl }
                                                     <div class="btn-order text-right"><a class="order-btn-close-detail" href="#">Hide Details<i
                                                                 class="fa fa-caret-up ml-2"></i></a></div>
                                                 </div>`))
@@ -193,10 +192,10 @@
                 confirmButtonText: 'Yes, cancel it!',
                 preConfirm: () => {
                     const reason = Swal.getPopup().querySelector('#reason').value;
-                    if (!reason) {
+                    if(!reason) {
                         Swal.showValidationMessage(`Please enter reason for order cancellation`);
                     }
-                    return {reason: reason}
+                    return { reason: reason}
                 }
             }).then((result) => {
                 if (result.value) {
@@ -211,9 +210,9 @@
                                 'Your order has been canceled.',
                                 'success'
                             )
-                                .then(() => {
-                                    location.reload()
-                                })
+                            .then(() => {
+                                location.reload()
+                            })
                         }
                     });
                 }
@@ -222,6 +221,7 @@
 
         $(document).on('click', '#select-show-order', function (e) {
             e.preventDefault();
+            console.log('hahhaah')
             let that = $(this);
             display(1, that.val());
         });

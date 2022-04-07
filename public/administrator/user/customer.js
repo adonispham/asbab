@@ -4,25 +4,13 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
     if ($('#customers-table').length) {
-        var urlAjax = $('#customers-table').data('url');
-        var oTable = $('#customers-table').DataTable({
-            processing: true,
-            responsive: true,
-            dom: '<"flex-between"lf>t<"flex-between"ip>',
-            language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
-                paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
-                },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
-            },
-            serverSide: true,
-            order: [0, 'desc'],
-            ajax: urlAjax,
-            columns: [{
+        let urlAjax = $('#customers-table').data('url');
+        let columns;
+
+        if (urlAjax.split('data/')[1] == 1) {
+            columns = [{
                     data: 'check',
                     name: 'check',
                     class: 'text-center',
@@ -53,8 +41,51 @@
                     class: 'text-center',
                     orderable: false,
                     searchable: false
-                }
-            ]
+                }];
+        } else {
+            columns = [{
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'orders',
+                    name: 'orders',
+                    class: 'text-center'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount',
+                    class: 'text-center'
+                },
+                {
+                    data: 'level',
+                    name: 'level',
+                    class: 'text-center',
+                    orderable: false,
+                    searchable: false
+                }];
+        }
+        $('#customers-table').DataTable({
+            processing: true,
+            responsive: true,
+            dom: '<"flex-between"lf>t<"flex-between"ip>',
+            language: {
+                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                paginate: {
+                    previous: '← Prev',
+                    next: 'Next →'
+                },
+                lengthMenu: '_MENU_ results per page',
+                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+            },
+            serverSide: true,
+            order: [0, 'desc'],
+            ajax: urlAjax,
+            columns: columns
         });
     }
 

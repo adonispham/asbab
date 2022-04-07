@@ -10,11 +10,6 @@ use Log;
 
 class PermissionController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $modulesTmp = [];
@@ -42,12 +37,6 @@ class PermissionController extends Controller
         return response()->json($actions);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = $request->validate([
@@ -57,7 +46,7 @@ class PermissionController extends Controller
         try {
             DB::beginTransaction();
             foreach ($request->name as $value) {
-                Permission::create(['name' => $value]);
+                Permission::firstOrCreate(['name' => $value]);
             }
             DB::commit();
             return redirect()->route('admin.permission.create');

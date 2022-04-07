@@ -17,7 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        </li>
                         <li class="active">Roles</li>
                     </ul>
                 </div>
@@ -26,21 +27,36 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        <div class="flex-end center mb-15">
-                            <div class="btn-group text-right">
-                                <a href="{{ route('admin.role.create') }}" class="btn btn-success">
-                                    Add New <i class="fa fa-plus"></i>
-                                </a>
+                        @can('add role')
+                            <div class="flex-end center mb-15">
+                                <div class="btn-group text-right">
+                                    <a href="{{ route('admin.role.create') }}" class="btn btn-success">
+                                        Add New <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
+
                         <table class="table table-bordered table-striped" id="roles-table"
-                            data-url="{{ route('admin.role.data') }}">
+                            @if(auth()->user()->can('edit role') || auth()->user()->can('delete role'))
+                                @if (auth()->user()->can('edit role') && auth()->user()->can('delete role'))
+                                    data-url="{{ route('admin.role.data', ['permission' => 1]) }}"
+                                @elseif(auth()->user()->can('edit role'))
+                                    data-url="{{ route('admin.role.data', ['permission' => 2]) }}"
+                                @elseif(auth()->user()->can('delete role')) 
+                                    data-url="{{ route('admin.role.data', ['permission' => 3]) }}"
+                                @endif 
+                            @else
+                                data-url="{{ route('admin.role.data', ['permission' => 0]) }}"
+                            @endif>
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Role</th>
                                     <th>Description</th>
-                                    <th class="text-center">Action</th>
+                                    @if(auth()->user()->can('edit role') || auth()->user()->can('delete role'))
+                                        <th class="text-center">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>

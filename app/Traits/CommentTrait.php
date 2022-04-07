@@ -2,7 +2,7 @@
 namespace App\Traits;
 
 trait CommentTrait {
- public function getHtmlsComment($comment, $subcomments, $id, $view = 'product')
+    public function getHtmlsComment($comment, $subcomments, $id, $view = 'product')
     {
         $commhtmls = '';
         $count = 0;
@@ -10,7 +10,12 @@ trait CommentTrait {
             $parent = id_parent($sub->parent_id, $subcomments, 'parent_id', 'id');
             if($parent == $id) {
                 $count++;
-                $user = $sub->users;
+                if ($sub->user_id == 0) {
+                    $user->avatar = 'images/avatar/1631765133.png';
+                    $user->name = 'Asbab Furniture Shop';
+                } else {
+                    $user = $sub->users;
+                }
                 $likespanclass = '';
                 $likeIclass = 'far';
                 if(isset($sub->likes[0]) && $sub->likes[0]->user_id == auth()->id()) {
@@ -20,7 +25,7 @@ trait CommentTrait {
 
                 $commhtmls .= '<div data-id="'.$sub->id.'" class="comment-item comm-rep">
                                     <div class="comment-avatar">
-                                        <img src="'.$user->profile_photo_path.'" alt="User Avatar" />
+                                        <img src="'.asset($user->avatar).'" alt="User Avatar" />
                                     </div>
                                     <div class="comment-detail">
                                         <span class="comm-name">'.$user->name.'</span>

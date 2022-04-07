@@ -6,8 +6,8 @@
     });
 
     if ($('#setting-table').length) {
-        var urlAjax = $('#setting-table').data('url');
-        var oTable = $('#setting-table').DataTable({
+        let urlAjax = $('#setting-table').data('url');
+        $('#setting-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -24,40 +24,43 @@
             order: [0, 'desc'],
             ajax: urlAjax,
             columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'config_key',
-                    name: 'config_key'
-                },
-                {
-                    data: 'config_value',
-                    name: 'config_value'
-                }
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'config_key',
+                name: 'config_key'
+            },
+            {
+                data: 'config_value',
+                name: 'config_value'
+            }
             ]
         });
 
         $('#setting-table').on('click', function (e) {
-            if ($(e.target).is($('input'))) {
-                let that = $(e.target);
-                that.attr('disabled', false)
-                that.on('keyup', function (e) {
-                    if (e.which === 13) {
-                        let editUrl = that.data('url');
-                        $.ajax({
-                            type: 'post',
-                            url: editUrl,
-                            dataType: 'JSON',
-                            data: {
-                                'config_value': that.val()
-                            },
-                            success: function (data) {
-                                $('#setting-table').DataTable().ajax.reload();
-                            }
-                        });
-                    }
-                })
+            let permission = $('#setting-table').data('edit');
+            if (permission == 1) {
+                if ($(e.target).is($('input'))) {
+                    let that = $(e.target);
+                    that.attr('disabled', false)
+                    that.on('keyup', function (e) {
+                        if (e.which === 13) {
+                            let editUrl = that.data('url');
+                            $.ajax({
+                                type: 'post',
+                                url: editUrl,
+                                dataType: 'JSON',
+                                data: {
+                                    'config_value': that.val()
+                                },
+                                success: function (data) {
+                                    $('#setting-table').DataTable().ajax.reload();
+                                }
+                            });
+                        }
+                    })
+                }
             }
         })
     }

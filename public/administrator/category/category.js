@@ -6,8 +6,35 @@
     });
 
     if ($('#categories-table').length) {
-        var urlAjax = $('#categories-table').data('url');
-        var oTable = $('#categories-table').DataTable({
+        let urlAjax = $('#categories-table').data('url');
+        let columns;
+        if (urlAjax.split('data/')[1] == 0) {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            }];
+        } else {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }];
+        }
+
+        $('#categories-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -23,21 +50,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
+            columns: columns
         });
         $(document).on('click', '.action-delete', actionDelete);
     }
@@ -79,7 +92,6 @@
     $('#add-btn-category').on('click', function (e) {
         e.preventDefault();
         let storeUrl = $(this).data('url');
-
         $.ajax({
             type: 'POST',
             url: storeUrl,

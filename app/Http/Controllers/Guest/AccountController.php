@@ -30,7 +30,7 @@ class AccountController extends Controller
 
     public function edit_profile(Request $request)
     {
-        $image_path = auth()->user()->profile_photo_path;
+        $image_path = auth()->user()->avatar;
         $avaUpload = $this->storageUploadImageTrait($request, 'pf_avata', "avatar");
         $dataProfile = [
             'name' =>  $request->pf_name,
@@ -42,10 +42,10 @@ class AccountController extends Controller
         ];
 
         if ($avaUpload !== null) {
-            $dataProfile['profile_photo_path'] = $avaUpload['file_path'];
+            $dataProfile['avatar'] = $avaUpload['file_path'];
 
-            if(file_exists(public_path($image_path))) {
-                unlink(public_path($image_path));
+            if(file_exists($image_path)) {
+                unlink($image_path);
             }
         }
         auth()->user()->update($dataProfile);
@@ -117,7 +117,8 @@ class AccountController extends Controller
         $bills = Bill::where('order_id', $id)->get();
 
         return response()->json([
-            'bills' => $bills
+            'bills' => $bills,
+            'baseUrl' => route('asbab.home')
         ], 200);
     }
 
@@ -128,5 +129,13 @@ class AccountController extends Controller
             'reason' => $request->reason
         ]);
         return response()->json($order);
+    }
+
+    public function confirm($id)
+    {
+        Order::find($id)->update([
+            'status' => 1
+        ]);
+        return redirect()->route('asbab.home');
     }
 }

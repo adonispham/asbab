@@ -1,5 +1,5 @@
 /* Tablet desktop :768px. */
-@media (max-width: 991px) {
+@media all and (max-width: 991px) {
     .mobile-menu a {
         font-size: 0.875rem;
     }
@@ -60,6 +60,10 @@
         font-size: 1.1rem;
     }
 
+    .owl-wrap .owl-image {
+        height: 500px;
+    }
+
     .owl-content h2 {
         font-size: 20px;
     }
@@ -113,7 +117,7 @@
     }
 }
 
-@media (max-width: 767px) {
+@media all and (max-width: 767px) {
     #login_account .login-socials,
     #login_account .btn-login-account {
         flex: 0 0 100%;
@@ -123,6 +127,10 @@
 
     .breadcrumb-area .breadcrumb-item {
         font-size: 1rem;
+    }
+
+    .owl-wrap .owl-image {
+        height: 350px;
     }
 
     .prize-thumb {
@@ -178,7 +186,7 @@
     }
 
     .product-list-view .prd-item-infor {
-        padding: 0 !important;
+        padding: 10px 5px 70px 5px !important;
         margin-top: 15px;
     }
 
@@ -234,7 +242,7 @@
     }
 }
 
-@media (max-width: 575px) {
+@media all and (max-width: 575px) {
     .container {
         max-width: 95%;
     }
@@ -262,6 +270,10 @@
         width: 12px !important;
         line-height: 11px !important;
         font-size: 8px !important;
+    }
+
+    .owl-wrap .owl-image {
+        height: 200px;
     }
 
     .owl-content h2 {
@@ -398,6 +410,14 @@
         background-color: #1a1a1a;
     }
 
+    .owl-related .prd-item-thumb {
+        min-height: 170px;
+    }
+
+    .comm-addition .fr-btn {
+        bottom: -15px !important;
+    }
+
     .contact-form-contain .form-contain {
         display: block !important;
     }
@@ -408,7 +428,7 @@
     }
 }
 
-@media (max-width: 450px) {
+@media all and (max-width: 450px) {
 
     .big-thumb-contain .tab-pane,
     .big-thumb-contain img {

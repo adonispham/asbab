@@ -41,7 +41,7 @@
                         </tr>
                         <tr class="alert">
                             <td style="border: none; padding-left: 0">HOTLINE: <span
-                                    class="alert-link">{{ $order->phone_contact }}</span>
+                                    class="alert-link">{{ $order->shop_phone }}</span>
                             </td>
                         </tr>
                         <tr class="alert">
@@ -149,7 +149,7 @@
         </div>
     </main>
     <footer>
-            <table class="table" style="width: 40%; position: relative; left: 60%">
+            <table class="table">
                 <tbody>
                     <tr class="alert">
                         <td class="text-center" style="border: none">

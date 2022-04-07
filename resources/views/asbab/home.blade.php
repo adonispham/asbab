@@ -17,13 +17,13 @@
         <section class="owl-carousel owl-wrap">
             @foreach ($sliders as $slider)
                 <div class="slide-container">
-                    <div class="owl-image"><img src="{{ $slider->image_path }}" alt="" /></div>
+                    <div class="owl-image"><img src="{{ asset($slider->image_path) }}" alt="" /></div>
                     <div class="owl-content align-items-center d-flex">
                         <div class="text-center w-100">
                             <h2>{{ $slider->name }}</h2>
                             <h1>{{ $slider->description }}</h1>
                             <div class="cr-btn">
-                                <a href="cart.html">Shop Now</a>
+                                <a href="{{ route('asbab.shop.index') }}">Shop Now</a>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12 single-product">
                             <div class="product-item">
                                 <div class="prd-item-thumb">
-                                    <a><img src="{{ $product->feature_image_path }}" alt="" /></a>
+                                    <a href="#"><img src="{{ asset($product->feature_image_path) }}" alt="" /></a>
                                 </div>
                                 <ul class="prd-item-action">
                                     <li><a class="btn-add-wishlist" href="#"
@@ -95,7 +95,7 @@
                     <div class="col-md-6">
                         <div class="prize-inner">
                             <div class="prize-thumb">
-                                <img class="w-100" src="{{ $good->feature_image_path }}" alt="Banner images" />
+                                <img class="w-100" src="{{ asset($good->feature_image_path) }}" alt="Banner images" />
                             </div>
                             <div class="banner-infor">
                                 <div class="tooltip-box">
@@ -116,7 +116,7 @@
                         <div class="col-xl-3 col-lg-4 col-md-6 single-product">
                             <div class="product-item">
                                 <div class="prd-item-thumb">
-                                    <a><img src="{{ $sell->feature_image_path }}" alt="" /></a>
+                                    <a><img src="{{ asset($sell->feature_image_path) }}" alt="" /></a>
                                 </div>
                                 <ul class="prd-item-action">
                                     <li><a class="btn-add-wishlist" href="#"
@@ -149,7 +149,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>
@@ -163,7 +163,7 @@
                         <div class="col-xl-4 col-md-6 single-blog">
                             <div class="blog-item">
                                 <div class="blog-item-thumb">
-                                    <a href="#"><img src="{{ $new->image_path }}" alt="" /></a>
+                                    <a href="#"><img src="{{ asset($new->image_path) }}" alt="" /></a>
                                 </div>
                                 <div class="blog-item-details">
                                     <div class="bl-date">

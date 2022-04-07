@@ -1,9 +1,8 @@
 (function ($) {
     'use strict';
 
-    var baseUrl = $('meta[name="base-url"]')[0].content
     function format(n) {
-        return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+        return parseFloat(n).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     }
 
     if ($('#wishlist-table').length) {
@@ -12,12 +11,12 @@
             let imagEl;
             if (w > 768 && w < 992) {
                 imagEl = `<td class="prd-thumbnail">
-                            <img src="${ prd.feature_image_path }" alt="">
+                            <img src="${ baseUrl + '/' +  prd.feature_image_path }" alt="">
                             <div>${ prd.name }</div>
                         </td>`;
             } else {
                 imagEl = `<td class="prd-thumbnail">
-                                <img src="${ prd.feature_image_path }" alt="">
+                                <img src="${ baseUrl + '/' + prd.feature_image_path }" alt="">
                             </td>
                             <td class="text-justify">${ prd.name }</td>`;
             }
@@ -34,7 +33,7 @@
             const templateXS = `<div class="single-product col-sm-6 col-12">
                                     <div class="product-item">
                                         <div class="prd-item-thumb">
-                                            <a href="#"><img src="${ prd.feature_image_path }" alt=""></a>
+                                            <a href="#"><img src="${ baseUrl + '/' + prd.feature_image_path }" alt=""></a>
                                         </div>
                                         <ul class="prd-item-action">
                                             <li><a data-url="${ baseUrl +'/cart/addcart/' + prd.id }" href="#" class="btn-add-cart"><i class="fas fa-shopping-bag"></i></a></li>
@@ -199,7 +198,7 @@
             let status = prd.status == 0 ? 'Out of stock' : 'In stock';
             const template = `<tr class="text-center compare-group-local">
                                 <td class="prd-thumbnail">
-                                    <img src="${ prd.image }" alt="">
+                                    <img src="${ baseUrl + '/' + prd.image }" alt="">
                                     <div>${ prd.name }</div>
                                 </td>
                                 <td>$${ format(prd.price) }</td>
@@ -221,7 +220,7 @@
             const templateXS = `<div class="single-product compare-group-local col-sm-6 col-12">
                                     <div class="product-item">
                                         <div class="prd-item-thumb">
-                                            <a href="#"><img src="${ prd.image }" alt=""></a>
+                                            <a href="#"><img src="${ baseUrl + '/' + prd.image }" alt=""></a>
                                         </div>
                                         <ul class="prd-item-action">
                                             <li><a data-url="${ baseUrl +'/cart/addcart/' + prd.id }" href="#" class="btn-add-cart"><i class="fas fa-shopping-bag"></i></a></li>
@@ -266,7 +265,7 @@
 
             return $.ajax({
                 type: 'get',
-                url: baseUrl + '/compare/data',
+                url: $('#compare-table').data('url'),
                 data: {
                     'data': arrID,
                 },
@@ -277,6 +276,7 @@
         function display() {
             return getCompare()
                 .then((data) => {
+                    console.log(data)
                     if (data.products.length !== 0) {
                         $('#compare-table').children().remove();
                         let showEl, bodyEl;

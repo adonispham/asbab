@@ -28,6 +28,7 @@
         "laravolt/avatar": "^4.1",
         "mockery/mockery": "^1.5",
         "nunomaduro/collision": "^5.11",
+        "paypal/rest-api-sdk-php": "^1.14",
         "phpunit/phpunit": "^9.5",
         "phpviet/laravel-omnipay": "^1.1",
         "pusher/pusher-php-server": "^7.0",
@@ -35,7 +36,6 @@
         "spatie/laravel-backup": "^6.16",
         "spatie/laravel-fractal": "^5.8",
         "spatie/laravel-permission": "^5.5",
-        "srmklive/paypal": "~3.0",
         "tymon/jwt-auth": "^1.0",
         "yajra/laravel-datatables-oracle": "^9.19"
     },

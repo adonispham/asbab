@@ -10,13 +10,13 @@
             const template = `<div class="col-xl-4 col-md-6 single-blog">
                                     <div class="blog-item">
                                         <div class="blog-item-thumb">
-                                            <a href="#"><img src="${ blog.image_path }" alt="" /></a>
+                                            <a href="#"><img src="${ baseUrl + '/' + blog.image_path }" alt="" /></a>
                                         </div>
                                         <div class="blog-item-details">
                                             <div class="bl-date">
                                                 <span>${ date.split(' ')[1] + ' ' + date.split(' ')[2] + ', ' + date.split(' ')[3] }</span>
                                             </div>
-                                            <a href="#">${ blog.title }</a>
+                                            <a href="${ baseUrl + '/news/' + blog.slug }">${ blog.title }</a>
                                             <p class="content-details limit-line">${ blog.abstract }</p>
                                             <div class="blog-btn">
                                                 <a href="${ baseUrl + '/news/' + blog.slug }">Read More</a>
@@ -198,7 +198,6 @@
         });
     });
 
-
     $(document).on('click', '.btn-like-comment', function (e) {
         e.preventDefault();
         let that = $(this);
@@ -295,7 +294,7 @@
             const template = `<div class="comment-group">
                                     <div data-id="${ comment.id }" class="comment-item">
                                         <div class="comment-avatar">
-                                            <img src="${ comment.users.profile_photo_path }" alt="User Avatar" />
+                                            <img src="${ baseUrl + '/' + comment.users.avatar }" alt="User Avatar" />
                                         </div>
                                         <div class="comment-detail">
                                             <span class="comm-name">${ comment.users.name }</span>

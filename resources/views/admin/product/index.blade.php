@@ -26,15 +26,27 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        <div class="flex-end center mb-15">
-                            <div class="btn-group text-right">
-                                <a href="{{ route('admin.product.create') }}" class="btn btn-success">
-                                    Add New <i class="fa fa-plus"></i>
-                                </a>
+                        @can('add product')
+                            <div class="flex-end center mb-15">
+                                <div class="btn-group text-right">
+                                    <a href="{{ route('admin.product.create') }}" class="btn btn-success">
+                                        Add New <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                         <table class="table table-bordered table-striped" id="products-table"
-                            data-url="{{ route('admin.product.data') }}">
+                            @if(auth()->user()->can('edit product') || auth()->user()->can('delete product'))
+                                @if (auth()->user()->can('edit product') && auth()->user()->can('delete product'))
+                                    data-url="{{ route('admin.product.data', ['permission' => 1]) }}"
+                                @elseif(auth()->user()->can('edit product'))
+                                    data-url="{{ route('admin.product.data', ['permission' => 2]) }}"
+                                @elseif(auth()->user()->can('delete product')) 
+                                    data-url="{{ route('admin.product.data', ['permission' => 3]) }}"
+                                @endif 
+                            @else
+                                data-url="{{ route('admin.product.data', ['permission' => 0]) }}"
+                            @endif>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -42,7 +54,9 @@
                                     <th>Image</th>
                                     <th>Price</th>
                                     <th class="text-center">Status</th>
-                                    <th class="text-center">Action</th>
+                                    @if(auth()->user()->can('edit product') || auth()->user()->can('delete product'))
+                                        <th class="text-center">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>

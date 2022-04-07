@@ -33,7 +33,9 @@
                                     <th></th>
                                     <th>User</th>
                                     <th>Content</th>
-                                    <th class="text-center">Access</th>
+                                    @if(auth()->user()->Can('reply comment') || auth()->user()->Can('delete comment'))
+                                        <th class="text-center">Access</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody data-item="{{ $product->slug }}" data-type="product"
@@ -51,10 +53,16 @@
                                                 @endif
                                             </td>
                                             <td class="text-justify">{!! $comm->comment !!}</td>
-                                            <td class="text-center">
-                                                <a href="#" class="btn btn-small btn-primary btn-comment-reply">Reply</a>
-                                                <a href="#" class="btn btn-small btn-danger btn-comment-delete">Delete</a>
-                                            </td>
+                                            @if(auth()->user()->Can('reply comment') || auth()->user()->Can('delete comment'))
+                                                <td class="text-center">
+                                                    @can('reply comment')
+                                                        <a href="#" class="btn btn-small btn-primary btn-comment-reply">Reply</a>
+                                                    @endcan
+                                                    @can('delete comment')
+                                                        <a href="#" class="btn btn-small btn-danger btn-comment-delete">Delete</a>
+                                                    @endcan
+                                                </td>
+                                            @endif
                                         </tr>
                                         @foreach ($comments->where('parent_id', '>', 0) as $key => $child)
                                             @if (id_parent($child->parent_id, $comments, 'parent_id', 'id') == $comm->id)
@@ -77,10 +85,16 @@
                                                     <td class="text-justify"><span
                                                             class="text-danger weight-700 mr-10">{{ '@' . $child->reply_for_user_name }}</span>{!! $child->comment !!}
                                                     </td>
-                                                    <td class="text-center">
-                                                        <a href="#" class="text-primary btn-comment-reply">Reply</a> |
-                                                        <a href="#" class="text-danger btn-comment-delete">Delete</a>
-                                                    </td>
+                                                    @if(auth()->user()->Can('reply comment') || auth()->user()->Can('delete comment'))
+                                                        <td class="text-center">
+                                                            @can('reply comment')
+                                                                <a href="#" class="text-primary btn-comment-reply">Reply</a> 
+                                                            @endcan|
+                                                            @can('delete comment')
+                                                                <a href="#" class="text-danger btn-comment-delete">Delete</a>
+                                                            @endcan
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                             @endif
                                         @endforeach

@@ -68,7 +68,7 @@
         smartSpeed: 1000,
         autoplay: true,
         autoplayTimeout: 10000,
-        items: 5,
+        items: 4,
         dots: false,
         autoplayHoverPause: true,
         lazyLoad: true,
@@ -76,7 +76,6 @@
             0: {
                 items: 1,
             },
-
             575: {
                 items: 2,
             },

@@ -48,7 +48,7 @@
                                         <div class="pro-ava">
                                             <div class="avar-container">
                                                 <div id="preview-ava-profile">
-                                                    <img src="{{ auth()->user()->profile_photo_path }}" alt="" />
+                                                    <img src="{{ asset(auth()->user()->avatar) }}" alt="" />
                                                 </div>
                                                 <div class="d-flex justify-content-center">
                                                     <input hidden type="file" name="pf_avata" id="pf_avatar" />
@@ -164,7 +164,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>

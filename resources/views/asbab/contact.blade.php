@@ -54,7 +54,7 @@
                             <div class="item-details">
                                 <div class="detail-contain">
                                     <h4 class="ct-title">Email Address</h4>
-                                    <span>{{ $settings->where('config_key', 'mail_contact')->first()->config_value }}</span>
+                                    <span>{{ $settings->where('config_key', 'shop_email')->first()->config_value }}</span>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                             <div class="item-details">
                                 <div class="detail-contain">
                                     <h4 class="ct-title">Phone number</h4>
-                                    <span>{{ $settings->where('config_key', 'phone_contact')->first()->config_value }}</span>
+                                    <span>{{ $settings->where('config_key', 'shop_phone')->first()->config_value }}</span>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>

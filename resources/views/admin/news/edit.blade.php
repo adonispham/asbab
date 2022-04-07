@@ -23,7 +23,6 @@
                     </ul>
                 </div>
             </div>
-
             <section class="form-admin">
                 <form action="{{ route('admin.news.update', ['id' => $new->id]) }}" method="post" class="row" enctype="multipart/form-data">
                     @csrf
@@ -39,7 +38,7 @@
                         <div class="form-group">
                             <label>Image:</label>
                             <div class="files-view">
-                                <span class="view-item"><img src="{{ $new->image_path }}" alt="" /></span>
+                                <span class="view-item"><img src="{{ public_path($new->image_path) }}" alt="" /></span>
                             </div>
                             <div class="file-btn">
                                 <input hidden type="file" name="image_path"

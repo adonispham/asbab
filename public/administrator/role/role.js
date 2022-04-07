@@ -5,8 +5,44 @@
         }
     });
     if ($('#roles-table').length) {
-        var urlAjax = $('#roles-table').data('url');
-        var oTable = $('#roles-table').DataTable({
+        let urlAjax = $('#roles-table').data('url');
+        let columns;
+        if (urlAjax.split('data/')[1] == 0) {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'description',
+                name: 'description',
+                class: 'text-justify'
+            }];
+        } else {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'description',
+                name: 'description',
+                class: 'text-justify'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }];
+        }
+        $('#roles-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -22,26 +58,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    class: 'text-justify'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
+            columns: columns
         });
         $(document).on('click', '.action-delete', actionDelete);
     }

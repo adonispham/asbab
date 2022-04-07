@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="base-url" content="{{ route('asbab.home') }}">
 
     <title>Asbab | Furniture</title>
 
@@ -19,14 +18,15 @@
     <link rel="stylesheet" href="{{ asset('guest/css/responsive.css') }}" />
 </head>
 
-<body>
+<body data-url_base="{{ route('asbab.home') }}">
     <header id="header-area">
         <section class="top-header">
             <div class="container">
                 <div class="row">
                     <div class="col-4 col-lg-2 col-md-2 col-sm-3">
                         <a class="logo-header" href="#">
-                            <img class="w-100" src="{{ asset('guest/images/logo/logo.png') }}" alt="logo images" />
+                            <img class="w-100" src="{{ asset('guest/images/logo/logo.png') }}"
+                                alt="logo images" />
                         </a>
                     </div>
                     <div class="col-2 col-lg-8 col-md-6 col-sm-3">
@@ -35,7 +35,8 @@
                                 <li><a class="nav-link" href="{{ route('asbab.home') }}">Home</a></li>
                                 <li><a class="nav-link" href="{{ route('asbab.shop.index') }}">Shop</a></li>
                                 <li><a class="nav-link" href="{{ route('asbab.news.index') }}">Blog</a></li>
-                                <li><a class="nav-link" href="{{ route('asbab.contact.index') }}">Contact</a></li>
+                                <li><a class="nav-link" href="{{ route('asbab.contact.index') }}">Contact</a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -57,11 +58,20 @@
                                     <span data-toggle="tooltip" title="Log In"><i class="fa fa-key"></i></span>
                                 @endif
                             </span>
-                            <span class="border-left cart-btn-open"><i class="fa fa-shopping-bag"></i><span
-                                    class="badge">{{ $carts !== null ? count($carts) : 0 }}</span></span>
+                            <span class="border-left cart-btn-open"><i class="fa fa-shopping-bag"></i>
+                                @php
+                                    $item = 0;
+                                    if($carts && count($carts) > 0) {
+                                        foreach($carts as $cart) {
+                                            $item += $cart['quantity'];
+                                        }
+                                    }
+                                @endphp
+                                <span class="badge">{{ $item }}</span></span>
                         </div>
                     </div>
-                    <div class="col-2 col-md-1 col-sm-2 d-lg-none mobile-icon"><span><i class="fa fa-bars"></i></span>
+                    <div class="col-2 col-md-1 col-sm-2 d-lg-none mobile-icon"><span><i
+                                class="fa fa-bars"></i></span>
                     </div>
                 </div>
             </div>
@@ -91,8 +101,10 @@
                     <div class="login-socials">
                         <h5>or login with</h5>
                         <div class="d-flex justify-content-center">
-                            <a href="{{ route('asbab.login.redirect', ['provider' => 'facebook']) }}" class="bg-primary"><i class="fab fa-facebook-f mr-1"></i> Facebook</a>
-                            <a href="{{ route('asbab.login.redirect', ['provider' => 'google']) }}" class="bg-danger"><i class="fab fa-google-plus-g mr-1"></i> Google+</a>
+                            <a href="{{ route('asbab.login.redirect', ['provider' => 'facebook']) }}"
+                                class="bg-primary"><i class="fab fa-facebook-f mr-1"></i> Facebook</a>
+                            <a href="{{ route('asbab.login.redirect', ['provider' => 'google']) }}"
+                                class="bg-danger"><i class="fab fa-google-plus-g mr-1"></i> Google+</a>
                         </div>
                     </div>
                 </div>
@@ -117,13 +129,18 @@
             <div class="container">
                 <div class="row">
                     <div class="search-inner">
-                        <form method="get">
+                        <form method="get" id="search-enter" data-action="{{ route('asbab.home') }}">
+                            @csrf
                             <input type="search" name="keyword" placeholder="Search here..." />
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                         <div class="search-btn-close"><i class="fa fa-times"></i></div>
                     </div>
                 </div>
+                <section id="search-results" class="row"></section>
+                <section id="search-pagination" class="row d-flex justify-content-end">
+                    <ul class="pagination"></ul>
+                </section>
             </div>
         </section>
         <section class="shopping-cart">
@@ -141,7 +158,7 @@
                             <div class="shp-single-prd cart-product-item">
                                 <div class="shp-prd-infor d-flex">
                                     <div class="shp-prd-thumb">
-                                        <a href="#"><img src="{{ $cart['image_path'] }}" alt="" /></a>
+                                        <a href="#"><img src="{{ asset($cart['image_path']) }}" alt="" /></a>
                                     </div>
                                     <div class="shp-prd-details">
                                         <a href="#">{{ $cart['name'] }}</a>
@@ -237,24 +254,49 @@
             <div class="container">
                 <div class="row">
                     <div class="copyright-inner">
-                        <p>Copyright© <a href="#">QuocCuong</a> 2022. All right reserved.</p>
-                        <ul class="d-flex mb-0">
-                            <li><a href="#"><i class="fab fa-cc-paypal"></i></a></li>
-                            <li><a href="#"><i class="fab fa-cc-visa"></i></a></li>
-                            <li><a href="#"><i class="fab fa-cc-discover"></i></a></li>
-                            <li><a href="#"><i class="fab fa-cc-mastercard"></i></a></li>
-                            <li><a href="#"><i class="fab fa-cc-jcb"></i></a></li>
-                            <li><a href="#"><i class="fab fa-cc-apple-pay"></i></a></li>
-                        </ul>
+                        <p>Copyright© <a href="#">BaTruong</a> 2021. All right reserved.</p>
                     </div>
                 </div>
             </div>
         </section>
     </footer>
 
+    <section id="chat-with-shop" data-url="{{ route('asbab.chat.index') }}">
+        <div class="chat-title">
+            <span class="chat-title-text">CHAT WITH SHOP</span>
+            <span class="chat-title-icon"></span>
+        </div>
+        <div class="chat-wrap">
+            <ul class="chat-meassage"></ul>
+            <form id="chat-inbox" data-action="{{ route('asbab.chat.store') }}" class="chat-enter-content d-flex">
+                <input class="form-control" type="text" name="message" placeholder="Write message..." />
+                <button class="btn btn-small btn-info" type="submit"><i class="fa fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </section>
+
     <script src="{{ asset('guest/assets/jquery/jquery-3.5.0.min.js') }}"></script>
     <script src="{{ asset('guest/assets/bootstrap/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
+    <script>
+        var pusher = new Pusher('af88ad31025c923bf4f8', {
+            forceTLS: true,
+            cluster: 'ap1'
+        });
+        var channel = pusher.subscribe('chat-with-admin');
+        channel.bind('chat-admin', function(data) {
+            console.log(data)
+            $(`<li class="message-item replies">
+                    <span class="mess-img">
+                        <img src="${ 'https://asbab.dev.com/' + data.user }" alt="">
+                    </span>
+                    <p>${ data.message }</p>
+                </li>`).appendTo('#chat-with-shop .chat-wrap .chat-meassage');
+        });
+    </script>
+
     <script src="{{ asset('guest/js/plugins.js') }}"></script>
     <script src="{{ asset('guest/js/active.js') }}"></script>
     @yield('js')

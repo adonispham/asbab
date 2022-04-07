@@ -17,7 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        </li>
                         <li class="active">Orders Details</li>
                     </ul>
                 </div>
@@ -84,12 +85,12 @@
                                     }
                                 @endphp
                                 <tr>
-                                    <td>{{ $order->shippers->name }}</td>
-                                    <td>{{ $order->shippers->email }}</td>
-                                    <td>{{ $order->shippers->phone }}</td>
+                                    <td>{{ $order->shippers !== null ? $order->shippers->name : 'none' }}</td>
+                                    <td>{{ $order->shippers !== null ? $order->shippers->email : 'none' }}</td>
+                                    <td>{{ $order->shippers !== null ? $order->shippers->phone : 'none' }}</td>
                                     <td>{{ $order->address }}</td>
                                     <td>{{ $pay }}</td>
-                                    <td class="note-delivery">{{ $order->note }}</td>
+                                    <td class="note-delivery">{{ $order->note ? $order->note : 'none' }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -134,10 +135,14 @@
                             @php
                                 $feeship = $order->fee_ship;
                                 $tax = $amount * 0.1;
-                                if($order->coupons->type == 0) {
-                                    $discount = $order->coupons->discount;
+                                if ($order->coupon_id !== null) {
+                                    if ($order->coupons->type == 0) {
+                                        $discount = $order->coupons->discount;
+                                    } else {
+                                        $discount = ($amount * $order->coupons->discount) / 100;
+                                    }
                                 } else {
-                                    $discount = $amount*$order->coupons->discount / 100;
+                                    $discount = 0;
                                 }
                                 $totalamount = $amount - $discount + $tax + $feeship;
                             @endphp
@@ -159,10 +164,14 @@
                         </table>
                     </secction>
                 </div>
-
-                <div class="flex-center">
-                    <a href="{{ route('admin.order.print', ['id' => $order->id]) }}" class="btn btn-info mb-15">Print</a>
-                </div>
+                @can('print order')
+                    @if ($order->status > 1)
+                        <div class="flex-center">
+                            <a href="{{ route('admin.order.print', ['id' => $order->id]) }}"
+                                class="btn btn-info mb-15">Print</a>
+                        </div>
+                    @endif
+                @endcan
             </section>
         </section>
     </section>

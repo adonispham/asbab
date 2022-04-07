@@ -24,46 +24,59 @@
             </div>
 
             <section class="form-admin">
-                <form id="brand-form" data-action="{{ route('admin.brand.store') }}" method="post"
-                    class="row flex-center">
-                    @csrf
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>Brand:</label>
-                            <input type="text" name="name" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label>Links:</label>
-                            <input type="text" name="link" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label>Logo:</label>
-                            <div class="files-view"></div>
-                            <div class="file-btn">
-                                <input hidden type="file" name="image_path" class="file-choose" />
-                                <div class="btn btn-info file-choose-alt choose"><span></span>Choose</div>
+                @can('add brand')
+                    <form id="brand-form" data-action="{{ route('admin.brand.store') }}" method="post"
+                        class="row flex-center">
+                        @csrf
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Brand:</label>
+                                <input type="text" name="name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Links:</label>
+                                <input type="text" name="link" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Logo:</label>
+                                <div class="files-view"></div>
+                                <div class="file-btn">
+                                    <input hidden type="file" name="image_path" class="file-choose" />
+                                    <div class="btn btn-info file-choose-alt choose"><span></span>Choose</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-success text-uppercase" type="submit">Add</button>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <button class="btn btn-success text-uppercase" type="submit">Add</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                @endcan
             </section>
 
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-
                         <table class="table table-bordered table-striped" id="brands-table"
-                            data-url="{{ route('admin.brand.data') }}">
+                        @if(auth()->user()->can('edit brand') || auth()->user()->can('delete brand'))
+                            @if (auth()->user()->can('edit brand') && auth()->user()->can('delete brand'))
+                                data-url="{{ route('admin.brand.data', ['permission' => 1]) }}"
+                            @elseif(auth()->user()->can('edit brand'))
+                                data-url="{{ route('admin.brand.data', ['permission' => 2]) }}"
+                            @elseif(auth()->user()->can('delete brand')) 
+                                data-url="{{ route('admin.brand.data', ['permission' => 3]) }}"
+                            @endif
+                        @else
+                            data-url="{{ route('admin.brand.data', ['permission' => 0]) }}"
+                        @endif>
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Brand</th>
                                     <th>Logo</th>
                                     <th>Link</th>
-                                    <th class="text-center">Action</th>
+                                    @if(auth()->user()->can('edit brand') || auth()->user()->can('delete brand'))
+                                        <th class="text-center">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>

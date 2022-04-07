@@ -94,8 +94,10 @@
                 $('#profile').parents('.row').find('.edit-badge').removeClass('d-none')
                 that.removeClass('active').children().find('input').attr('disabled', true);
                 that.find('.gender-not-edit').text(gender)
-                let date = data.birdth.split('-');
-                that.find('[name="pf_birdth"]').attr('type', 'text').val(date[2] + '/' + date[1] + '/' + date[0]);
+                if (data.birdth !== null) {
+                    let date = data.birdth.split('-');
+                    that.find('[name="pf_birdth"]').attr('type', 'text').val(date[2] + '/' + date[1] + '/' + date[0]);
+                }
                 that.find('.btn-alt-avata').addClass('d-none');
                 that.find('.gender-not-edit').removeClass('d-none');
                 that.find('.gender-edit').addClass('d-none');
@@ -149,44 +151,44 @@
     /*-----------------------------------------------
     3.0 Cancel Order Code
     -----------------------------------------------*/
-    // $(document).on('click', '.order-btn-cancel', function (e) {
-    //     e.preventDefault();
-    //     let url = $(this).find('a').data('href');
-    //     Swal.fire({
-    //         title: '<strong>Reason</strong>',
-    //         html: '<textarea id="reason" name="reason" rows="5" class="form-control"></textarea> ',
-    //         showCancelButton: true,
-    //         focusConfirm: false,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Yes, cancel it!',
-    //         preConfirm: () => {
-    //             const reason = Swal.getPopup().querySelector('#reason').value;
-    //             if(!reason) {
-    //                 Swal.showValidationMessage(`Please enter reason for order cancellation`);
-    //             }
-    //             return { reason: reason}
-    //         }
-    //     }).then((result) => {
-    //         if (result.value) {
-    //             $.ajax({
-    //                 type: 'GET',
-    //                 url: url,
-    //                 dataType: 'json',
-    //                 data: result.value,
-    //                 success: function (data) {
-    //                     Swal.fire(
-    //                         'Canceled!',
-    //                         'Your order has been canceled.',
-    //                         'success'
-    //                     )
-    //                     .then(() => {
-    //                         location.reload()
-    //                     })
-    //                 }
-    //             });
-    //         }
-    //     })
-    // })
+    $(document).on('click', '.order-btn-cancel', function (e) {
+        e.preventDefault();
+        let url = $(this).find('a').data('href');
+        Swal.fire({
+            title: '<strong>Reason</strong>',
+            html: '<textarea id="reason" name="reason" rows="5" class="form-control"></textarea> ',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!',
+            preConfirm: () => {
+                const reason = Swal.getPopup().querySelector('#reason').value;
+                if(!reason) {
+                    Swal.showValidationMessage(`Please enter reason for order cancellation`);
+                }
+                return { reason: reason}
+            }
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    dataType: 'json',
+                    data: result.value,
+                    success: function (data) {
+                        Swal.fire(
+                            'Canceled!',
+                            'Your order has been canceled.',
+                            'success'
+                        )
+                        .then(() => {
+                            location.reload()
+                        })
+                    }
+                });
+            }
+        })
+    })
 
 })(jQuery)

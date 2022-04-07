@@ -6,7 +6,7 @@
     });
     if ($('#product-comments-table').length) {
         var urlAjax = $('#product-comments-table').data('url');
-        var oTable = $('#product-comments-table').DataTable({
+        $('#product-comments-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -52,7 +52,7 @@
 
     if ($('#news-comments-table').length) {
         var urlAjax = $('#news-comments-table').data('url');
-        var oTable = $('#news-comments-table').DataTable({
+        $('#news-comments-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -130,7 +130,6 @@
                     dataType: 'json',
                     data: result.value,
                     success: function (data) {
-                        console.log(data)
                         Swal.fire(
                             'Replied!',
                             'Your comment has been replied.',

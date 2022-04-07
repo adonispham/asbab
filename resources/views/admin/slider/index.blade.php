@@ -17,7 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        </li>
                         <li class="active">Sliders</li>
                     </ul>
                 </div>
@@ -26,22 +27,36 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        <div class="flex-end center mb-15">
-                            <div class="btn-group text-right">
-                                <a class="btn btn-success" id="create-btn-slider" data-toggle="modal" href="#createSlider">
-                                    Add New <i class="fa fa-plus"></i>
-                                </a>
+                        @can('add slider')
+                            <div class="flex-end center mb-15">
+                                <div class="btn-group text-right">
+                                    <a class="btn btn-success" id="create-btn-slider" data-toggle="modal" href="#createSlider">
+                                        Add New <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                         <table class="table table-bordered table-striped" id="sliders-table"
-                            data-url="{{ route('admin.slider.data') }}">
+                            @if(auth()->user()->can('edit slider') || auth()->user()->can('delete slider'))
+                                @if (auth()->user()->can('edit slider') && auth()->user()->can('delete slider'))
+                                    data-url="{{ route('admin.slider.data', ['permission' => 1]) }}"
+                                @elseif(auth()->user()->can('edit slider'))
+                                    data-url="{{ route('admin.slider.data', ['permission' => 2]) }}"
+                                @elseif(auth()->user()->can('delete slider')) 
+                                    data-url="{{ route('admin.slider.data', ['permission' => 3]) }}"
+                                @endif 
+                            @else
+                                data-url="{{ route('admin.slider.data', ['permission' => 0]) }}"
+                            @endif>
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th class="text-center">Image</th>
                                     <th>Description</th>
-                                    <th class="text-center">Action</th>
+                                    @if(auth()->user()->can('edit slider') || auth()->user()->can('delete slider'))
+                                        <th class="text-center">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>
@@ -66,8 +81,7 @@
                                     <label>Image:</label>
                                     <div class="files-view"></div>
                                     <div class="file-btn">
-                                        <input hidden type="file" name="image_path"
-                                            class="file-choose" />
+                                        <input hidden type="file" name="image_path" class="file-choose" />
                                         <div class="btn btn-info file-choose-alt choose"><span></span>Choose</div>
                                     </div>
                                 </div>
@@ -106,8 +120,7 @@
                                         <span class="view-item"><img src="" alt="" /></span>
                                     </div>
                                     <div class="file-btn">
-                                        <input hidden type="file" name="image_path"
-                                            class="file-choose" />
+                                        <input hidden type="file" name="image_path" class="file-choose" />
                                         <div class="btn btn-info file-choose-alt choose"><span></span>Choose</div>
                                     </div>
                                 </div>

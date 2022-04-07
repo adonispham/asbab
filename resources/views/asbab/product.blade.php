@@ -42,7 +42,7 @@
                                                 <a class="nav-link active" id="{{ 'thumb-tab-' . $key }}"
                                                     data-toggle="tab" href="#{{ 'thumb-' . $key }}" role="tab"
                                                     aria-controls="{{ 'thumb-' . $key }}" aria-selected="true">
-                                                    <img src="{{ $image->image_path }}" alt="{{ $product->name }}" />
+                                                    <img src="{{ asset($image->image_path) }}" alt="{{ $product->name }}" />
                                                 </a>
                                             </li>
                                         @else
@@ -50,7 +50,7 @@
                                                 <a class="nav-link" id="{{ 'thumb-tab-' . $key }}" data-toggle="tab"
                                                     href="#{{ 'thumb-' . $key }}" role="tab"
                                                     aria-controls="{{ 'thumb-' . $key }}" aria-selected="false">
-                                                    <img src="{{ $image->image_path }}" alt="{{ $product->name }}" />
+                                                    <img src="{{ asset($image->image_path) }}" alt="{{ $product->name }}" />
                                                 </a>
                                             </li>
                                         @endif
@@ -67,12 +67,12 @@
                                         @if ($count === 0)
                                             <div class="tab-pane fade show active" id="{{ 'thumb-' . $key }}"
                                                 role="tabpanel" aria-labelledby="{{ 'thumb-tab-' . $key }}">
-                                                <img src="{{ $image->image_path }}" alt="{{ $product->name }}" />
+                                                <img src="{{ asset($image->image_path) }}" alt="{{ $product->name }}" />
                                             </div>
                                         @else
                                             <div class="tab-pane fade" id="{{ 'thumb-' . $key }}" role="tabpanel"
                                                 aria-labelledby="{{ 'thumb-tab-' . $key }}">
-                                                <img src="{{ $image->image_path }}" alt="{{ $product->name }}" />
+                                                <img src="{{ asset($image->image_path) }}" alt="{{ $product->name }}" />
                                             </div>
                                         @endif
                                         @php
@@ -83,7 +83,7 @@
                             @else
                                 <div class="big-thumb-contain">
                                     <div class="tab-pane active">
-                                        <img src="{{ $product->feature_image_path }}" alt="{{ $product->name }}" />
+                                        <img src="{{ asset($product->feature_image_path) }}" alt="{{ $product->name }}" />
                                     </div>
                                 </div>
                             @endif
@@ -277,7 +277,7 @@
                 @foreach ($relateds as $related)
                     <div class="product-item">
                         <div class="prd-item-thumb" style="background-color: #fff; border: 1px solid #ececec;">
-                            <a><img style="width: 90%" src="{{ $related->feature_image_path }}" alt="" /></a>
+                            <a><img style="width: 90%" src="{{ asset($related->feature_image_path) }}" alt="" /></a>
                         </div>
                         <ul class="prd-item-action">
                             <li><a class="btn-add-wishlist" href="#"
@@ -304,7 +304,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>

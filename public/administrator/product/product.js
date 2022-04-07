@@ -5,8 +5,65 @@
         }
     });
     if ($('#products-table').length) {
-        var urlAjax = $('#products-table').data('url');
-        var oTable = $('#products-table').DataTable({
+        let urlAjax = $('#products-table').data('url');
+        let columns;
+        if (urlAjax.split('data/')[1] == 0) {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'feature_image_path',
+                name: 'feature_image_path',
+                class: 'text-center image'
+            },
+            {
+                data: 'price',
+                name: 'price',
+                class: 'text-center'
+            },
+            {
+                data: 'status',
+                name: 'status',
+                class: 'text-center'
+            }];
+        } else {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'feature_image_path',
+                name: 'feature_image_path',
+                class: 'text-center image'
+            },
+            {
+                data: 'price',
+                name: 'price',
+                class: 'text-center'
+            },
+            {
+                data: 'status',
+                name: 'status',
+                class: 'text-center'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }];
+        }
+        
+        $('#products-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -22,36 +79,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'feature_image_path',
-                    name: 'feature_image_path',
-                    class: 'text-center image'
-                },
-                {
-                    data: 'price',
-                    name: 'price',
-                    class: 'text-center'
-                },
-                {
-                    data: 'status',
-                    name: 'status',
-                    class: 'text-center'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
+            columns: columns
         });
         $(document).on('click', '.action-delete', actionDelete);
     }

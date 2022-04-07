@@ -17,7 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        </li>
                         <li class="active">Customers</li>
                     </ul>
                 </div>
@@ -26,18 +27,27 @@
             <section class="panel">
                 <div class="panel-body">
                     <form class="adv-table">
-                        <div class="flex-end center mb-15">
-                            <div class="btn-group text-right">
-                                <a data-url="{{ route('admin.customer.update') }}" class="btn btn-success btn-update-vip">
-                                    VIP <i class="fa fa-plus"></i>
-                                </a>
+                        @can('vip customer')
+                            <div class="flex-end center mb-15">
+                                <div class="btn-group text-right">
+                                    <a data-url="{{ route('admin.customer.update') }}" class="btn btn-success btn-update-vip">
+                                        VIP <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <table class="table table-bordered table-striped" id="customers-table" data-url="{{ route('admin.customer.data') }}">
+                        @endcan
+                        <table class="table table-bordered table-striped" id="customers-table"
+                            @if(auth()->user()->can('vip customer'))
+                                data-url="{{ route('admin.customer.data', ['permission' => 1]) }}"
+                            @else
+                                data-url="{{ route('admin.customer.data', ['permission' => 0]) }}"
+                            @endif>
                             <thead>
                                 <tr>
-                                    <th class="text-center"><input type="checkbox" name="check" data-toggle="checkall"
-                                        data-target=".item" /></th>
+                                    @can('vip customer')
+                                        <th class="text-center"><input type="checkbox" name="check" data-toggle="checkall"
+                                                data-target=".item" /></th>
+                                    @endcan
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Orders</th>

@@ -1,6 +1,5 @@
 <?php
 namespace App\Traits;
-use Storage;
 use Str;
 
 trait StorageImageTrait {
@@ -10,10 +9,10 @@ trait StorageImageTrait {
             $file = $request->$fielname;
             $basename = $file->getClientOriginalName();
             $filename = Str::random(20).'.'.$file->extension();
-            $path = $request->file($fielname)->storeAs('public/'.$foldername, $filename);
+            $path = $request->file($fielname)->move(public_path('images/'.$foldername), $filename);
             return [
                 'file_name' => $basename,
-                'file_path' => Storage::url($path)
+                'file_path' => 'images/'.$foldername.'/'.$filename
             ];
         } else {
             return null;
@@ -24,10 +23,10 @@ trait StorageImageTrait {
     {
         $basename = $file->getClientOriginalName();
         $filename = Str::random(20).'.'.$file->extension();
-        $path = $file->storeAs('public/'.$foldername, $filename);
+        $path = $file->move(public_path('images/'.$foldername), $filename);
         return [
             'file_name' => $basename,
-            'file_path' => Storage::url($path)
+            'file_path' => 'images/'.$foldername.'/'.$filename
         ];
     }
 }

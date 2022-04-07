@@ -6,33 +6,35 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Order;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'name',
         'email',
-        'password',
         'phone',
-        'gender',
-        'birdth',
         'address',
         'type',
+        'gender',
+        'birdth',
         'wishlist',
-        'profile_photo_path'
+        'avatar',
+        'password',
+        'email_verified_at'
     ];
 
-    protected $guarded = [];
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
      * @var array
      */
@@ -42,7 +44,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
@@ -53,5 +55,10 @@ class User extends Authenticatable
     public function orders()
     {
        return $this->hasMany(Order::class, 'user_id');
+    }
+
+    public function messages()
+    {
+    return $this->hasMany(Message::class);
     }
 }

@@ -26,15 +26,30 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        <div class="flex-end center mb-15">
-                            <div class="btn-group text-right">
-                                <a class="btn btn-success" href="{{ route('admin.coupon.create') }}">
-                                    Add New <i class="fa fa-plus"></i>
-                                </a>
+                        @can('add coupon')
+                            <div class="flex-end center mb-15">
+                                <div class="btn-group text-right">
+                                    <a class="btn btn-success" href="{{ route('admin.coupon.create') }}">
+                                        Add New <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
+
                         <table class="table table-bordered table-striped" id="coupons-table"
-                            data-url="{{ route('admin.coupon.data') }}">
+                            @if(auth()->user()->can('edit coupon') || auth()->user()->can('delete coupon') || auth()->user()->can('send coupon'))
+                                @if (auth()->user()->can('edit coupon') && auth()->user()->can('delete coupon') && auth()->user()->can('send coupon'))
+                                    data-url="{{ route('admin.coupon.data', ['permission' => 1]) }}"
+                                @elseif(auth()->user()->can('edit coupon'))
+                                    data-url="{{ route('admin.coupon.data', ['permission' => 2]) }}"
+                                @elseif(auth()->user()->can('delete coupon')) 
+                                    data-url="{{ route('admin.coupon.data', ['permission' => 3]) }}"
+                                @elseif(auth()->user()->can('send coupon'))
+                                    data-url="{{ route('admin.coupon.data', ['permission' => 4]) }}"
+                                @endif 
+                            @else
+                                data-url="{{ route('admin.coupon.data', ['permission' => 0]) }}"
+                            @endif>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -42,7 +57,9 @@
                                     <th class="text-center">Code</th>
                                     <th class="text-center">Discount</th>
                                     <th class="text-center">Quantity</th>
-                                    <th class="text-center">Action</th>
+                                    @if(auth()->user()->can('edit coupon') || auth()->user()->can('delete coupon'))
+                                        <th class="text-center">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>

@@ -29,14 +29,17 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    'google' => [
-        'client_id'     => env('GOOGLE_CLIENT_ID', '904541494141-9mvsc48fbbmbtfhmm7evcbkt49oib51r.apps.googleusercontent.com'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET', 'fuXwEL5PV3icH9ben4AokrBZ'),
-        'redirect'      => env('GOOGLE_REDIRECT', 'https://asbab.dev.com/callback/google'),
-    ],
+
     'facebook' => [
-        'client_id' => env('FACEBOOK_APP_ID', '747661122679722'),
-        'client_secret' => env('FACEBOOK_APP_SECRET', 'a337bb4d43f54da98cd6ded437294a36'),
-        'redirect' => env('FACEBOOK_APP_CALLBACK_URL', 'https://asbab.dev.com/callback/facebook'),
+        'client_id' => env('FACEBOOK_APP_ID'),
+        'client_secret' => env('FACEBOOK_APP_SECRET'),
+        'redirect' => env('FACEBOOK_REDIRECT')
     ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_ID'),
+        'client_secret' => env('GOOGLE_APP_SECRET'),
+        'redirect' => env('GOOGLE_URL')
+    ]
+
 ];

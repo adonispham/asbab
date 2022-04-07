@@ -17,7 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        </li>
                         <li class="active">Categories</li>
                     </ul>
                 </div>
@@ -26,21 +27,35 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        <div class="flex-end center mb-15">
-                            <div class="btn-group text-right">
-                                <a data-url="{{ route('admin.category.create') }}" class="btn btn-success"
-                                    id="create-btn-category" data-toggle="modal" href="#createCategory">
-                                    Add New <i class="fa fa-plus"></i>
-                                </a>
+                        @can('add category')
+                            <div class="flex-end center mb-15">
+                                <div class="btn-group text-right">
+                                    <a data-url="{{ route('admin.category.create') }}" class="btn btn-success"
+                                        id="create-btn-category" data-toggle="modal" href="#createCategory">
+                                        Add New <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                         <table class="table table-bordered table-striped" id="categories-table"
-                            data-url="{{ route('admin.category.data') }}">
+                            @if(auth()->user()->can('edit category') || auth()->user()->can('delete category'))
+                                @if (auth()->user()->can('edit category') && auth()->user()->can('delete category'))
+                                    data-url="{{ route('admin.category.data', ['permission' => 1]) }}"
+                                @elseif(auth()->user()->can('edit category'))
+                                    data-url="{{ route('admin.category.data', ['permission' => 2]) }}"
+                                @elseif(auth()->user()->can('delete category')) 
+                                    data-url="{{ route('admin.category.data', ['permission' => 3]) }}"
+                                @endif
+                            @else
+                                data-url="{{ route('admin.category.data', ['permission' => 0]) }}"
+                            @endif>
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th class="text-center">Action</th>
+                                    @if(auth()->user()->can('edit category') || auth()->user()->can('delete category'))
+                                        <th class="text-center">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>
@@ -68,7 +83,8 @@
                                     </select>
                                 </div>
                                 <div class="flex-end">
-                                    <button data-dismiss="modal" class="btn btn-shadow btn-default" type="button">Close</button>
+                                    <button data-dismiss="modal" class="btn btn-shadow btn-default"
+                                        type="button">Close</button>
                                     <button id="add-btn-category" class="btn btn-shadow btn-success ml-10" type="submit"
                                         data-url="{{ route('admin.category.store') }}">Add</button>
                                 </div>
@@ -100,8 +116,10 @@
                                     </select>
                                 </div>
                                 <div class="flex-end">
-                                    <button data-dismiss="modal" class="btn btn-shadow btn-default" type="button">Close</button>
-                                    <button id="edit-btn-category" class="btn btn-shadow btn-success ml-10" type="submit">Update</button>
+                                    <button data-dismiss="modal" class="btn btn-shadow btn-default"
+                                        type="button">Close</button>
+                                    <button id="edit-btn-category" class="btn btn-shadow btn-success ml-10"
+                                        type="submit">Update</button>
                                 </div>
                             </form>
                         </div>

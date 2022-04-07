@@ -114,7 +114,7 @@
                                 @foreach ($seller as $sell)
                                     <div class="product-item">
                                         <div class="prd-item-thumb">
-                                            <a><img src="{{ $sell->feature_image_path }}" alt="{{ $sell->slug }}" /></a>
+                                            <a><img src="{{ asset($sell->feature_image_path) }}" alt="{{ $sell->slug }}" /></a>
                                         </div>
                                         <div class="prd-item-infor">
                                             <div class="infor-content">
@@ -139,7 +139,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>

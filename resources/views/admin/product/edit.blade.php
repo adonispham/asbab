@@ -91,7 +91,7 @@
                         <div class="form-group">
                             <label>Image:</label>
                             <div class="files-view">
-                                <span class="view-item"><img src="{{ $product->feature_image_path }}" alt="" /></span>
+                                <span class="view-item"><img src="{{ asset($product->feature_image_path) }}" alt="" /></span>
                             </div>
                             <div class="file-btn">
                                 <input hidden type="file" name="feature_image_path"
@@ -106,7 +106,7 @@
                             <label>Image Details:</label>
                             <div class="files-view multiview">
                                 @foreach ($product->images()->get() as $img)
-                                    <span class="view-item"><img src="{{ $img->image_path }}" alt="" /></span>
+                                    <span class="view-item"><img src="{{ asset($img->image_path) }}" alt="" /></span>
                                 @endforeach
                             </div>
                             <div class="file-btn @error('image_path') is-invalid @enderror">

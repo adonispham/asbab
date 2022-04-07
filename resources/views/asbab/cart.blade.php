@@ -26,6 +26,9 @@
         </section>
         <section class="product-wishlist">
             <div class="container">
+                @if (!empty($notify))
+                    {!! $notify !!}
+                @endif
                 @php
                     $total = session()->get('fee_ship') !== null ? session()->get('fee_ship')['fee'] : 0;
                 @endphp
@@ -48,7 +51,7 @@
                                         <tr class="cart-product-item">
                                             <td class="prd-thumbnail">
                                                 <a href="#">
-                                                    <img src="{{ $cart['image_path'] }}" alt="Product Image" />
+                                                    <img src="{{ asset($cart['image_path']) }}" alt="Product Image" />
                                                 </a>
                                             </td>
                                             <td class="text-center">
@@ -61,9 +64,11 @@
                                             <td class="prd-qtt text-center">
                                                 <div class="d-flex justify-content-center">
                                                     <div class="prd-quantity">
-                                                        <span class="qtt-btn qtt-minus"><i class="fa fa-minus"></i></span>
+                                                        <span class="qtt-btn qtt-minus"><i
+                                                                class="fa fa-minus"></i></span>
                                                         <input type="number" name="prd_qtt[{{ $cart['id'] }}]" min="0"
-                                                            step="1" class="show-qtt" value="{{ $cart['quantity'] }}" />
+                                                            step="1" class="show-qtt"
+                                                            value="{{ $cart['quantity'] }}" />
                                                         <span class="qtt-btn qtt-plus"><i class="fa fa-plus"></i></span>
                                                     </div>
                                                 </div>
@@ -90,7 +95,7 @@
                                     <div class="single-product cart-product-item">
                                         <div class="product-item">
                                             <div class="prd-item-thumb">
-                                                <a href="#"><img src="{{ $cart['image_path'] }}" alt="" /></a>
+                                                <a href="#"><img src="{{ asset($cart['image_path']) }}" alt="" /></a>
                                                 <a data-href="{{ route('asbab.cart.removecart', ['id' => $cart['id']]) }}"
                                                     class="btn-remove-cart"><i class="fa fa-times"></i></a>
                                             </div>
@@ -100,7 +105,8 @@
                                                     <div class="infor-rating text-center">
                                                         <span class="stars"><i class="far fa-star"></i><i
                                                                 class="far fa-star"></i><i class="far fa-star"></i><i
-                                                                class="far fa-star"></i><i class="far fa-star"></i></span>
+                                                                class="far fa-star"></i><i
+                                                                class="far fa-star"></i></span>
                                                     </div>
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <p class="infor-price"><span
@@ -112,7 +118,8 @@
                                                             <input type="number" name="prd_qtt[{{ $cart['id'] }}]"
                                                                 min="0" step="1" class="show-qtt"
                                                                 value="{{ $cart['quantity'] }}" />
-                                                            <span class="qtt-btn qtt-plus"><i class="fa fa-plus"></i></span>
+                                                            <span class="qtt-btn qtt-plus"><i
+                                                                    class="fa fa-plus"></i></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -199,12 +206,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="d-flex">
-                                        <input readonly type="text" name="basic_address" class="form-control mr-2"
-                                            placeholder="Address Customer"
-                                            value="{{ session()->get('fee_ship') !== null ? $basic_address : '' }}" />
-                                        <input type="text" name="details_address" class="form-control"
+                                        <input type="text" name="details_address" class="form-control mr-2"
                                             placeholder="Street, Lane, No House"
                                             value="{{ session()->get('fee_ship') !== null ? $details_address : '' }}" />
+                                        <input readonly type="text" name="basic_address" class="form-control"
+                                            placeholder="Address Customer"
+                                            value="{{ session()->get('fee_ship') !== null ? $basic_address : '' }}" />                                        
                                     </div>
                                 </div>
                                 <a href="#" class="fr-btn btn-cal-fee">Fee</a>
@@ -216,14 +223,17 @@
                                         value="{{ auth()->user() ? auth()->id() : null }}" />
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="customer_name" class="form-control" placeholder="Full name" value="{{ auth()->user() ? auth()->user()->name : null }}" />
+                                    <input type="text" name="customer_name" class="form-control" placeholder="Full name"
+                                        value="{{ auth()->user() ? auth()->user()->name : null }}" />
                                 </div>
                                 <div class="form-group">
                                     <input type="text" name="customer_mail" class="form-control"
-                                        placeholder="Email Address" value="{{ auth()->user() ? auth()->user()->email : null }}" />
+                                        placeholder="Email Address"
+                                        value="{{ auth()->user() ? auth()->user()->email : null }}" />
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="customer_phone" class="form-control" placeholder="Phone No"value="{{ auth()->user() ? auth()->user()->phone : null }}" />
+                                    <input type="text" name="customer_phone" class="form-control" placeholder="Phone No"
+                                        value="{{ auth()->user() ? auth()->user()->phone : null }}" />
                                 </div>
                                 @if (!auth()->user())
                                     <div class="form-group shop-checkbox">
@@ -275,12 +285,14 @@
                                     </li>
                                 </ul>
                                 <div class="payment-btn">
-                                    <a href="#"  data-url="{{ route('asbab.checkout.payment') }}" class="fr-btn">Place Order</a>
+                                    <a href="#" class="fr-btn"
+                                        data-url="{{ route('asbab.checkout.payment') }}">Place Order</a>
                                     <div class="method-pay">
                                         <div class="form-group">
                                             <label>
                                                 <input type="radio" name="paymethod" value="0" />
                                                 Paypal
+                                                <div id="paypal-marks-container"></div>
                                             </label>
                                         </div>
                                         <div class="form-group">
@@ -292,13 +304,7 @@
                                         <div class="form-group">
                                             <label>
                                                 <input type="radio" name="paymethod" value="2" />
-                                                Credit card
-                                            </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>
-                                                <input type="radio" name="paymethod" value="3" />
-                                                Direct bank transfer
+                                                Credit card & Direct bank transfer
                                             </label>
                                         </div>
                                     </div>
@@ -313,7 +319,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>

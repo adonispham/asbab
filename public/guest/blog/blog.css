@@ -10,10 +10,18 @@
 
 .single-blog .blog-item-thumb {
     height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.single-blog .blog-item-thumb a {
+    display: block;
+    height: 100%;
+    position: relative;
 }
 
 .single-blog .blog-item-thumb img {
-    min-width: 100%;
+    width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;

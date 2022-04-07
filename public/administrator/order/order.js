@@ -6,8 +6,69 @@
     });
 
     if ($('#orders-table').length) {
-        var urlAjax = $('#orders-table').data('url');
-        var oTable = $('#orders-table').DataTable({
+        let urlAjax = $('#orders-table').data('url');
+        let columns;
+        if ($('#orders-table').data('update') == 0) {
+            columns = [{
+                data: 'code',
+                name: 'code'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'phone',
+                name: 'phone'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'status',
+                name: 'status',
+                class: 'text-center'
+            },
+            {
+                data: 'amount',
+                name: 'amount'
+            }];
+        } else {
+            columns = [{
+                data: 'check',
+                name: 'check',
+                class: 'text-center',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'code',
+                name: 'code'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'phone',
+                name: 'phone'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'status',
+                name: 'status',
+                class: 'text-center'
+            },
+            {
+                data: 'amount',
+                name: 'amount'
+            }];
+        }
+        $('#orders-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -23,39 +84,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'check',
-                    name: 'check',
-                    class: 'text-center',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'code',
-                    name: 'code'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'status',
-                    name: 'status',
-                    class: 'text-center'
-                },
-                {
-                    data: 'amount',
-                    name: 'amount'
-                }
-            ]
+            columns: columns
         });
     }
 

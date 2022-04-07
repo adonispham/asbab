@@ -12,7 +12,7 @@ use App\Models\ProductImage;
 use App\Components\CategoryRecusive;
 use App\Traits\StorageImageTrait;
 use App\Traits\EditorUploadImage;
-use Datatables;
+use DataTables;
 use Storage;
 use Log;
 use DB;
@@ -22,34 +22,51 @@ class ProductController extends Controller
 {
     use StorageImageTrait;
     use EditorUploadImage;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index($permission)
     {
         $products = Product::get();
-        return DataTables::of($products)
-            ->editColumn('feature_image_path', function ($product) {
-                return '<img src="'.$product->feature_image_path.'" />';
-            })
-            ->editColumn('status', function ($product) {
-                return $product->quantity > 0 ? '<span class="btn btn-success">In Stock</span>' : '<span class="btn btn-danger">Out of Stock</span>';
-            })
-            ->addColumn('action', function ($product) {
-                return '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Edit</a>
-                        <a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Delete</a>';
-            })
-            ->rawColumns(['feature_image_path', 'status', 'action'])
-            ->make(true);
+        foreach ($products as $p) {
+            $p->auth_permission = $permission;
+        }
+        if ($permission != 0) {
+            return DataTables::of($products)
+                ->editColumn('feature_image_path', function ($product) {
+                    return '<img src="'.asset($product->feature_image_path).'" />';
+                })
+                ->editColumn('status', function ($product) {
+                    return $product->quantity > 0 ? '<span class="btn btn-success">In Stock</span>' : '<span class="btn btn-danger">Out of Stock</span>';
+                })
+                ->addColumn('action', function ($product) {
+                    switch ($product->auth_permission) {
+                        case '1':
+                            $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Edit</a>
+                                        <a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                        case '2':
+                            $action = $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Edit</a>';
+                            break;
+                        case '3':
+                            $action = '<a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                    }
+                    return $action;
+                })
+                ->rawColumns(['feature_image_path', 'status', 'action'])
+                ->make(true);
+        } else {
+            return DataTables::of($products)
+                ->editColumn('feature_image_path', function ($product) {
+                    return '<img src="'.asset($product->feature_image_path).'" />';
+                })
+                ->editColumn('status', function ($product) {
+                    return $product->quantity > 0 ? '<span class="btn btn-success">In Stock</span>' : '<span class="btn btn-danger">Out of Stock</span>';
+                })
+                ->rawColumns(['feature_image_path','status'])
+                ->make(true);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $recusive = new CategoryRecusive(Category::get());
@@ -57,16 +74,10 @@ class ProductController extends Controller
         return view('admin.product.create', compact('htmloptions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['bail','required','unique:products','min:10','max:255'],
+            'name' => ['bail','required','unique:products','max:255'],
             'category_id' => 'required',
             'price' => ['bail','required','regex:/^\d*(\.\d{0,2})?$/'],
             'quantity' => ['bail','required','integer'],
@@ -120,12 +131,6 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $product = Product::find($id);
@@ -134,18 +139,11 @@ class ProductController extends Controller
         return view('admin.product.edit', compact('htmloptions', 'product'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
         $request->validate([
-            'name' => ['bail','required','unique:products,name,'.$product->slug.',slug','min:10','max:255'],
+            'name' => ['bail','required','unique:products,name,'.$product->slug.',slug','max:255'],
             'category_id' => 'required',
             'price' => ['bail','required','regex:/^\d*(\.\d{0,2})?$/'],
             'quantity' => ['bail','required','integer'],
@@ -158,8 +156,10 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
-            $details = $this->SaveUploadEditorImage($request, 'product');
+            $uploadDir = 'images/upload/product/'.$product->slug;
+            Storage::disk('public')->deleteDirectory($uploadDir);
 
+            $details = $this->SaveUploadEditorImage($request, 'product');
             $dataImageUploadUpdate = $this->storageUploadImageTrait($request, 'feature_image_path', "product");
             $dataproductUpdate = [
                 'name' =>  $request->name,
@@ -212,22 +212,12 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $product = Product::find($id);
-
         $product->tags()->detach();
-
-        $uploadDir = 'public/upload/product/'.Str::slug($product->name);
-        
-        Storage::deleteDirectory($uploadDir);
-
+        $uploadDir = 'storage/upload/product/'.$product->slug;
+        Storage::disk('public')->deleteDirectory($uploadDir);
         if(file_exists(public_path($product->feature_image_path))) {
             unlink(public_path($product->feature_image_path));
         }

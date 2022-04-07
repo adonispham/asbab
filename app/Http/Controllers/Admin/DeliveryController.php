@@ -8,17 +8,12 @@ use App\Models\Delivery;
 use Province;
 use District;
 use Ward;
-use Datatables;
+use DataTables;
 use Log;
 use DB;
 
 class DeliveryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $deliveries = Delivery::get();
@@ -57,12 +52,6 @@ class DeliveryController extends Controller
         return response()->json($districts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = $request->validate([
@@ -93,13 +82,6 @@ class DeliveryController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $delivery = Delivery::find($id);

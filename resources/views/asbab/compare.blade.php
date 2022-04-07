@@ -26,7 +26,7 @@
         </section>
         <section class="wishlist-area">
             <div class="container">
-                <div class="row" id="compare-table"></div>
+                <div class="row" id="compare-table" data-url="{{ route('asbab.compare.data') }}"></div>
                 <div class="row d-flex justify-content-end mt-2 mb-5">
                     <ul class="pagination" id="pagination"></ul>
                 </div>
@@ -36,7 +36,7 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
                                     alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>

@@ -6,8 +6,52 @@
     });
 
     if ($('#brands-table').length) {
-        var urlAjax = $('#brands-table').data('url');
-        var oTable = $('#brands-table').DataTable({
+        let urlAjax = $('#brands-table').data('url');
+        let columns;
+        if (urlAjax.split('data/')[1] == 0) {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'image_path',
+                name: 'image_path',
+                class: 'text-center image'
+            },
+            {
+                data: 'link',
+                name: 'link'
+            }];
+        } else {
+            columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'image_path',
+                name: 'image_path',
+                class: 'text-center image'
+            },
+            {
+                data: 'link',
+                name: 'link'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }];
+        }
+        $('#brands-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
@@ -23,30 +67,7 @@
             serverSide: true,
             order: [0, 'desc'],
             ajax: urlAjax,
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'image_path',
-                    name: 'image_path',
-                    class: 'text-center image'
-                },
-                {
-                    data: 'link',
-                    name: 'link'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
+            columns: columns
         });
         $(document).on('click', '.action-delete', actionDelete);
     }
@@ -64,7 +85,7 @@
                 that.find('[name="url"]').val(data.url);
                 that.find('[name="name"]').val(data.brand.name);
                 that.find('[name="link"]').val(data.brand.link);
-                that.find('.files-view').append('<span class="view-item"><img src="' + data.brand.image_path + '" /></span>')
+                that.find('.files-view').append('<span class="view-item"><img src="' + editUrl.split('admin')[0] + data.brand.image_path + '" /></span>')
             }
         });
     })

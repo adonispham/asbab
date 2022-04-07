@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slider;
 use App\Models\Product;
-use App\Models\NewsPaper;
+use App\Models\News;
+use App\Models\Brand;
 use App\Models\User;
+use App\Model\Rating;
 use Log;
 use DB;
 
@@ -17,7 +19,7 @@ class HomeController extends Controller
     {
         $sliders = Slider::all();
         $products = Product::latest()->take(9)->get();
-        $news = NewsPaper::latest()->paginate(3);
+        $news = News::latest()->paginate(3);
         $seller = Product::orderBy('sell', 'DESC')->take('4')->get();
         $good = Product::withCount('rates')->orderBy('rates_count', 'desc')->first();
         return view('asbab.home', compact('sliders','products','news','seller','good'));

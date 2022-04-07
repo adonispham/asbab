@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\Category;
 use App\Models\User;
+use App\Models\Category;
+use App\Models\Order;
+use App\Models\Message;
 
 class AuthController extends Controller
 {
@@ -14,13 +15,32 @@ class AuthController extends Controller
     {
         if(auth()->check()) {
             $orders = Order::where('status','<',4)->get();
-            $customers = User::where('type','>',0)->get();
+            $customers = User::where('type','>',4)->get();
             return view('admin.dashboard',compact('orders','customers'));
         } else {
             return view('admin.login');
         } 
     }
 
+    public function login(Request $request)
+    {
+        $remember = $request->has('remember_me') ? true : false;
+        if (auth()->attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ], $remember)) {
+            return redirect()->to('admin/');
+        }
+
+        return back();
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->to('admin');
+    }
+    
     public function line_chart()
     {
         $orders = Order::orderBy('updated_at', 'asc')->get();
@@ -72,22 +92,15 @@ class AuthController extends Controller
         return response()->json($data);
     }
 
-    public function login(Request $request)
-    {
-        $remember = $request->has('remember_me') ? true : false;
-        if (auth()->attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ], $remember)) {
-            return redirect()->to('admin/');
-        }
-
-        return back();
-    }
-
-    public function logout()
-    {
-        auth()->logout();
-        return redirect()->to('admin');
-    }
+   public function notification()
+   {
+       $userIds = $messages = [];
+       foreach (Message::where('read', 0)->where('type', 'client')->where('repfor', 0)->orderBy('created_at', 'desc')->get() as $m) {
+           if(!in_array($m->user_id, $userIds)) {
+                $userIds[] = $m->user_id;
+                $messages[] = $m;
+           }
+       }
+       return response()->json($messages, 200);
+   }
 }

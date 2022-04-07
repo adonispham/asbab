@@ -46,13 +46,14 @@
 
 .comm-addition .fr-btn {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 50px;
-    line-height: 50px;
+    bottom: 0 !important; 
+    right: 0 !important;
+    height: 50px !important;
+    line-height: 50px !important;
     font-size: 30px;
-    width: 50px;
+    width: 50px !important;
     padding: 0;
+    border-radius: 0 0  5px 0;
 }
 
 .prd-best-sale h2,
@@ -76,6 +77,10 @@
 
 .prd-item-thumb {
     width: 75%;
+}
+
+.prd-item-thumb a {
+    display: block;
 }
 
 .prd-item-thumb img {
@@ -246,6 +251,14 @@
     text-align: center;
     width: 100%;
     display: block;
+}
+
+.prd-best-sale .prd-item-infor .infor-content a {
+    padding: 0 10px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .prd-best-sale .prd-item-thumb {
@@ -676,6 +689,7 @@ html .ui-button.ui-state-disabled:active {
 
 .product-list-view .prd-item-thumb {
     position: relative;
+    border: none !important;
     width: 40% !important;
 }
 
@@ -683,7 +697,8 @@ html .ui-button.ui-state-disabled:active {
     padding-left: 15px !important;
     padding-top: 0 !important;
     display: block;
-    padding-bottom: 60px;
+    padding-bottom: 60px !important;
+    position: relative;
 }
 
 .product-list-view .infor-content p,
@@ -702,6 +717,7 @@ html .ui-button.ui-state-disabled:active {
 .product-list-view .content-details {
     text-align: justify !important;
     margin-top: 30px !important;
+    position: relative;
 }
 
 .product-list-view .fr-btn {

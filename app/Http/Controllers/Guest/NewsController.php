@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\NewsPaper;
+use App\Models\News;
 use App\Models\NewsComment;
 use App\Models\NewsCommentLike;
 use App\Traits\EditorUploadImage;
@@ -20,32 +20,32 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = NewsPaper::orderBy('id', 'desc')->get();
+        $news = News::orderBy('id', 'desc')->get();
         return view('asbab.news', compact('news'));
     }
 
     public function data()
     {
-        $news = NewsPaper::orderBy('id', 'desc')->get();
+        $news = News::orderBy('id', 'desc')->get();
         $baseUrl = route('asbab.home');
         return response()->json(['news' => $news, 'baseUrl' => $baseUrl], 200);
     }
 
     public function details($slug)
     {
-        $blog = NewsPaper::where('slug', $slug)->first();
+        $blog = News::where('slug', $slug)->first();
         visits($blog)->increment();
         $visits = visits($blog)->count();
         $blogId = $blog->id;
-        $comments = NewsComment::where('news_paper_id', $blogId)->where('parent_id', 0)->orderBy('updated_at', 'desc')->paginate(4);        
-        $subcomments = NewsComment::where('news_paper_id', $blogId)->orderBy('updated_at', 'asc')->get();  
+        $comments = NewsComment::where('news_id', $blogId)->where('parent_id', 0)->orderBy('updated_at', 'desc')->paginate(4);        
+        $subcomments = NewsComment::where('news_id', $blogId)->orderBy('updated_at', 'asc')->get();  
         return view('asbab.article', compact('blog','comments','subcomments','visits'));
     }
 
     public function getComment(Request $request, $id)
     {
-        $comments = NewsComment::where('news_paper_id', $id)->where('parent_id', '0')->get();
-        $subcomments = NewsComment::where('news_paper_id', $id)->get();
+        $comments = NewsComment::where('news_id', $id)->where('parent_id', '0')->get();
+        $subcomments = NewsComment::where('news_id', $id)->get();
         foreach($comments as $comm) {
             $comm->date_print = date('D-H:i M/Y', strtotime($comm->updated_at));
             $count = 0;
@@ -71,7 +71,7 @@ class NewsController extends Controller
     public function getSubComm(Request $request, $id)
     {
         $comment = NewsComment::find($id);
-        $subcomments = NewsComment::where('news_paper_id', $comment->news_paper_id)->orderBy('updated_at', 'asc')->get();
+        $subcomments = NewsComment::where('news_id', $comment->news_id)->orderBy('updated_at', 'asc')->get();
         $data = $this->getHtmlsComment($comment, $subcomments, $id, 'news');
         return response()->json([
             'commhtmls' => $data['htmls'],
@@ -90,23 +90,28 @@ class NewsController extends Controller
         try {
             DB::beginTransaction();
             $comment = NewsComment::create([
-                'news_paper_id' => $id,
+                'news_id' => $id,
                 'user_id' => auth()->id(),
                 'parent_id' => $request->parent_id,
                 'comment' => ''
             ]);
 
-            $details = $this->SaveUploadEditorImage($request, 'blog_comment/'.$comment->id);
+            $details = $this->SaveUploadEditorImage($request, 'news_comment/'.$comment->id);
             $comment->update([
                 'comment' => $details
             ]);
             DB::commit();
-            $user = $comment->users;
+            if ($comment->user_id == 0) {
+                $user->avatar = 'images/avatar/1631765133.png';
+                $user->name = 'Asbab Furniture Shop';
+            } else {
+                $user = $comment->users;
+            }
             if ($request->parent_id == 0) {
                 $htmlComment = '<div class="comment-group">
                                     <div data-id="'.$comment->id.'" class="comment-item">
                                         <div class="comment-avatar">
-                                            <img src="'.$user->profile_photo_path.'" alt="User Avatar" />
+                                            <img src="'.asset($user->avatar).'" alt="User Avatar" />
                                         </div>
                                         <div class="comment-detail">
                                             <span class="comm-name">'.$user->name.'</span>
@@ -124,7 +129,7 @@ class NewsController extends Controller
             } else {
                 $htmlComment = '<div data-id="'.$comment->id.'" class="comment-item comm-rep">
                                     <div class="comment-avatar">
-                                        <img src="'.$user->profile_photo_path.'" alt="User Avatar" />
+                                        <img src="'.asset($user->avatar).'" alt="User Avatar" />
                                     </div>
                                     <div class="comment-detail">
                                         <span class="comm-name">'.$user->name.'</span>
@@ -154,16 +159,16 @@ class NewsController extends Controller
 
     public function remove_comment($id)
     {
-        $uploadDir = 'public/upload/blog_comment/'.$id;
-        Storage::deleteDirectory($uploadDir);
+        $uploadDir = 'images/upload/news_comment/'.$id;
+        Storage::disk('public')->deleteDirectory($uploadDir);
         $comment = NewsComment::find($id);
         $parent_id = $comment->parent_id;
         if($parent_id == 0) {
             $comments = NewsComment::all();
             foreach ($comments as $comm) {
                 if (id_parent($comm->parent_id, $comments, 'parent_id', 'id') == $id) {
-                    $uploadSubDir = 'public/upload/blog_comment/'.$comm->id;
-                    Storage::deleteDirectory($uploadSubDir);
+                    $uploadSubDir = 'public/upload/news_comment/'.$comm->id;
+                    Storage::disk('public')->deleteDirectory($uploadSubDir);
                     $comm->delete();
                 }
             }
@@ -180,7 +185,7 @@ class NewsController extends Controller
     public function like_comment(Request $request, $id)
     {
         if($request->type == 0) {
-            $blog = NewsPaper::find($id);
+            $blog = News::find($id);
             $like_old = $blog->likes;
             $arrOld = trim($like_old) === '' ? [] : explode(',', $like_old);
             if(count($arrOld) === 0) {

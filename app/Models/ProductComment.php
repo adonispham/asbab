@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductCommentLike;
+use App\Models\ProductComment;
+use App\Models\Product;
 use App\Models\User;
 
 class ProductComment extends Model

@@ -21,7 +21,7 @@ class ProductController extends Controller
 {
     use EditorUploadImage;
     use CommentTrait;
-
+    
     public function show($slug)
     {
         $brands = Brand::all();
@@ -104,13 +104,13 @@ class ProductController extends Controller
             ], 422);
         }
     }
-
+ 
     public function add_comment(Request $request, $id)
     {
         $validator = $request->validate([
             'details' => 'required'
         ]);
-
+        
         try {
             DB::beginTransaction();
             $comment = ProductComment::create([
@@ -130,7 +130,7 @@ class ProductController extends Controller
                 $htmlComment = '<div class="comment-group">
                                     <div data-id="'.$comment->id.'" class="comment-item">
                                         <div class="comment-avatar">
-                                            <img src="'.$user->profile_photo_path.'" alt="User Avatar" />
+                                            <img src="'.asset($user->avatar).'" alt="User Avatar" />
                                         </div>
                                         <div class="comment-detail">
                                             <span class="comm-name">'.$user->name.'</span>
@@ -148,7 +148,7 @@ class ProductController extends Controller
             } else {
                 $htmlComment = '<div data-id="'.$comment->id.'" class="comment-item comm-rep">
                                     <div class="comment-avatar">
-                                        <img src="'.$user->profile_photo_path.'" alt="User Avatar" />
+                                        <img src="'.asset($user->avatar).'" alt="User Avatar" />
                                     </div>
                                     <div class="comment-detail">
                                         <span class="comm-name">'.$user->name.'</span>
@@ -162,7 +162,7 @@ class ProductController extends Controller
                                     </div>
                                 </div>';
             }
-            $comments = ProductComment::where('product_id', $id)->where('parent_id', 0)->orderBy('updated_at', 'desc')->paginate(4);
+            $comments = ProductComment::where('product_id', $id)->where('parent_id', 0)->orderBy('updated_at', 'desc')->paginate(4);        
             $paginations = $this->paginate($comments);
             return response()->json([
                 'htmlComment' => $htmlComment,
@@ -182,8 +182,8 @@ class ProductController extends Controller
 
     public function remove_comment($id)
     {
-        $uploadDir = 'public/upload/product_comment/'.$id;
-        Storage::deleteDirectory($uploadDir);
+        $uploadDir = 'images/upload/product_comment/'.$id;
+        Storage::disk('public')->deleteDirectory($uploadDir);
         $comment = ProductComment::find($id);
         $parent_id = $comment->parent_id;
         if($parent_id == 0) {
@@ -191,7 +191,7 @@ class ProductController extends Controller
             foreach ($comments as $comm) {
                 if (id_parent($comm->parent_id, $comments, 'parent_id', 'id') == $id) {
                     $uploadSubDir = 'public/upload/product_comment/'.$comm->id;
-                    Storage::deleteDirectory($uploadSubDir);
+                    Storage::disk('public')->deleteDirectory($uploadSubDir);
                     $comm->delete();
                 }
             }
@@ -241,7 +241,7 @@ class ProductController extends Controller
             $products = Product::whereIn('id', $arrPrdID)->orderBy('price', 'asc')->get();
         }
         $pagi = $this->paginate($products, $request->page, $request->items);
-
+        
         return response()->json([
             'products' => $products,
             'baseUrl' => route('asbab.home'),
@@ -266,16 +266,16 @@ class ProductController extends Controller
         } else {
             $wishlist = session()->get('wishlist');
             if (!empty($wishlist)) {
-                $wishlist .= ','.$id;
+                $wishlist .= ','.$id; 
             } else {
                 $wishlist = $id;
             }
             session()->put('wishlist', $wishlist);
             $w = session()->get('wishlist');
         }
-
+        
         return response()->json($w, 200);
-
+        
     }
 
     public function add_wishlist(Request $request)
@@ -306,7 +306,7 @@ class ProductController extends Controller
             $updated = session()->put('wishlist', $strId);
         }
         return response()->json($updated);
-
+        
     }
 
     public function compare(Request $request)

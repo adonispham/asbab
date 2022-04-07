@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
                         <li class="active">Dashboard</li>
                     </ul>
                 </div>
@@ -132,9 +132,11 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <div class="text-right">
-                                    <a class="btn btn-primary btn-shadow" href="{{ route('admin.order.index') }}">Details</a>
-                                </div>
+                                @can('list order')
+                                    <div class="text-right">
+                                        <a class="btn btn-primary btn-shadow" href="{{ route('admin.order.index') }}">Details</a>
+                                    </div>
+                                @endcan
                             </section>
                         </div>
                     </section>

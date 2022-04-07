@@ -1,9 +1,9 @@
 @extends('asbab.layout.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('guest/assets/owl-carousel/owl.carousel.min.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('guest/slider/slider.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('guest/product/product.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('guest/wishlist/wishlist.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('guest/assets/owl-carousel/owl.carousel.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('guest/slider/slider.css') }}" />
+    <link rel="stylesheet" href="{{ asset('guest/product/product.css') }}" />
+    <link rel="stylesheet" href="{{ asset('guest/wishlist/wishlist.css') }}" />
 @endsection
 
 @section('js')
@@ -36,8 +36,8 @@
             <div class="container">
                 <ul class="row owl-carousel owl-brand">
                     @foreach ($brands as $brand)
-                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ $brand->image_path }}"
-                                                                                 alt="{{ $brand->name }}"/></a></li>
+                        <li class="brand-logo"><a href="{{ $brand->link }}"><img src="{{ asset($brand->image_path) }}"
+                                    alt="{{ $brand->name }}" /></a></li>
                     @endforeach
                 </ul>
             </div>

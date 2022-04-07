@@ -6,38 +6,61 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use App\Models\User;
-use Datatables;
+use DataTables;
 use Mail;
 use Log;
 use DB;
 
 class CouponController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($permission)
     {
         $coupons = Coupon::get();
-        return DataTables::of($coupons)
-            ->editColumn('discount', function ($coupon) {
-                return $coupon->type === 0 ? $coupon->discount.'$' : $coupon->discount.'%';
-            })
-            ->addColumn('action', function ($coupon) {
-                return '<a href="'.route('admin.coupon.edit', ['id' => $coupon->id]).'" class="btn btn-info action-edit">Edit</a>
-                        <a data-href="'.route('admin.coupon.delete', ['id' => $coupon->id]).'" class="btn btn-danger action-delete">Delete</a>
-                        <div class="btn-group btn-send-coupon">
-                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Send Coupon <span class="caret"></span></button>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a data-href="'.route('admin.coupon.send', ['id' => $coupon->id, 'type' => 1]).'">Normal</a></li>
-                                <li><a data-href="'.route('admin.coupon.send', ['id' => $coupon->id, 'type' => 2]).'">Vips</a></li>
-                            </ul>
-                        </div>';
-            })
-            ->rawColumns(['discount','action'])
-            ->make(true);
+        foreach ($coupons as $e) {
+            $e->auth_permission = $permission;
+        }
+        if ($permission != 0) {
+            return DataTables::of($coupons)
+                ->editColumn('discount', function ($coupon) {
+                    return $coupon->type === 0 ? $coupon->discount.'$' : $coupon->discount.'%';
+                })
+                ->addColumn('action', function ($coupon) {
+                    switch ($coupon->auth_permission) {
+                        case '1':
+                            $action = '<a href="'.route('admin.coupon.edit', ['id' => $coupon->id]).'" class="btn btn-info action-edit">Edit</a>
+                                        <a data-href="'.route('admin.coupon.delete', ['id' => $coupon->id]).'" class="btn btn-danger action-delete">Delete</a>
+                                        <div class="btn-group btn-send-coupon">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Send Coupon <span class="caret"></span></button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a data-href="'.route('admin.coupon.send', ['id' => $coupon->id, 'type' => 5]).'">Normal</a></li>
+                                                <li><a data-href="'.route('admin.coupon.send', ['id' => $coupon->id, 'type' => 6]).'">Vips</a></li>
+                                            </ul>
+                                        </div>';
+                            break;
+                        case '2':
+                            $action = $action = '<a href="'.route('admin.coupon.edit', ['id' => $coupon->id]).'" class="btn btn-info action-edit">Edit</a>';
+                            break;
+                        case '3':
+                            $action = '<a data-href="'.route('admin.coupon.delete', ['id' => $coupon->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            break;
+                        case '4':
+                            $action = '<div class="btn-group btn-send-coupon">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Send Coupon <span class="caret"></span></button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a data-href="'.route('admin.coupon.send', ['id' => $coupon->id, 'type' => 5]).'">Normal</a></li>
+                                                <li><a data-href="'.route('admin.coupon.send', ['id' => $coupon->id, 'type' => 6]).'">Vips</a></li>
+                                            </ul>
+                                        </div>';
+                            break;
+                    }
+                    return $action;
+                })
+                ->rawColumns(['discount','action'])
+                ->make(true);
+        } else {
+            return DataTables::of($coupons)
+                ->make(true);
+        }
     }
 
     public function send($id, $type)
@@ -46,7 +69,7 @@ class CouponController extends Controller
         $date = date('d.m.Y');
         $title = "Coupon's code of day ".$date;
         $mails = [];
-        foreach (User::where('type', '>', $type)->get() as $customer) {
+        foreach (User::where('type', $type)->get() as $customer) {
             $mails[] = $customer->email;
         }
 
@@ -67,12 +90,6 @@ class CouponController extends Controller
         return view('admin.coupon.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = $request->validate([
@@ -104,25 +121,12 @@ class CouponController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $coupon = Coupon::find($id);
         return view('admin.coupon.edit', compact('coupon'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $coupon = Coupon::find($id);
@@ -154,12 +158,6 @@ class CouponController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $coupon = Coupon::find($id)->delete();

@@ -2293,8 +2293,6 @@ function () {
 
 (function ($) {
     'use strict';
-    var baseUrl = $('meta[name="base-url"]')[0].content
-
     /*-----------------------------------------------
     1.0 Product Masory Layout
     -----------------------------------------------*/
@@ -2309,18 +2307,28 @@ function () {
     })
 
     function format(n) {
-        return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+        return parseFloat(n).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     }
 
     /*-----------------------------------------------
     2.0 Product Item Height
     -----------------------------------------------*/
-    if ($('.list-masory .prd-item-thumb').length) {
-        $('.list-masory .prd-item-thumb').each(function (i, e) {
-            let heightFoot = $(e).parents('.product-item').find('.prd-item-infor').height();
-            $(e).css('height', $(e).height() + heightFoot);
-        })
+    function setHeightPrdItem () {
+        if ($('.list-masory .prd-item-thumb').length) {
+            $('.list-masory .prd-item-thumb').each(function (i, e) {
+                let heightFoot = $(e).parents('.product-item').find('.prd-item-infor').outerHeight();
+                let heightThumb = $(e).parents('.product-item').find('.prd-item-thumb').outerHeight();
+                let heightAction = $(e).parents('.product-item').find('.prd-item-action').outerHeight();
+                if (heightThumb > heightAction + 25) {
+                    $(e).css('height', heightThumb + heightFoot);
+                } else {
+                    $(e).css('height', heightAction + 30 + heightFoot);
+                }
+            });
+        }
     }
+
+    setHeightPrdItem();    
 
     /*-----------------------------------------------
     3.0 Price Slider Active
@@ -2383,38 +2391,37 @@ function () {
             const abstract = $(product.details).text().split('ABSTRACT:')[1].split('II - DETAILS')[0].trim();
             const infor = {
                 "id": product.id,
-                "price": format(product.price),
-                "baseUrl": baseUrl
+                "price": format(product.price)
             }
 
             const template = `<div class="single-product">
                                 <div class="product-item">
                                     <div class="prd-item-thumb">
-                                        <a><img src="${ product.feature_image_path }" alt="${ product.slug }" /></a>
+                                        <a><img src="${ baseUrl + '/' + product.feature_image_path }" alt="${ product.slug }" /></a>
                                         <ul class="prd-item-action">
-                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-wishlist"><i class="far fa-heart"></i></a></li>
-                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-compare"><i class="fa fa-random"></i></a></li>
-                                        </ul>
-                                    </div>
+                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-wishlist"><i class="far fa-heart"></i></a></li> 
+                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-compare"><i class="fa fa-random"></i></a></li> 
+                                        </ul> 
+                                    </div> 
                                     <div class="prd-item-infor">
                                         <div class="infor-content">
-                                        <a data-info='${JSON.stringify(infor)}' href="${ baseUrl + '/product/' + product.slug }" class="product-name">${product.name} </a>
+                                        <a data-info='${JSON.stringify(infor)}' href="${ baseUrl + '/product/' + product.slug }" class="product-name">${product.name} </a> 
                                         <p class="infor-price"><span class="old-price"></span>$${ format(product.price) }</p>
-                                    </div>
+                                    </div> 
                                     <div class="infor-rating">
                                         <span class="stars"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span>
-                                    </div>
-                                        <p class="content-details">${abstract}</p>
+                                    </div> 
+                                        <p class="content-details">${abstract}</p> 
                                     <div class="prd-list-btn">
-                                        <a class="fr-btn btn-add-cart" href="#" data-url="${ baseUrl + '/cart/addcart/' + product.id }"> Add To Cart </a>
-                                    </div>
-                                </div>
+                                        <a class="fr-btn btn-add-cart" href="#" data-url="${ baseUrl + '/cart/addcart/' + product.id }"> Add To Cart </a> 
+                                    </div> 
+                                </div> 
                             </div>`;
 
             const gid = `<div class="col-lg-4 col-md-6 single-product">
                             <div class="product-item">
                                 <div class="prd-item-thumb">
-                                    <a><img src="${ product.feature_image_path }" alt="${ product.slug }" /></a>
+                                    <a><img src="${ baseUrl + '/' + product.feature_image_path }" alt="${ product.slug }" /></a>
                                 </div>
                                 <ul class="prd-item-action">
                                     <li><a href="#" data-info='${ JSON.stringify(infor) }' class="btn-add-wishlist"><i class="far fa-heart"></i></a></li>
@@ -2827,7 +2834,7 @@ function () {
             const template = `<div class="comment-group">
                                     <div data-id="${ comment.id }" class="comment-item">
                                         <div class="comment-avatar">
-                                            <img src="${ comment.users.profile_photo_path }" alt="User Avatar" />
+                                            <img src="${ baseUrl + '/' + comment.users.avatar }" alt="User Avatar" />
                                         </div>
                                         <div class="comment-detail">
                                             <span class="comm-name">${ comment.users.name }</span>
