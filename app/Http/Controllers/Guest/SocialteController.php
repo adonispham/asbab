@@ -20,7 +20,6 @@ class SocialteController extends Controller
 
     public function callback($provider)
     {
-        dd('hahhaah');
         $getInfor = Socialite::driver($provider)->user();
         $user = $this->createOrGetUser($getInfor, $provider);
         auth()->login($user);

@@ -32,10 +32,11 @@ class CheckoutController extends Controller
 {
     public function __construct()
     {
+        $paypalConfigs = config('paypal');
         $this->apiContext = new ApiContext(
             new OAuthTokenCredential(
-                'AQaayUhnL3b_f_6LWjo71z2k7Nayvog1l4H1SIQRhFmUG7os4-uKOx1NH94znmd1_yVa2cdNXHg41FzW',
-                'EBcTsAvB4_5zke39gnNZsdOtJV3CMMDenvc0MIM8DyC86684qMydJkb5ZqeDKJWaUDjj_0NJ3r-xsF3M'
+                $paypalConfigs['client_id'],
+                $paypalConfigs['secret']
             )
         );
     }
@@ -344,18 +345,11 @@ class CheckoutController extends Controller
     {
         if (session()->get('checkout') == 'paypal')
         {
-            $apiContext = new \PayPal\Rest\ApiContext(
-                new \PayPal\Auth\OAuthTokenCredential(
-                    'AZOybgnUFnEbb6xniaVqaeZXI21OYTP-xVOa-Cv3_uf0Quwj0If5358kUMdHjb5s2wV225FxcTsU2w1m',     // ClientID
-                    'EEEwHsKC-CYRc82_Ec1aEk-qBAkh3Bz2_W6A7CekAPuL1Sc4l5gbh-fuCjbm8-JqeLrmXacYIQmTnNZt'      // ClientSecret
-                )
-            );
-
             $paymentId = $_GET['paymentId'];
-            $payment = \PayPal\Api\Payment::get($paymentId, $apiContext);
+            $payment = \PayPal\Api\Payment::get($paymentId, $this->apiContext);
             $execution = new \PayPal\Api\PaymentExecution();
             $execution->setPayerId($_GET['PayerID']);
-            $payment->execute($execution, $apiContext);
+            $payment->execute($execution, $this->apiContext);
         }
         try {
             DB::beginTransaction();
