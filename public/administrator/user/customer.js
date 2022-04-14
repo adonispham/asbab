@@ -74,13 +74,16 @@
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -105,7 +108,7 @@
             }
         });
 
-        if (match.length) { 
+        if (match.length) {
             sendStatusUpdate(data, urlUpdate);
         }
 
@@ -117,8 +120,8 @@
                 data: d,
                 success: function (data) {
                     Swal.fire(
-                        'Updated',
-                        'Your customer has been updated',
+                        'Đã cập nhật',
+                        'Thông tin khách hàng đã được cập nhật',
                         'success'
                     ).then(() => {
                         $('#customers-table').DataTable().ajax.reload();

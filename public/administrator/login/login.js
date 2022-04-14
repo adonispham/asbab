@@ -14,10 +14,10 @@
         },
         messages: {
             password: {
-                required: "Please provide a password !",
-                minlength: "Your password must be at least 6 characters long !"
+                required: "Vui lòng nhập mật khẩu !",
+                minlength: "Mật khẩu phải có độ dài tối thiểu 6 ký tự !"
             },
-            email: "Please enter a valid email address"
+            email: "Email không đúng định dạng."
         }
     });
 

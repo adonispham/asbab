@@ -18,16 +18,16 @@
                 @csrf
                 <h1>Asbab Furniture</h1>
                 <div class="form-group">
-                    <input type="text" name="email" placeholder="Your Email *" />
+                    <input type="text" name="email" placeholder="Địa chỉ email *" />
                 </div>
                 <div class="form-group">
-                    <input type="password" name="password" placeholder="Password *" />
+                    <input type="password" name="password" placeholder="Mật khẩu *" />
                 </div>
                 <div class="form-group flex-between center">
-                    <label for="remember"><input type="checkbox" name="remember_me" id="remember" />Remember me</label>
-                    <a href="#">Forgot password ?</a>
+                    <label for="remember"><input type="checkbox" name="remember_me" id="remember" />Ghi nhớ đăng nhập</label>
+                    <a href="#">Quên mật khẩu ?</a>
                 </div>
-                <button class="btn btn-info btn-shadow btn-login" type="submit">LOG IN</button>
+                <button class="btn btn-info btn-shadow btn-login" type="submit">ĐĂNG NHẬP</button>
             </form>
         </section>
     </section>

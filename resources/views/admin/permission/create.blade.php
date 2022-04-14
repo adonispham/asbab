@@ -17,8 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="active">Add Permisson</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="active">Thêm quyền</li>
                     </ul>
                 </div>
             </div>
@@ -28,18 +28,18 @@
                     @csrf
                     <div class="col-lg-9">
                         <div class="form-group">
-                            <label>Module:</label>
+                            <label>Mục:</label>
                             <select class="form-control text-capitalize" name="module_par"
                                 data-url="{{ route('admin.permission.get_actions') }}">
-                                <option value="">Select Module</option>
-                                @foreach ($modules as $module)
-                                    <option class="text-capitalize" value="{{ $module }}">{{ $module }}</option>
+                                <option value="">Chọn mục cần thêm quyền</option>
+                                @foreach ($modules as $key => $module)
+                                    <option class="text-capitalize" value="{{ $key }}">{{ $key }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group flex-between module_actions"></div>
                         <div class="form-group">
-                            <button class="btn btn-success text-uppercase" type="submit">Add</button>
+                            <button class="btn btn-success text-uppercase" type="submit">Thêm</button>
                         </div>
                     </div>
                 </form>

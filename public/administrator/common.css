@@ -1124,11 +1124,6 @@ ul.top-menu>li>a:focus {
     padding-left: 5px;
 }
 
-.top-nav .user-login img {
-    position: relative;
-    height: 100%;
-}
-
 .top-nav .user-login .username {
     position: relative;
     padding-right: 5px;

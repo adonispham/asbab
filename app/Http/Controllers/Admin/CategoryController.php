@@ -25,14 +25,14 @@ class CategoryController extends Controller
                 ->addColumn('action', function ($category) {
                     switch ($category->auth_permission) {
                         case '1':
-                            $action = '<a data-href="'.route('admin.category.edit', ['id' => $category->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Edit</a>
-                                        <a data-href="'.route('admin.category.delete', ['id' => $category->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="' . route('admin.category.edit', ['id' => $category->id]) . '" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Sửa</a>
+                                        <a data-href="' . route('admin.category.delete', ['id' => $category->id]) . '" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                         case '2':
-                            $action = $action = '<a data-href="'.route('admin.category.edit', ['id' => $category->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Edit</a>';
+                            $action = $action = '<a data-href="' . route('admin.category.edit', ['id' => $category->id]) . '" class="btn btn-info action-edit" data-toggle="modal" href="#editCategory">Sửa</a>';
                             break;
                         case '3':
-                            $action = '<a data-href="'.route('admin.category.delete', ['id' => $category->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="' . route('admin.category.delete', ['id' => $category->id]) . '" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                     }
                     return $action;
@@ -41,7 +41,7 @@ class CategoryController extends Controller
         } else {
             return DataTables::of($categories)
                 ->editColumn('name', function ($category) {
-                    return '<div class="text-justify">'.$category->name.'</div>';
+                    return '<div class="text-justify">' . $category->name . '</div>';
                 })
                 ->rawColumns(['name'])
                 ->make(true);
@@ -57,10 +57,17 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            'name.required' => 'Tên danh mục không được để trống.',
+            'name.unique' => 'Danh mục đã có.',
+            'name.max' => 'Tên danh mục quá dài.',
+            'parent_id.required' => 'Vui lòng chọn danh mục cha.'
+        ];
+
         $validator = $request->validate([
-            'name' => ['bail','required','unique:categories','max:255'],
+            'name' => ['bail', 'required', 'unique:categories', 'max:255'],
             'parent_id' => 'required'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -69,12 +76,12 @@ class CategoryController extends Controller
                 'parent_id' => $request->parent_id,
                 'slug' => Str::slug($request->name)
             ]);
-    
+
             DB::commit();
             return response()->json($category);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()
@@ -97,10 +104,17 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
+        $messages = [
+            'name.required' => 'Tên danh mục không được để trống.',
+            'name.unique' => 'Danh mục đã có.',
+            'name.max' => 'Tên danh mục quá dài.',
+            'parent_id.required' => 'Vui lòng chọn danh mục cha.'
+        ];
+
         $validator = $request->validate([
-            'name' => ['bail','required','unique:categories,name,'.Category::find($id)->name.',name','max:255'],
+            'name' => ['bail', 'required', 'unique:categories,name,' . Category::find($id)->name . ',name', 'max:255'],
             'parent_id' => 'required'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -114,7 +128,7 @@ class CategoryController extends Controller
             return response()->json($category);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()

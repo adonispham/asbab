@@ -17,9 +17,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang chủ</a>
                         </li>
-                        <li class="active">Employees</li>
+                        <li class="active">Nhân viên</li>
                     </ul>
                 </div>
             </div>
@@ -27,22 +27,22 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        @can('add employee')
+                        @can('thêm nhân viên')
                             <div class="flex-end center mb-15">
                                 <div class="btn-group text-right">
                                     <a href="{{ route('admin.employee.create') }}" class="btn btn-success">
-                                        Add New <i class="fa fa-plus"></i>
+                                        Thêm mới <i class="fa fa-plus"></i>
                                     </a>
                                 </div>
                             </div>
                         @endcan
-                        <table class="table table-bordered table-striped" id="employees-table" 
-                            @if(auth()->user()->can('edit employee') || auth()->user()->can('delete employee'))
-                                @if (auth()->user()->can('edit employee') && auth()->user()->can('delete employee'))
+                        <table class="table table-bordered table-striped" id="employees-table"
+                            @if(auth()->user()->can('sửa nhân viên') || auth()->user()->can('xóa nhân viên'))
+                                @if (auth()->user()->can('sửa nhân viên') && auth()->user()->can('xóa nhân viên'))
                                     data-url="{{ route('admin.employee.data', ['permission' => 1]) }}"
-                                @elseif(auth()->user()->can('edit employee'))
+                                @elseif(auth()->user()->can('sửa nhân viên'))
                                     data-url="{{ route('admin.employee.data', ['permission' => 2]) }}"
-                                @elseif(auth()->user()->can('delete employee')) 
+                                @elseif(auth()->user()->can('xóa nhân viên'))
                                     data-url="{{ route('admin.employee.data', ['permission' => 3]) }}"
                                 @endif
                             @else
@@ -50,12 +50,12 @@
                             @endif>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
+                                    <th>STT</th>
+                                    <th>Họ và tên</th>
                                     <th>Email</th>
-                                    <th class="text-center">Position</th>
-                                    @if(auth()->user()->can('edit employee') || auth()->user()->can('delete employee'))
-                                        <th class="text-center">Action</th>
+                                    <th class="text-center">Chức vụ</th>
+                                    @if(auth()->user()->can('sửa nhân viên') || auth()->user()->can('xóa nhân viên'))
+                                        <th class="text-center">Hành động</th>
                                     @endif
                                 </tr>
                             </thead>

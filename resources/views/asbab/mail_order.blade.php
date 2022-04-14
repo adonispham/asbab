@@ -43,7 +43,8 @@
                         Quanlity - Fast</h4>
                 </div>
                 <div class="col-12">
-                    <p style="color: #fff">Dear <strong style="color: #000; text-decoration: underline">{{ $order->name }}</strong>,</p>
+                    <p style="color: #fff">Dear <strong style="color: #000; text-decoration: underline">Do Ba
+                            Truong</strong>,</p>
                 </div>
                 <div class="col-12">
                     <p style="color: #fff">You or someone has been ordered at shop with information as:
@@ -64,7 +65,7 @@
                 <div class="col-12">
                     <h4 style="color: #fff; text-transform: uppercase">Customer information:</h4>
                     <p></p>
-                    <p style="margin-left: 10px">- Full name: <strong style="color: #fff;">{{ $order->name }}</strong>
+                    <p style="margin-left: 10px">- Full name: <strong style="color: #fff;">{{ $order->name }}/strong>
                     </p>
                     <p style="margin-left: 10px">- Email: <strong style="color: #fff;">{{ $order->mail }}</strong>
                     </p>
@@ -155,7 +156,7 @@
                 <div class="col-12">
                     <p style="color: #fff">For more information, please contact us at the website: <a
                             href="{{ route('asbab.contact.index') }}">{{ route('asbab.home') }}</a>, or contact the hotline:
-                        0123456789. Thank you for your order in our shop !</p>
+                        0988041615. Thank you for your order in our shop !</p>
                 </div>
             </div>
             @if (empty($cashout))

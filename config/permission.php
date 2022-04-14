@@ -1,26 +1,23 @@
 <?php
 
 return [
-    'access' => [
-        'category-list' => 'list_category'
-    ],
     'modules' => [
-        'employee'=>['list','add','edit','delete'],
-        'customer'=>['list','vip'],
-        'category'=>['list','add','edit','delete'],
-        'product'=>['list','add','edit','delete'],
-        'comment'=>['list','reply','delete'],
-        'news'=>['list','add','edit','delete'],
-        'slider'=>['list','add','edit','delete'],
-        'coupon'=>['list','add','edit','delete','send'],
-        'delivery'=>['list','add','edit'],
-        'brand'=>['list','add','edit','delete'],
-        'order'=>['list','update','show', 'print'],
-        'permission'=>['add'],
-        'role'=>['list','add','edit','delete'],
-        'chat'=>['list','add'],
-        'support'=>['list','reply','delete'],
-        'setting'=>['list','add','edit']
+        'Nhân viên' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Khách hàng' => ['xem', 'sửa'],
+        'Danh mục' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Sản phẩm' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Bình luận' => ['xem', 'trả lời', 'xóa'],
+        'Tin tức' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Banners' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Phiếu giảm giá' => ['xem', 'thêm', 'sửa', 'xóa', 'gửi'],
+        'Phí vận chuyển' => ['xem', 'thêm', 'sửa'],
+        'Ngành hàng' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Đơn hàng' => ['xem', 'cập nhật', 'hiển thị', 'in'],
+        'Phân quyền' => ['thêm'],
+        'Vai trò' => ['xem', 'thêm', 'sửa', 'xóa'],
+        'Tin nhắn' => ['xem', 'xóa'],
+        'Hỗ trợ' => ['xem', 'trả lời', 'xóa'],
+        'Cài đặt' => ['xem', 'thêm', 'sửa']
     ],
     'models' => [
 

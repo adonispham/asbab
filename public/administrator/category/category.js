@@ -39,13 +39,16 @@
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -64,7 +67,7 @@
             url: editUrl,
             dataType: 'json',
             success: function (data) {
-                that.find('.modal-title').text('Edit: ' + data.category.name);
+                that.find('.modal-title').text('Sửa: ' + data.category.name);
                 that.find('[name="url"]').val(data.editUrl);
                 that.find('[name="name"]').val(data.category.name);
                 that.find('[name="parent_id"]').append(data.htmlOptions);
@@ -102,8 +105,8 @@
                 $('#createCategory form .alert-danger').removeClass('alert-danger');
                 $('#createCategory').modal('hide');
                 Swal.fire(
-                    'Added!',
-                    'Your categry has been added.',
+                    'Đã thêm!',
+                    'Danh mục đã được thêm.',
                     'success'
                 )
                 $('#categories-table').DataTable().ajax.reload();
@@ -137,8 +140,8 @@
                 $('#editCategory form .alert-danger').removeClass('alert-danger');
                 $('#editCategory').modal('hide');
                 Swal.fire(
-                    'Edited!',
-                    'Your categry has been edited.',
+                    'Đã sửa!',
+                    'Danh mục đã thay đổi thành công.',
                     'success'
                 )
                 $('#categories-table').DataTable().ajax.reload();
@@ -164,13 +167,14 @@
         e.preventDefault();
         let hrefData = $(this).data('href');
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Bạn chắc chắn?',
+            text: "Bạn sẽ không thể lấy lại bản ghi này!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            cancelButtonText: 'Hủy',
+            confirmButtonText: 'Chắc chắn, xóa!'
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -179,8 +183,8 @@
                     dataType: 'json',
                     success: function (data) {
                         Swal.fire(
-                            'Deleted!',
-                            'Your category has been deleted.',
+                            'Đã xóa!',
+                            'Danh mục đã được xóa.',
                             'success'
                         )
                         $('#categories-table').DataTable().ajax.reload();

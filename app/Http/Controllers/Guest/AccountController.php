@@ -30,7 +30,7 @@ class AccountController extends Controller
 
     public function edit_profile(Request $request)
     {
-        $image_path = auth()->user()->avatar;
+        $image_path = auth()->user()->profile_photo_path;
         $avaUpload = $this->storageUploadImageTrait($request, 'pf_avata', "avatar");
         $dataProfile = [
             'name' =>  $request->pf_name,
@@ -42,10 +42,10 @@ class AccountController extends Controller
         ];
 
         if ($avaUpload !== null) {
-            $dataProfile['avatar'] = $avaUpload['file_path'];
-
-            if(file_exists($image_path)) {
-                unlink($image_path);
+            $dataProfile['profile_photo_path'] = $avaUpload['file_path'];
+            
+            if(file_exists(public_path($image_path))) {
+                unlink(public_path($image_path));
             }
         }
         auth()->user()->update($dataProfile);
@@ -59,7 +59,7 @@ class AccountController extends Controller
             'newpass' => 'bail|min:6|required',
             're_newpass' => 'bail|min:6|required_with:newpass|same:newpass'
         ]);
-
+        
         try {
             DB::beginTransaction();
             auth()->user()->update([
@@ -101,7 +101,7 @@ class AccountController extends Controller
                     break;
             }
             $pagi = $this->paginate($orders, $request->page, $request->items);
-
+            
             return response()->json([
                 'orders' => $orders,
                 'baseUrl' => route('asbab.home'),
@@ -115,7 +115,7 @@ class AccountController extends Controller
     public function detail($id)
     {
         $bills = Bill::where('order_id', $id)->get();
-
+        
         return response()->json([
             'bills' => $bills,
             'baseUrl' => route('asbab.home')

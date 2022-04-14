@@ -32,16 +32,15 @@ class CheckoutController extends Controller
 {
     public function __construct()
     {
-        $paypalConfigs = config('paypal');
         $this->apiContext = new ApiContext(
             new OAuthTokenCredential(
-                $paypalConfigs['client_id'],
-                $paypalConfigs['secret']
+                'AQaayUhnL3b_f_6LWjo71z2k7Nayvog1l4H1SIQRhFmUG7os4-uKOx1NH94znmd1_yVa2cdNXHg41FzW',
+                'EBcTsAvB4_5zke39gnNZsdOtJV3CMMDenvc0MIM8DyC86684qMydJkb5ZqeDKJWaUDjj_0NJ3r-xsF3M'
             )
         );
     }
     public function coupon(Request $request)
-    {
+    {   
         if(trim($request->coupon_code) !== '') {
             $coupon = Coupon::where('code', $request->coupon_code)->first();
             if (isset($coupon)) {
@@ -92,7 +91,7 @@ class CheckoutController extends Controller
             } else {
                 $fee = 50;
             }
-
+            
             session()->put('fee_ship', [
                 'fee' => $fee,
                 'province_id' => $request->province_id,
@@ -120,7 +119,6 @@ class CheckoutController extends Controller
 
     public function payment(Request $request)
     {
-        session()->forget('checkout');
         $fee_ship = session()->get('fee_ship');
         if($fee_ship === null) {
             return response()->json([
@@ -159,7 +157,7 @@ class CheckoutController extends Controller
                 } else {
                     $user = null;
                 }
-
+                
                 $order = [
                     'code' => substr(md5(microtime()),rand(0,26),6),
                     'name' => $request->customer_name,
@@ -181,8 +179,8 @@ class CheckoutController extends Controller
                 session()->put('payment', $payment);
 
                 DB::commit();
-
-                switch ($request->paymethod)
+                
+                switch ($request->paymethod) 
                 {
                     case '0': $urlRedirect = route('asbab.checkout.paypal'); break;
                     case '1': $urlRedirect = route('asbab.checkout.success'); break;
@@ -267,7 +265,7 @@ class CheckoutController extends Controller
         }
     }
 
-    public function vnpay()
+    public function vnpay() 
     {
         $order = (session()->get('payment'))['order'];
         if ($order['coupon_id'] !== null) {
@@ -282,7 +280,7 @@ class CheckoutController extends Controller
         }
         $total = $order['amount'] * 1.1 + $order['fee_ship'] - $discount;
 
-        $vnp_TmnCode = "X8I14G3R"; //Mã website tại VNPAY
+        $vnp_TmnCode = "X8I14G3R"; //Mã website tại VNPAY 
         $vnp_HashSecret = "UMVJGBUSKZJSDQRUTGLULAMQBXGTIVBR"; //Chuỗi bí mật
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = route('asbab.checkout.vnpay.return');
@@ -296,7 +294,7 @@ class CheckoutController extends Controller
         $inputData = array(
             "vnp_Version" => "2.0.0",
             "vnp_TmnCode" => $vnp_TmnCode,
-            "vnp_Amount" => $vnp_Amount * 100,
+            "vnp_Amount" => $vnp_Amount * 100, 
             "vnp_Command" => "pay",
             "vnp_CreateDate" => date('YmdHis'),
             "vnp_CurrCode" => "VND",
@@ -343,13 +341,20 @@ class CheckoutController extends Controller
 
     public function success(Request $request)
     {
-        if (session()->get('checkout') == 'paypal')
+        if (session()->get('checkout') == 'paypal') 
         {
+            $apiContext = new \PayPal\Rest\ApiContext(
+                new \PayPal\Auth\OAuthTokenCredential(
+                    'AZOybgnUFnEbb6xniaVqaeZXI21OYTP-xVOa-Cv3_uf0Quwj0If5358kUMdHjb5s2wV225FxcTsU2w1m',     // ClientID
+                    'EEEwHsKC-CYRc82_Ec1aEk-qBAkh3Bz2_W6A7CekAPuL1Sc4l5gbh-fuCjbm8-JqeLrmXacYIQmTnNZt'      // ClientSecret
+                )
+            );
+
             $paymentId = $_GET['paymentId'];
-            $payment = \PayPal\Api\Payment::get($paymentId, $this->apiContext);
+            $payment = \PayPal\Api\Payment::get($paymentId, $apiContext);
             $execution = new \PayPal\Api\PaymentExecution();
             $execution->setPayerId($_GET['PayerID']);
-            $payment->execute($execution, $this->apiContext);
+            $payment->execute($execution, $apiContext);
         }
         try {
             DB::beginTransaction();
@@ -391,7 +396,7 @@ class CheckoutController extends Controller
                     'product_price' => $cart['price'],
                     'quantity' => $cart['quantity']
                 ]);
-
+                
                 Product::find($key)->update([
                     'sell' => Product::find($key)->sell + $cart['quantity']
                 ]);
@@ -423,7 +428,7 @@ class CheckoutController extends Controller
             session()->forget('coupon');
             session()->forget('fee_ship');
             session()->forget('payment');
-
+            
             $notify = '<div class="alert alert-success row">The order has been placed, success !</div>';
             return view('asbab.cart', compact('notify'));
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {

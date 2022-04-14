@@ -17,8 +17,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="active">Products</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="active">Sản phẩm</li>
                     </ul>
                 </div>
             </div>
@@ -26,36 +26,36 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        @can('add product')
+                        @can('thêm sản phẩm')
                             <div class="flex-end center mb-15">
                                 <div class="btn-group text-right">
                                     <a href="{{ route('admin.product.create') }}" class="btn btn-success">
-                                        Add New <i class="fa fa-plus"></i>
+                                        Thêm mới <i class="fa fa-plus"></i>
                                     </a>
                                 </div>
                             </div>
                         @endcan
                         <table class="table table-bordered table-striped" id="products-table"
-                            @if(auth()->user()->can('edit product') || auth()->user()->can('delete product'))
-                                @if (auth()->user()->can('edit product') && auth()->user()->can('delete product'))
+                            @if(auth()->user()->can('sửa sản phẩm') || auth()->user()->can('xóa sản phẩm'))
+                                @if (auth()->user()->can('sửa sản phẩm') && auth()->user()->can('xóa sản phẩm'))
                                     data-url="{{ route('admin.product.data', ['permission' => 1]) }}"
-                                @elseif(auth()->user()->can('edit product'))
+                                @elseif(auth()->user()->can('sửa sản phẩm'))
                                     data-url="{{ route('admin.product.data', ['permission' => 2]) }}"
-                                @elseif(auth()->user()->can('delete product')) 
+                                @elseif(auth()->user()->can('xóa sản phẩm'))
                                     data-url="{{ route('admin.product.data', ['permission' => 3]) }}"
-                                @endif 
+                                @endif
                             @else
                                 data-url="{{ route('admin.product.data', ['permission' => 0]) }}"
                             @endif>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Product</th>
-                                    <th>Image</th>
-                                    <th>Price</th>
-                                    <th class="text-center">Status</th>
-                                    @if(auth()->user()->can('edit product') || auth()->user()->can('delete product'))
-                                        <th class="text-center">Action</th>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Ảnh</th>
+                                    <th>Giá</th>
+                                    <th class="text-center">Tình trạng</th>
+                                    @if(auth()->user()->can('sửa sản phẩm') || auth()->user()->can('xóa sản phẩm'))
+                                        <th class="text-center">Hành động</th>
                                     @endif
                                 </tr>
                             </thead>

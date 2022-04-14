@@ -19,7 +19,7 @@
             success: function (data) {
                 let actionsEl = '';
                 for (let i = 0; i < data.length; i++) {
-                    actionsEl += '<label class="text-capitalize">' + 
+                    actionsEl += '<label class="text-capitalize">' +
                                     '<input type="checkbox" name="name[]" value="' + data[i] + ' ' + that.val() + '" />  ' + data[i] +
                                 '</label>'
                 }

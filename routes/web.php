@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-    
-Route::namespace('Guest')->group(function () 
+
+Route::namespace('Guest')->group(function ()
 {
     Route::get('/', 'HomeController@index')->name('asbab.home');
     Route::post('/', 'HomeController@login')->name('asbab.login');
@@ -37,7 +37,7 @@ Route::namespace('Guest')->group(function ()
     Route::post('product/add_comment/{id}', 'ProductController@add_comment')->name('asbab.product.add_comment');
     Route::get('product/remove_comment/{id}', 'ProductController@remove_comment')->name('asbab.product.remove_comment');
     Route::get('product/like_comment/{id}', 'ProductController@like_comment')->name('asbab.product.like_comment');
-    
+
     // Route wishlist page
     Route::get('wishlist', function () {
         return view('asbab.wishlist');
@@ -73,7 +73,7 @@ Route::namespace('Guest')->group(function ()
     // Route about vnpay method
     Route::get('checkout/vnpay', 'CheckoutController@vnpay')->name('asbab.checkout.vnpay');
     Route::get('checkout/vnpay/return', 'CheckoutController@vnpayReturn')->name('asbab.checkout.vnpay.return');
-    
+
     // Route about page news
     Route::get('news', 'NewsController@index')->name('asbab.news.index');
     Route::get('news/data', 'NewsController@data')->name('asbab.news.data');
@@ -128,13 +128,13 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('employee')->group(function () {
         Route::get('/', function () {
             return view('admin.user.employee');
-        })->name('admin.employee.index')->middleware('permission:list employee');
+        })->name('admin.employee.index')->middleware('permission:xem nhân viên');
         Route::get('data/{permission}', 'UserController@employees')->name('admin.employee.data');
-        Route::get('create', 'UserController@create')->name('admin.employee.create')->middleware('permission:add employee');
-        Route::post('store', 'UserController@store')->name('admin.employee.store')->middleware('permission:add employee');
-        Route::get('edit/{id}', 'UserController@edit')->name('admin.employee.edit')->middleware('permission:edit employee');
-        Route::post('update/{id}', 'UserController@update')->name('admin.employee.update')->middleware('permission:edit employee');
-        Route::get('delete/{id}', 'UserController@destroy')->name('admin.employee.delete')->middleware('permission:delete employee');
+        Route::get('create', 'UserController@create')->name('admin.employee.create')->middleware('permission:thêm nhân viên');
+        Route::post('store', 'UserController@store')->name('admin.employee.store')->middleware('permission:thêm nhân viên');
+        Route::get('edit/{id}', 'UserController@edit')->name('admin.employee.edit')->middleware('permission:sửa nhân viên');
+        Route::post('update/{id}', 'UserController@update')->name('admin.employee.update')->middleware('permission:sửa nhân viên');
+        Route::get('delete/{id}', 'UserController@destroy')->name('admin.employee.delete')->middleware('permission:xóa nhân viên');
     });
 
     Route::prefix('customer')->group(function () {
@@ -142,19 +142,19 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
             return view('admin.user.customer');
         })->name('admin.customer.index');
         Route::get('data/{permission}', 'UserController@customers')->name('admin.customer.data');
-        Route::post('update', 'UserController@cus_update')->name('admin.customer.update')->middleware('permission:vip customer');
+        Route::post('update/{type}', 'UserController@cus_update')->name('admin.customer.update')->middleware('permission:sửa khách hàng');
     });
 
     Route::prefix('category')->group(function () {
         Route::get('index', function () {
             return view('admin.category.index');
-        })->name('admin.category.index')->middleware('permission:list category');
+        })->name('admin.category.index')->middleware('permission:xem danh mục');
         Route::get('data/{permission}', 'CategoryController@index')->name('admin.category.data');
-        Route::get('create', 'CategoryController@create')->name('admin.category.create')->middleware('permission:add category');
-        Route::post('store', 'CategoryController@store')->name('admin.category.store')->middleware('permission:add category');
-        Route::get('edit/{id}', 'CategoryController@edit')->name('admin.category.edit')->middleware('permission:edit category');
-        Route::post('update/{id}', 'CategoryController@update')->name('admin.category.update')->middleware('permission:edit category');
-        Route::get('delete/{id}', 'CategoryController@destroy')->name('admin.category.delete')->middleware('permission:delete category');
+        Route::get('create', 'CategoryController@create')->name('admin.category.create')->middleware('permission:thêm danh mục');
+        Route::post('store', 'CategoryController@store')->name('admin.category.store')->middleware('permission:thêm danh mục');
+        Route::get('edit/{id}', 'CategoryController@edit')->name('admin.category.edit')->middleware('permission:sửa danh mục');
+        Route::post('update/{id}', 'CategoryController@update')->name('admin.category.update')->middleware('permission:sửa danh mục');
+        Route::get('delete/{id}', 'CategoryController@destroy')->name('admin.category.delete')->middleware('permission:xóa danh mục');
     });
 
     Route::prefix('brand')->group(function () {
@@ -171,13 +171,13 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('product')->group(function () {
         Route::get('/', function () {
             return view('admin.product.index');
-        })->name('admin.product.index')->middleware('permission:list product');
+        })->name('admin.product.index')->middleware('permission:xem sản phẩm');
         Route::get('data/{permission}', 'ProductController@index')->name('admin.product.data');
-        Route::get('create', 'ProductController@create')->name('admin.product.create')->middleware('permission:add product');
-        Route::post('store', 'ProductController@store')->name('admin.product.store')->middleware('permission:add product');
-        Route::get('edit/{id}', 'ProductController@edit')->name('admin.product.edit')->middleware('permission:edit product');
-        Route::post('update/{id}', 'ProductController@update')->name('admin.product.update')->middleware('permission:edit product');
-        Route::get('delete/{id}', 'ProductController@destroy')->name('admin.product.delete')->middleware('permission:delete product');
+        Route::get('create', 'ProductController@create')->name('admin.product.create')->middleware('permission:thêm sản phẩm');
+        Route::post('store', 'ProductController@store')->name('admin.product.store')->middleware('permission:thêm sản phẩm');
+        Route::get('edit/{id}', 'ProductController@edit')->name('admin.product.edit')->middleware('permission:sửa sản phẩm');
+        Route::post('update/{id}', 'ProductController@update')->name('admin.product.update')->middleware('permission:sửa sản phẩm');
+        Route::get('delete/{id}', 'ProductController@destroy')->name('admin.product.delete')->middleware('permission:xóa sản phẩm');
     });
 
     Route::prefix('news')->group(function () {
@@ -245,13 +245,13 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('role')->group(function () {
         Route::get('index', function () {
             return view('admin.role.index');
-        })->name('admin.role.index')->middleware('permission:list role');
+        })->name('admin.role.index')->middleware('permission:xem vai trò');
         Route::get('data/{permission}', 'RoleController@index')->name('admin.role.data');
         Route::get('create', 'RoleController@create')->name('admin.role.create');
         Route::post('store', 'RoleController@store')->name('admin.role.store');
-        Route::get('edit/{id}', 'RoleController@edit')->name('admin.role.edit')->middleware('permission:edit role');
-        Route::post('update/{id}', 'RoleController@update')->name('admin.role.update')->middleware('permission:edit role');
-        Route::get('delete/{id}', 'RoleController@destroy')->name('admin.role.delete')->middleware('permission:delete role');
+        Route::get('edit/{id}', 'RoleController@edit')->name('admin.role.edit')->middleware('permission:sửa vai trò');
+        Route::post('update/{id}', 'RoleController@update')->name('admin.role.update')->middleware('permission:sửa vai trò');
+        Route::get('delete/{id}', 'RoleController@destroy')->name('admin.role.delete')->middleware('permission:xóa vai trò');
     });
 
     Route::prefix('delivery')->group(function () {
@@ -276,9 +276,9 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     });
 
     Route::prefix('permission')->group(function () {
-        Route::get('create', 'PermissionController@create')->name('admin.permission.create')->middleware('permission:add permission');
-        Route::get('get_actions', 'PermissionController@get_actions')->name('admin.permission.get_actions');
-        Route::post('store', 'PermissionController@store')->name('admin.permission.store')->middleware('permission:add permission');
+        Route::get('create', 'PermissionController@create')->name('admin.permission.create')->middleware('permission:thêm phân quyền');
+        Route::get('get_actions', 'PermissionController@get_actions')->name('admin.permission.get_actions')->middleware('permission:thêm phân quyền');
+        Route::post('store', 'PermissionController@store')->name('admin.permission.store')->middleware('permission:thêm phân quyền');
     });
 
     Route::prefix('setting')->group(function () {

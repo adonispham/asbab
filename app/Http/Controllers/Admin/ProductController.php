@@ -35,19 +35,19 @@ class ProductController extends Controller
                     return '<img src="'.asset($product->feature_image_path).'" />';
                 })
                 ->editColumn('status', function ($product) {
-                    return $product->quantity > 0 ? '<span class="btn btn-success">In Stock</span>' : '<span class="btn btn-danger">Out of Stock</span>';
+                    return $product->quantity > 0 ? '<span class="btn btn-success">Còn hàng</span>' : '<span class="btn btn-danger">Hết hàng</span>';
                 })
                 ->addColumn('action', function ($product) {
                     switch ($product->auth_permission) {
                         case '1':
-                            $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Edit</a>
-                                        <a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Sửa</a>
+                                        <a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                         case '2':
-                            $action = $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Edit</a>';
+                            $action = $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Sửa</a>';
                             break;
                         case '3':
-                            $action = '<a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                     }
                     return $action;
@@ -60,7 +60,7 @@ class ProductController extends Controller
                     return '<img src="'.asset($product->feature_image_path).'" />';
                 })
                 ->editColumn('status', function ($product) {
-                    return $product->quantity > 0 ? '<span class="btn btn-success">In Stock</span>' : '<span class="btn btn-danger">Out of Stock</span>';
+                    return $product->quantity > 0 ? '<span class="btn btn-success">Còn hàng</span>' : '<span class="btn btn-danger">Hết hàng</span>';
                 })
                 ->rawColumns(['feature_image_path','status'])
                 ->make(true);
@@ -90,7 +90,6 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
             $details = $this->SaveUploadEditorImage($request, 'product');
-
             $dataImageUpload = $this->storageUploadImageTrait($request, 'feature_image_path', "product");
             $dataproduct = [
                 'name' =>  $request->name,
@@ -114,7 +113,7 @@ class ProductController extends Controller
                     ]);
                 }
             }
-    
+
             foreach ($request->tags as $tag) {
                 if(trim($tag) !== '') {
                     $tagInstance = Tag::firstOrCreate(['name' => $tag]);
@@ -197,7 +196,7 @@ class ProductController extends Controller
                     ]);
                 }
             }
-            
+
             foreach ($request->tags as $tag) {
                 $tagInstance = Tag::firstOrCreate(['name' => $tag]);
                 $tagids[] = $tagInstance->id;

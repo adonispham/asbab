@@ -12,9 +12,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="breadcumb-item"><a href="{{ route('admin.role.index') }}">Roles</a></li>
-                        <li class="active">Add Role</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang chủ</a>
+                        </li>
+                        <li class="breadcumb-item"><a href="{{ route('admin.role.index') }}">Vai trò</a></li>
+                        <li class="active">Thêm mới</li>
                     </ul>
                 </div>
             </div>
@@ -24,60 +25,56 @@
                     @csrf
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label>Name:</label>
+                            <label>Vai trò:</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                autofocus value="{{ old('name') }}" />
+                                   autofocus value="{{ old('name') }}"/>
                             @error('name')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Description:</label>
+                            <label>Mô tả:</label>
                             <textarea name="description" rows="5"
-                                class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                      class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                             @error('description')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                            <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group">
                             <div class="top-permission">
                                 <label for="checkall">
-                                    <input type="checkbox" id="checkall" class="check-all" />
-                                    Check All
+                                    <input type="checkbox" id="checkall" class="check-all"/>
+                                    Tất cả
                                 </label>
                             </div>
 
-                            @foreach ($modules as $module)
+                            @foreach ($modules as $module => $actions)
                                 <div class="panel panel-info permission">
                                     <div class="panel-heading">
                                         <label for="{{ $module }}" class="text-capitalize">
-                                            <input type="checkbox" id="{{ $module }}" class="check-parent" />
-                                            Module {{ $module }}
+                                            <input type="checkbox" id="{{ $module }}" class="check-parent"/>
+                                            {{ $module }}
                                         </label>
                                     </div>
                                     <div class="panel-body flex-between">
-                                        @foreach ($permissions as $permiss)
-                                            @php
-                                                $endperarr = explode(' ', $permiss->name);
-                                                $endper = end($endperarr);
-                                            @endphp
-                                            @if ($endper === $module)
-                                                <div class="module-item" style="flex: 0 0 {{ 100/count(config('permission.modules.'.$module)) }}%">
-                                                    <label for="{{ implode('_', $endperarr) }}" class="text-capitalize">
-                                                        <input type="checkbox" name="permission_id[]" id="{{ implode('_', $endperarr) }}" value="{{ $permiss->id }}"
-                                                            class="check-child" />
-                                                        {{ reset($endperarr) }}
-                                                    </label>
-                                                </div>
-                                            @endif
+                                        @foreach ($actions as $action)
+                                            <div class="module-item"
+                                                 style="flex: 0 0 {{ 100/count(config('permission.modules.'.$module)) }}%">
+                                                <label for="{{ Str::slug($action.' '.$module) }}" class="text-capitalize">
+                                                    <input type="checkbox" name="permission_id[]" id="{{ Str::slug($action.' '.$module) }}"
+                                                           value="{{ Permission::where('name', $action.' '.$module)->first()->id }}"
+                                                           class="check-child"/>
+                                                    {{ $action }}
+                                                </label>
+                                            </div>
                                         @endforeach
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-success text-uppercase" type="submit">Add</button>
+                            <button class="btn btn-success text-uppercase" type="submit">Thêm</button>
                         </div>
                     </div>
                 </form>

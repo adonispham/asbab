@@ -21,17 +21,17 @@ class RoleController extends Controller
         if ($permission != 0) {
             return DataTables::of($roles)
                 ->addColumn('action', function ($role) {
-                    if(mb_strtolower($role->name) !== 'admin' && mb_strtolower($role->name) !== 'super admin') {
+                    if (mb_strtolower($role->name) !== 'quản trị') {
                         switch ($role->auth_permission) {
                             case '1':
-                                $action = '<a href="'.route('admin.role.edit', ['id' => $role->id]).'" class="btn btn-info">Edit</a>
-                                            <a data-href="'.route('admin.role.delete', ['id' => $role->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                                $action = '<a href="' . route('admin.role.edit', ['id' => $role->id]) . '" class="btn btn-info">Sửa</a>
+                                            <a data-href="' . route('admin.role.delete', ['id' => $role->id]) . '" class="btn btn-danger action-delete">Xóa</a>';
                                 break;
                             case '2':
-                                $action = $action = '<a href="'.route('admin.role.edit', ['id' => $role->id]).'" class="btn btn-info">Edit</a>';
+                                $action = $action = '<a href="' . route('admin.role.edit', ['id' => $role->id]) . '" class="btn btn-info">Sửa</a>';
                                 break;
                             case '3':
-                                $action = '<a data-href="'.route('admin.role.delete', ['id' => $role->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                                $action = '<a data-href="' . route('admin.role.delete', ['id' => $role->id]) . '" class="btn btn-danger action-delete">Xóa</a>';
                                 break;
                         }
                         return $action;
@@ -44,7 +44,7 @@ class RoleController extends Controller
         } else {
             return DataTables::of($roles)
                 ->editColumn('description', function ($role) {
-                    return '<div class="text-justify">'.$role->description.'</div>';
+                    return '<div class="text-justify">' . $role->description . '</div>';
                 })
                 ->rawColumns(['description'])
                 ->make(true);
@@ -53,23 +53,24 @@ class RoleController extends Controller
 
     public function create()
     {
-        $permissions = Permission::all();
-        $modules = [];
-        foreach ($permissions as $permission) {
-            $arrPers = explode(' ', $permission->name);
-            if (!in_array(end($arrPers), $modules)) {
-                $modules[] = end($arrPers);
-            } 
-        }
-        return view('admin.role.create', compact('permissions', 'modules'));
+        $modules = config('permission.modules');
+
+        return view('admin.role.create', compact('modules'));
     }
 
     public function store(Request $request)
     {
+        $messages = [
+            'name.required' => 'Vui lòng nhập tên vai trò.',
+            'name.unique' => 'Vai trò này đã tồn tại.',
+            'name.max' => 'Tên quá dài.',
+            'description.required' => 'Mô tả vai trò không được để trống.'
+        ];
+
         $validator = $request->validate([
-            'name' => ['bail','required','unique:roles','max:255'],
+            'name' => ['bail', 'required', 'unique:roles', 'max:255'],
             'description' => 'required'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -79,12 +80,12 @@ class RoleController extends Controller
             ]);
 
             $role->permissions()->attach($request->permission_id);
-    
+
             DB::commit();
             return redirect()->route('admin.role.index');
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return back();
         }
     }
@@ -92,25 +93,26 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $permissions = Permission::all();
-        $modules = [];
-        foreach ($permissions as $permission) {
-            $arrPers = explode(' ', $permission->name);
-            if (!in_array(end($arrPers), $modules)) {
-                $modules[] = end($arrPers);
-            } 
-        }
-        return view('admin.role.edit', compact('role','modules','permissions'));
+        $modules = config('permission.modules');
+
+        return view('admin.role.edit', compact('role', 'modules'));
     }
 
     public function update(Request $request, $id)
     {
         $role = Role::find($id);
-        
+
+        $messages = [
+            'name.required' => 'Vui lòng nhập tên vai trò.',
+            'name.unique' => 'Vai trò này đã tồn tại.',
+            'name.max' => 'Tên quá dài.',
+            'description.required' => 'Mô tả vai trò không được để trống.'
+        ];
+
         $validator = $request->validate([
-            'name' => ['bail','required','unique:roles,name,'.$role->name.',name','max:255'],
+            'name' => ['bail', 'required', 'unique:roles,name,' . $role->name . ',name', 'max:255'],
             'description' => 'required'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -123,7 +125,7 @@ class RoleController extends Controller
             return redirect()->route('admin.role.index');
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return back();
         }
     }

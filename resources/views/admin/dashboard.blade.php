@@ -19,8 +19,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="active">Dashboard</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="active">Tổng hợp</li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                             <h1 class="count">
                                 {{ $customers->where('created_at', '>=', date('Y-m'))->count() }}
                             </h1>
-                            <p>New Customers</p>
+                            <p>Khách hàng mới</p>
                         </div>
                     </section>
                 </div>
@@ -47,7 +47,7 @@
                             <h1 class=" count2">
                                 {{ number_format($orders->where('created_at', '>=', date('Y-m'))->sum('amount'), 0, '.', ',') }}
                             </h1>
-                            <p>Sales</p>
+                            <p>Doanh số</p>
                         </div>
                     </section>
                 </div>
@@ -60,7 +60,7 @@
                             <h1 class="count3">
                                 {{ $orders->where('created_at', '>=', date('Y-m'))->count() }}
                             </h1>
-                            <p>New Order</p>
+                            <p>Đơn hàng mới</p>
                         </div>
                     </section>
                 </div>
@@ -73,7 +73,7 @@
                             <h1 class="count4">
                                 0
                             </h1>
-                            <p>Total Ads</p>
+                            <p>Quảng cáo</p>
                         </div>
                     </section>
                 </div>
@@ -83,7 +83,7 @@
                 <div class="col-lg-6">
                     <section class="panel">
                         <header class="panel-heading bg-primary">
-                            Sales Monthly
+                            Doanh số hàng tháng
                         </header>
                         <div class="panel-body">
                             <div id="sales-month" class="graph"></div>
@@ -93,7 +93,7 @@
                 <div class="col-lg-6">
                     <section class="panel">
                         <header class="panel-heading bg-success">
-                            Sales Categories
+                            Doanh số theo danh mục
                         </header>
                         <div class="panel-body">
                             <div id="sales-categories" class="graph"></div>
@@ -106,18 +106,18 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            <b>Orders Processing.</b>
+                            <b>Đơn hàng chờ xử lý.</b>
                         </header>
                         <div class="panel-body">
                             <section id="orders-store">
                                 <table class="table table-bordered table-striped table-condensed">
                                     <thead>
                                         <tr>
-                                            <th>Order Code</th>
-                                            <th>Buyer</th>
-                                            <th>Tel</th>
-                                            <th class="numeric">Amount</th>
-                                            <th>Date</th>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Khách hàng</th>
+                                            <th>Liên hệ</th>
+                                            <th class="numeric">Tổng cộng</th>
+                                            <th>Ngày đặt</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,7 +134,7 @@
                                 </table>
                                 @can('list order')
                                     <div class="text-right">
-                                        <a class="btn btn-primary btn-shadow" href="{{ route('admin.order.index') }}">Details</a>
+                                        <a class="btn btn-primary btn-shadow" href="{{ route('admin.order.index') }}">Chi tiết</a>
                                     </div>
                                 @endcan
                             </section>

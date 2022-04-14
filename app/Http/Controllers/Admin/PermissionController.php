@@ -12,29 +12,52 @@ class PermissionController extends Controller
 {
     public function create()
     {
-        $modulesTmp = [];
-        foreach (config('permission.modules') as $key => $mod) {
-            $modulesTmp[] = $key;
-        }
+        $permissions = config('permission.modules');
 
         $Arrpers = [];
         foreach (Permission::all() as $per) {
             $nameTmp = explode(' ', $per->name);
             $nameModule = end($nameTmp);
-            if(!in_array($nameModule, $Arrpers)) {
+            if (!in_array($nameModule, $Arrpers)) {
                 $Arrpers[] = $nameModule;
             }
         }
 
-        $modules = array_diff($modulesTmp, $Arrpers);
+        $records = Permission::all()->pluck('name')->toArray();
+        $modules = [];
+        foreach ($permissions as $key => $mod) {
+            $modules[$key] = [];
+            foreach ($mod as $m) {
+                if (!in_array(mb_strtolower($m . ' ' . $key), $records)) {
+                    array_push($modules[$key], $m);
+                }
+            }
 
-        return view('admin.permission.create', compact('modules'));
+            if (count($modules[$key]) == 0) {
+                unset($key, $modules);
+            }
+        }
+
+        if (empty($modules)) {
+            $modules = [];
+        }
+
+        return view('admin.permission.create')->with('modules', $modules);
     }
 
     public function get_actions(Request $request)
     {
-        $actions = config('permission.modules.'.$request->module);
-        return response()->json($actions);
+        $actions = config('permission.modules.' . $request->module);
+        $acts = [];
+        foreach ($actions as $a) {
+            $p = Permission::where('name', $a . ' ' . $request->module)->first();
+
+            if (empty($p)) {
+                $acts[] = $a;
+            }
+        }
+
+        return response()->json($acts);
     }
 
     public function store(Request $request)
@@ -46,13 +69,13 @@ class PermissionController extends Controller
         try {
             DB::beginTransaction();
             foreach ($request->name as $value) {
-                Permission::firstOrCreate(['name' => $value]);
+                Permission::firstOrCreate(['name' => mb_strtolower($value)]);
             }
             DB::commit();
             return redirect()->route('admin.permission.create');
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return back();
         }
     }
