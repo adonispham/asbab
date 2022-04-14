@@ -164,7 +164,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list delivery'))
+                @if (auth()->user()->Can('xem phí vận chuyển'))
                     <li class="{{ request()->is('admin/delivery*') ? 'active' : '' }}">
                         <a href="{{ route('admin.delivery.index') }}">
                             <i class="fa fa-truck"></i>
@@ -172,11 +172,11 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list brand'))
+                @if (auth()->user()->Can('xem ngành hàng'))
                     <li class="{{ request()->is('admin/brand*') ? 'active' : '' }}">
                         <a href="{{ route('admin.brand.index') }}">
                             <i class="fa fa-link"></i>
-                            <span>Ngành hàng</span>
+                            <span>Nhãn hàng</span>
                         </a>
                     </li>
                 @endif
@@ -204,7 +204,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list setting'))
+                @if (auth()->user()->Can('xem cài đặt'))
                     <li class="{{ request()->is('admin/setting*') ? 'active' : '' }}">
                         <a href="{{ route('admin.setting.index') }}">
                             <i class="fa fa-cogs"></i>

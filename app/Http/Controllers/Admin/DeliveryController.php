@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Delivery;
-use Province;
-use District;
-use Ward;
 use DataTables;
-use Log;
 use DB;
+use District;
+use Illuminate\Http\Request;
+use Log;
+use Province;
+use Ward;
 
 class DeliveryController extends Controller
 {
@@ -28,9 +28,9 @@ class DeliveryController extends Controller
                 return Ward::find($delivery->ward_id)->name;
             })
             ->editColumn('feeship', function ($delivery) {
-                return '<input class="form-control text-center" data-url="'.route('admin.delivery.update', ['id' => $delivery->id]).'" disabled type="text" name="feeship" value="'.$delivery->feeship.'" />';
+                return '<input class="form-control text-center" data-url="' . route('admin.delivery.update', ['id' => $delivery->id]) . '" disabled type="text" name="feeship" value="' . $delivery->feeship . '" />';
             })
-            ->rawColumns(['feeship','province_id','district_id','ward_id'])
+            ->rawColumns(['feeship', 'province_id', 'district_id', 'ward_id'])
             ->make(true);
     }
 
@@ -54,12 +54,21 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            'province_id.required' => 'Bạn chưa chọn tỉnh, thành phố.',
+            'district_id.required' => 'Bạn chưa chọn quận, huyện.',
+            'ward_id.required' => 'Bạn chưa chọn phường, xã.',
+            'feeship.required' => 'Hãy nhập phí vận chuyển.',
+            'feeship.numeric' => 'Giá trị bạn nhập không phải là số.',
+            'feeship.regex' => 'Giá trị bạn nhập không hợp lệ.',
+        ];
+
         $validator = $request->validate([
             'province_id' => 'required',
             'district_id' => 'required',
             'ward_id' => 'required',
-            'feeship' => ['bail','required','numeric','regex:/^\d*(\.\d{0,2})?$/']
-        ]);
+            'feeship' => ['bail', 'required', 'numeric', 'regex:/^\d*(\.\d{0,2})?$/']
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -69,12 +78,12 @@ class DeliveryController extends Controller
                 'ward_id' => $request->ward_id,
                 'feeship' => $request->feeship
             ]);
-    
+
             DB::commit();
             return response()->json($delivery);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()
@@ -86,21 +95,27 @@ class DeliveryController extends Controller
     {
         $delivery = Delivery::find($id);
 
+        $messages = [
+            'feeship.required' => 'Hãy nhập phí vận chuyển.',
+            'feeship.numeric' => 'Giá trị bạn nhập không phải là số.',
+            'feeship.regex' => 'Giá trị bạn nhập không hợp lệ.',
+        ];
+
         $validator = $request->validate([
-            'feeship' => ['bail','required','numeric','regex:/^\d*(\.\d{0,2})?$/']
-        ]);
+            'feeship' => ['bail', 'required', 'numeric', 'regex:/^\d*(\.\d{0,2})?$/']
+        ], $messages);
 
         try {
             DB::beginTransaction();
             $delivery->update([
                 'feeship' => $request->feeship
             ]);
-    
+
             DB::commit();
             return response()->json($delivery);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()

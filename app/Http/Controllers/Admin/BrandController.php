@@ -29,14 +29,14 @@ class BrandController extends Controller
                 ->addColumn('action', function ($brand) {
                     switch ($brand->auth_permission) {
                         case '1':
-                            $action = '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Edit</a>
-                                        <a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Sửa</a>
+                                        <a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                         case '2':
-                            $action = $action = '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Edit</a>';
+                            $action = $action = '<a data-href="'.route('admin.brand.edit', ['id' => $brand->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editBrand">Sửa</a>';
                             break;
                         case '3':
-                            $action = '<a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="'.route('admin.brand.delete', ['id' => $brand->id]).'" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                     }
                     return $action;
@@ -58,11 +58,21 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            'name.required' => 'Tên nhãn hàng không được để trống',
+            'name.unique' => 'Nhãn hàng đã tồn tại',
+            'name.max' => 'Tên nhãn hàng quá dài',
+            'link.required' => 'Nhãn hàng cần được thêm đường dẫn.',
+            'link.url' => 'Đường dẫn không hợp lệ.',
+            'image_path.required' => 'Vui lòng chọn ảnh cho nhãn hàng.',
+            'image_path.mimes' => 'Ảnh không đúng định dạng.'
+        ];
+
         $validator = $request->validate([
             'name' => ['bail','required','unique:brands','max:255'],
             'link' => 'bail|required|url',
             'image_path' => 'bail|required|image|mimes:jpg,jpeg,png,gif'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -74,7 +84,7 @@ class BrandController extends Controller
                 'image_path' => $dataImageUpload['file_path'],
                 'image_name' => $dataImageUpload['file_name']
             ]);
-    
+
             DB::commit();
             return response()->json($brand);
         } catch (\Exception $exception) {
@@ -100,11 +110,20 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         $brand = Brand::find($id);
+        $messages = [
+            'name.required' => 'Tên nhãn hàng không được để trống',
+            'name.unique' => 'Nhãn hàng đã tồn tại',
+            'name.max' => 'Tên nhãn hàng quá dài',
+            'link.required' => 'Nhãn hàng cần được thêm đường dẫn.',
+            'link.url' => 'Đường dẫn không hợp lệ.',
+            'image_path.mimes' => 'Ảnh không đúng định dạng.'
+        ];
+
         $validator = $request->validate([
             'name' => ['bail','required','unique:brands,name,'.$brand->name.',name','max:255'],
             'link' => 'bail|required|url',
             'image_path' => 'bail|image|mimes:jpg,jpeg,png,gif'
-        ]);
+        ],$messages);
 
         try {
             DB::beginTransaction();
@@ -124,7 +143,7 @@ class BrandController extends Controller
             }
 
             $brand->update($dataBrandUpdate);
-    
+
             DB::commit();
             return response()->json($brand);
         } catch (\Exception $exception) {
@@ -136,7 +155,7 @@ class BrandController extends Controller
             ], 422);
         }
     }
-    
+
     public function destroy($id)
     {
         $brand = Brand::find($id);

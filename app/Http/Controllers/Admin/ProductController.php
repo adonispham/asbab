@@ -44,7 +44,7 @@ class ProductController extends Controller
                                         <a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                         case '2':
-                            $action = $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Sửa</a>';
+                            $action = '<a href="'.route('admin.product.edit', ['id' => $product->id]).'" class="btn btn-info">Sửa</a>';
                             break;
                         case '3':
                             $action = '<a data-href="'.route('admin.product.delete', ['id' => $product->id]).'" class="btn btn-danger action-delete">Xóa</a>';
@@ -76,6 +76,25 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            'name.required' => 'Tên sản phẩm không được để trống.',
+            'name.unique' => 'Tên sản phẩm đã tồn tại.',
+            'name.max' => 'Độ dài không hợp lệ.',
+            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm.',
+            'price.required' => 'Hãy điền giá cho sản phẩm.',
+            'price.integer' => 'Giá trị bạn nhập không phải là số.',
+            'quantity.required' => 'Nhập số lượng hiện có cho sản phẩm.',
+            'quantity.integer' => 'Giá trị bạn nhập không phải là số.',
+            'details.required' => 'Bạn hãy nhập mô tả cho sản phẩm.',
+            'feature_image_path.image' => 'Ảnh không hợp lệ.',
+            'feature_image_path.mimes' => 'Ảnh không hợp lệ.',
+            'feature_image_path.max' => 'Kích thước ảnh lớn hơn 100KB.',
+            'image_path.max' => 'Số lượng ảnh tối đa là 5.',
+            'image_path.*.image' => 'Ảnh không hợp lệ.',
+            'image_path.*.mimes' => 'Ảnh không hợp lệ.',
+            'image_path.*.max' => 'Kích thước ảnh lớn hơn 100KB.'
+        ];
+
         $request->validate([
             'name' => ['bail','required','unique:products','max:255'],
             'category_id' => 'required',
@@ -85,7 +104,7 @@ class ProductController extends Controller
             'feature_image_path' => 'bail|image|mimes:jpg,jpeg,png,gif|max:102400',
             'image_path' => 'bail|array|max:5',
             'image_path.*' => 'bail|image|mimes:jpg,jpeg,png,gif|max:102400'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -141,6 +160,25 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
+        $messages = [
+            'name.required' => 'Tên sản phẩm không được để trống.',
+            'name.unique' => 'Tên sản phẩm đã tồn tại.',
+            'name.max' => 'Độ dài không hợp lệ.',
+            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm.',
+            'price.required' => 'Hãy điền giá cho sản phẩm.',
+            'price.integer' => 'Giá trị bạn nhập không phải là số.',
+            'quantity.required' => 'Nhập số lượng hiện có cho sản phẩm.',
+            'quantity.integer' => 'Giá trị bạn nhập không phải là số.',
+            'details.required' => 'Bạn hãy nhập mô tả cho sản phẩm.',
+            'feature_image_path.image' => 'Ảnh không hợp lệ.',
+            'feature_image_path.mimes' => 'Ảnh không hợp lệ.',
+            'feature_image_path.max' => 'Kích thước ảnh lớn hơn 100KB.',
+            'image_path.max' => 'Số lượng ảnh tối đa là 5.',
+            'image_path.*.image' => 'Ảnh không hợp lệ.',
+            'image_path.*.mimes' => 'Ảnh không hợp lệ.',
+            'image_path.*.max' => 'Kích thước ảnh lớn hơn 100KB.'
+        ];
+
         $request->validate([
             'name' => ['bail','required','unique:products,name,'.$product->slug.',slug','max:255'],
             'category_id' => 'required',
@@ -150,7 +188,7 @@ class ProductController extends Controller
             'feature_image_path' => 'bail|image|mimes:jpg,jpeg,png,gif|max:102400',
             'image_path' => 'bail|array|max:5',
             'image_path.*' => 'bail|image|mimes:jpg,jpeg,png,gif|max:102400'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();

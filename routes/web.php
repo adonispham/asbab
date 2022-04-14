@@ -160,12 +160,12 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('brand')->group(function () {
         Route::get('/', function () {
             return view('admin.brand.index');
-        })->name('admin.brand.index')->middleware('permission:list brand');
+        })->name('admin.brand.index')->middleware('permission:xem ngành hàng');
         Route::get('data/{permission}', 'BrandController@index')->name('admin.brand.data');
-        Route::post('store', 'BrandController@store')->name('admin.brand.store')->middleware('permission:add brand');
-        Route::get('edit/{id}', 'BrandController@edit')->name('admin.brand.edit')->middleware('permission:edit brand');
-        Route::post('update/{id}', 'BrandController@update')->name('admin.brand.update')->middleware('permission:edit brand');
-        Route::get('delete/{id}', 'BrandController@destroy')->name('admin.brand.delete')->middleware('permission:delete brand');
+        Route::post('store', 'BrandController@store')->name('admin.brand.store')->middleware('permission:thêm ngành hàng');
+        Route::get('edit/{id}', 'BrandController@edit')->name('admin.brand.edit')->middleware('permission:sửa ngành hàng');
+        Route::post('update/{id}', 'BrandController@update')->name('admin.brand.update')->middleware('permission:sửa ngành hàng');
+        Route::get('delete/{id}', 'BrandController@destroy')->name('admin.brand.delete')->middleware('permission:xóa ngành hàng');
     });
 
     Route::prefix('product')->group(function () {
@@ -257,13 +257,13 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('delivery')->group(function () {
         Route::get('index', function () {
             return view('admin.delivery.index');
-        })->name('admin.delivery.index')->middleware('permission:list delivery');
+        })->name('admin.delivery.index')->middleware('permission:xem phí vận chuyển');
         Route::get('data', 'DeliveryController@index')->name('admin.delivery.data');
         Route::get('provinces', 'DeliveryController@provinces')->name('admin.delivery.provinces');
         Route::get('districts/{id}', 'DeliveryController@wards')->name('admin.delivery.wards');
         Route::get('wards/{id}', 'DeliveryController@districts')->name('admin.delivery.districts');
-        Route::post('store', 'DeliveryController@store')->name('admin.delivery.store')->middleware('permission:add delivery');
-        Route::post('update/{id}', 'DeliveryController@update')->name('admin.delivery.update')->middleware('permission:edit delivery');
+        Route::post('store', 'DeliveryController@store')->name('admin.delivery.store')->middleware('permission:thêm phí vận chuyển');
+        Route::post('update/{id}', 'DeliveryController@update')->name('admin.delivery.update')->middleware('permission:sửa phí vận chuyển');
     });
 
     Route::prefix('support')->group(function () {
@@ -284,9 +284,9 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('setting')->group(function () {
         Route::get('index', function () {
             return view('admin.setting.index');
-        })->name('admin.setting.index')->middleware('permission:list setting');
+        })->name('admin.setting.index')->middleware('permission:xem cài đặt');
         Route::get('data', 'SettingController@index')->name('admin.setting.data');
-        Route::post('store', 'SettingController@store')->name('admin.setting.store')->middleware('permission:add setting');
-        Route::post('update/{id}', 'SettingController@update')->name('admin.setting.update')->middleware('permission:edit setting');
+        Route::post('store', 'SettingController@store')->name('admin.setting.store')->middleware('permission:thêm cài đặt');
+        Route::post('update/{id}', 'SettingController@update')->name('admin.setting.update')->middleware('permission:sửa cài đặt');
     });
 });

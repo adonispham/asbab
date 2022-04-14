@@ -19,15 +19,21 @@ class SettingController extends Controller
                 return '<input class="form-control" data-url="'.route('admin.setting.update', ['id' => $set->id]).'" disabled type="text" name="config_value" value="'.$set->config_value.'" />';
             })
             ->rawColumns(['config_value'])
-            ->make(true); 
+            ->make(true);
     }
 
     public function store(Request $request)
     {
+        $messages = [
+            'config_key.required' => 'Tên nội dung cần cài đặt không được để trống.',
+            'config_key.unique' => 'Tên nội dung đã tồn tại.',
+            'config_value.required' => 'Nội dung không được để trống.',
+        ];
+
         $validator = $request->validate([
             'config_key' => 'bail|required|unique:settings',
             'config_value' => 'required'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -35,7 +41,7 @@ class SettingController extends Controller
                 'config_key' => $request->config_key,
                 'config_value' => $request->config_value
             ]);
-    
+
             DB::commit();
             return response()->json($set);
         } catch (\Exception $exception) {
@@ -51,8 +57,11 @@ class SettingController extends Controller
     public function update(Request $request, $id)
     {
         $set = Setting::find($id);
+
         $validator = $request->validate([
             'config_value' => 'required'
+        ], [
+            'config_value.required' => 'Nội dung không được để trống.'
         ]);
 
         try {
@@ -60,7 +69,7 @@ class SettingController extends Controller
             $set->update([
                 'config_value' => $request->config_value
             ]);
-    
+
             DB::commit();
             return response()->json($set);
         } catch (\Exception $exception) {
