@@ -105,7 +105,7 @@
                                         class="old-price pr-3">$30.3</span>${{ number_format($product->price, 2, '.', ',') }}
                                 </p>
                             </div>
-                            <p class="content-details">{!! trim(explode('II', explode('ABSTRACT:', strip_tags(html_entity_decode($product->details)))[1])[0]) !!}</p>
+                            <p class="content-details">{!! trim(explode('II', explode('MÔ TẢ NGẮN:', strip_tags(html_entity_decode($product->details)))[1])[0]) !!}</p>
                             <p class="prd-status">Availability: <span
                                     class="text-muted">{{ $product->quantity > 0 ? 'In Stock' : 'Out Of Stock' }}</span>.
                             </p>
@@ -173,7 +173,7 @@
                                     @foreach ($trDetails as $key => $detail)
                                         <div class="col-lg-4 col-md-6 col-12">
                                             <h4>{{ strip_tags(explode('</td>', $detail)[0] . '</td>') }}</h4>
-                                            <p>{!! strip_tags(explode('</td>', $detail)[1] . '</td>', '<br>') !!}</p>
+                                            <p>{!! strip_tags(explode('</td>', $detail)[1] . '</td>', '<br><ul><li>') !!}</p>
                                         </div>
                                     @endforeach
                                 </div>

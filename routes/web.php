@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::namespace('Guest')->group(function ()
-{
+Route::namespace('Guest')->group(function () {
     Route::get('/', 'HomeController@index')->name('asbab.home');
     Route::post('/', 'HomeController@login')->name('asbab.login');
     Route::get('logout', 'HomeController@logout')->name('asbab.logout');
@@ -107,18 +106,17 @@ Route::namespace('Guest')->group(function ()
     Route::post('contact/question', 'ContactController@question')->name('asbab.contact.question');
 });
 
-Route::prefix('admin')->namespace('Admin')->group(function ()
-{
+Route::prefix('admin')->namespace('Admin')->group(function () {
     Route::get('/', 'AuthController@index')->name('admin');
     Route::get('logout', 'AuthController@logout')->name('admin.logout');
     Route::post('/', 'AuthController@login')->name('admin.login');
     Route::get('notification/message', 'AuthController@notification')->name('admin.notification.message');
 
     // Route about chat real time client
-    Route::get('chat', 'ChatController@index')->name('admin.chat.index')->middleware('permission:list chat');
-    Route::post('chat/store', 'ChatController@store')->name('admin.chat.store')->middleware('permission:add chat');;
-    Route::get('chat/data/{id}', 'ChatController@data')->name('admin.chat.data')->middleware('permission:list chat');;
-    Route::get('chat/search', 'ChatController@search')->name('admin.chat.search')->middleware('permission:list chat');;
+    Route::get('chat', 'ChatController@index')->name('admin.chat.index')->middleware('permission:xem tin nhắn');
+    Route::post('chat/store', 'ChatController@store')->name('admin.chat.store')->middleware('permission:thêm tin nhắn');;
+    Route::get('chat/data/{id}', 'ChatController@data')->name('admin.chat.data')->middleware('permission:xem tin nhắn');;
+    Route::get('chat/search', 'ChatController@search')->name('admin.chat.search')->middleware('permission:xem tin nhắn');;
 
     Route::prefix('dashboard')->group(function () {
         Route::get('line_chart', 'AuthController@line_chart')->name('admin.dashboard.line_chart');
@@ -183,63 +181,63 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('news')->group(function () {
         Route::get('/', function () {
             return view('admin.news.index');
-        })->name('admin.news.index')->middleware('permission:list news');
+        })->name('admin.news.index')->middleware('permission:xem tin tức');
         Route::get('data/{permission}', 'NewsController@index')->name('admin.news.data');
-        Route::get('create', 'NewsController@create')->name('admin.news.create')->middleware('permission:add news');
-        Route::post('store', 'NewsController@store')->name('admin.news.store')->middleware('permission:add news');
-        Route::get('edit/{id}', 'NewsController@edit')->name('admin.news.edit')->middleware('permission:edit news');
-        Route::post('update/{id}', 'NewsController@update')->name('admin.news.update')->middleware('permission:edit news');
-        Route::get('delete/{id}', 'NewsController@destroy')->name('admin.news.delete')->middleware('permission:delete news');
+        Route::get('create', 'NewsController@create')->name('admin.news.create')->middleware('permission:thêm tin tức');
+        Route::post('store', 'NewsController@store')->name('admin.news.store')->middleware('permission:thêm tin tức');
+        Route::get('edit/{id}', 'NewsController@edit')->name('admin.news.edit')->middleware('permission:sửa tin tức');
+        Route::post('update/{id}', 'NewsController@update')->name('admin.news.update')->middleware('permission:sửa tin tức');
+        Route::get('delete/{id}', 'NewsController@destroy')->name('admin.news.delete')->middleware('permission:xóa tin tức');
     });
 
     Route::prefix('comment')->group(function () {
         Route::get('product', function () {
             return view('admin.comment.product');
-        })->name('admin.comment.product')->middleware('permission:list comment');
+        })->name('admin.comment.product')->middleware('permission:xem bình luận');
         Route::get('product/data', 'CommentController@PRDcomments')->name('admin.comment.product.data');
         Route::get('product/{slug}', 'CommentController@PRDcommDT')->name('admin.comment.product.details');
-        Route::get('product/{slug}/reply', 'CommentController@PRDreply')->name('admin.comment.product.reply')->middleware('permission:reply comment');
-        Route::get('product/{slug}/delete', 'CommentController@PRDdelete')->name('admin.comment.product.delete')->middleware('permission:delete comment');
+        Route::get('product/{slug}/reply', 'CommentController@PRDreply')->name('admin.comment.product.reply')->middleware('permission:trả lời bình luận');
+        Route::get('product/{slug}/delete', 'CommentController@PRDdelete')->name('admin.comment.product.delete')->middleware('permission:xóa bình luận');
 
         Route::get('news', function () {
             return view('admin.comment.news');
-        })->name('admin.comment.news')->middleware('permission:list comment');
+        })->name('admin.comment.news')->middleware('permission:xem bình luận');
         Route::get('news/data', 'CommentController@NEWScomments')->name('admin.comment.news.data');
         Route::get('news//{slug}', 'CommentController@NEWScommDT')->name('admin.comment.news.details');
-        Route::get('news/{slug}/reply', 'CommentController@NEWSreply')->name('admin.comment.news.reply')->middleware('permission:reply comment');
-        Route::get('news/{slug}/delete', 'CommentController@NEWSdelete')->name('admin.comment.news.delete')->middleware('permission:delete comment');
+        Route::get('news/{slug}/reply', 'CommentController@NEWSreply')->name('admin.comment.news.reply')->middleware('permission:trả lời bình luận');
+        Route::get('news/{slug}/delete', 'CommentController@NEWSdelete')->name('admin.comment.news.delete')->middleware('permission:xóa bình luận');
     });
 
     Route::prefix('slider')->group(function () {
         Route::get('index', function () {
             return view('admin.slider.index');
-        })->name('admin.slider.index')->middleware('permission:list slider');
+        })->name('admin.slider.index')->middleware('permission:xem banners');
         Route::get('data/{permission}', 'SliderController@index')->name('admin.slider.data');
-        Route::post('store', 'SliderController@store')->name('admin.slider.store')->middleware('permission:add slider');
-        Route::get('edit/{id}', 'SliderController@edit')->name('admin.slider.edit')->middleware('permission:edit slider');
-        Route::post('update/{id}', 'SliderController@update')->name('admin.slider.update')->middleware('permission:edit slider');
-        Route::get('delete/{id}', 'SliderController@destroy')->name('admin.slider.delete')->middleware('permission:delete slider');
+        Route::post('store', 'SliderController@store')->name('admin.slider.store')->middleware('permission:thêm banners');
+        Route::get('edit/{id}', 'SliderController@edit')->name('admin.slider.edit')->middleware('permission:sửa banners');
+        Route::post('update/{id}', 'SliderController@update')->name('admin.slider.update')->middleware('permission:sửa banners');
+        Route::get('delete/{id}', 'SliderController@destroy')->name('admin.slider.delete')->middleware('permission:xóa banners');
     });
 
     Route::prefix('order')->group(function () {
-        Route::get('index', 'OrderController@index')->name('admin.order.index')->middleware('permission:list order');
+        Route::get('index', 'OrderController@index')->name('admin.order.index')->middleware('permission:xem đơn hàng');
         Route::get('data/{show}/{update}', 'OrderController@data')->name('admin.order.data');
-        Route::get('show/{id}', 'OrderController@show')->name('admin.order.show')->middleware('permission:show order');;
-        Route::get('print/{id}', 'OrderController@print')->name('admin.order.print')->middleware('permission:print order');;
-        Route::post('update/{status}', 'OrderController@update')->name('admin.order.update')->middleware('permission:update order');;
+        Route::get('show/{id}', 'OrderController@show')->name('admin.order.show')->middleware('permission:hiển thị đơn hàng');
+        Route::get('print/{id}', 'OrderController@print')->name('admin.order.print')->middleware('permission:in đơn hàng');
+        Route::post('update/{status}', 'OrderController@update')->name('admin.order.update')->middleware('permission:cập nhật đơn hàng');
     });
 
     Route::prefix('coupon')->group(function () {
         Route::get('index', function () {
             return view('admin.coupon.index');
-        })->name('admin.coupon.index')->middleware('permission:list coupon');;
+        })->name('admin.coupon.index')->middleware('permission:xem phiếu giảm giá');;
         Route::get('data/{permission}', 'CouponController@index')->name('admin.coupon.data');
-        Route::get('create', 'CouponController@create')->name('admin.coupon.create')->middleware('permission:add coupon');
-        Route::post('store', 'CouponController@store')->name('admin.coupon.store')->middleware('permission:add coupon');
-        Route::get('edit/{id}', 'CouponController@edit')->name('admin.coupon.edit')->middleware('permission:edit coupon');
-        Route::get('send/{id}/{type}', 'CouponController@send')->name('admin.coupon.send')->middleware('permission:send coupon');
-        Route::post('update/{id}', 'CouponController@update')->name('admin.coupon.update')->middleware('permission:edit coupon');
-        Route::get('delete/{id}', 'CouponController@destroy')->name('admin.coupon.delete')->middleware('permission:delete coupon');
+        Route::get('create', 'CouponController@create')->name('admin.coupon.create')->middleware('permission:thêm phiếu giảm giá');
+        Route::post('store', 'CouponController@store')->name('admin.coupon.store')->middleware('permission:thêm phiếu giảm giá');
+        Route::get('edit/{id}', 'CouponController@edit')->name('admin.coupon.edit')->middleware('permission:sửa phiếu giảm giá');
+        Route::get('send/{id}/{type}', 'CouponController@send')->name('admin.coupon.send')->middleware('permission:gửi phiếu giảm giá');
+        Route::post('update/{id}', 'CouponController@update')->name('admin.coupon.update')->middleware('permission:sửa phiếu giảm giá');
+        Route::get('delete/{id}', 'CouponController@destroy')->name('admin.coupon.delete')->middleware('permission:xóa phiếu giảm giá');
     });
 
     Route::prefix('role')->group(function () {
@@ -269,10 +267,10 @@ Route::prefix('admin')->namespace('Admin')->group(function ()
     Route::prefix('support')->group(function () {
         Route::get('index', function () {
             return view('admin.support.index');
-        })->name('admin.support.index')->middleware('permission:list support');
+        })->name('admin.support.index')->middleware('permission:xem hỗ trợ');
         Route::get('data/{permission}', 'SupportController@index')->name('admin.support.data');
-        Route::get('reply/{id}', 'SupportController@store')->name('admin.support.reply')->middleware('permission:reply support');
-        Route::get('delete/{id}', 'SupportController@destroy')->name('admin.support.delete')->middleware('permission:delete support');
+        Route::get('reply/{id}', 'SupportController@store')->name('admin.support.reply')->middleware('permission:trả lời hỗ trợ');
+        Route::get('delete/{id}', 'SupportController@destroy')->name('admin.support.delete')->middleware('permission:xóa hỗ trợ');
     });
 
     Route::prefix('permission')->group(function () {

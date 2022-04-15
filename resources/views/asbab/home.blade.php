@@ -80,7 +80,7 @@
                         <div class="col-md-6">
                             <div class="prd-prize-inner">
                                 <h2>{{ $good->name }}</h2>
-                                <h3>{!! trim(explode('II', explode('ABSTRACT:', strip_tags(html_entity_decode($good->details)))[1])[0]) !!}</h3>
+                                <h3>{!! trim(explode('II', explode('MÔ TẢ NGẮN:', strip_tags(html_entity_decode($good->details)))[1])[0]) !!}</h3>
                                 <a class="prd-btn" href="{{ route('asbab.product.show', ['slug' => $good->slug]) }}">Read
                                     More</a>
                             </div>
@@ -89,8 +89,8 @@
                             $detailsTable = explode('</tbody>', explode('<tbody>', explode('</table>', html_entity_decode($good->details))[0])[1])[0];
                             $trDetails = '';
                             foreach (explode('<tr', $detailsTable) as $key => $tr) {
-                                if (strpos(mb_strtolower(strip_tags(html_entity_decode($tr))), 'materials')) {
-                                    $trDetails = strip_tags(html_entity_decode(explode('</td>', $tr)[1]), '<br>');
+                                if (strpos(mb_strtolower(strip_tags(html_entity_decode($tr))), 'chất liệu')) {
+                                    $trDetails = strip_tags(html_entity_decode(explode('</td>', $tr)[1]), '<br><ul><li>');
                                 }
                             }
                         @endphp
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                @endif;
+                @endif
             </div>
         </section>
         <section class="prd-best-sale">

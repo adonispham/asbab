@@ -19,7 +19,7 @@ class AuthController extends Controller
             return view('admin.dashboard',compact('orders','customers'));
         } else {
             return view('admin.login');
-        } 
+        }
     }
 
     public function login(Request $request)
@@ -40,7 +40,7 @@ class AuthController extends Controller
         auth()->logout();
         return redirect()->to('admin');
     }
-    
+
     public function line_chart()
     {
         $orders = Order::orderBy('updated_at', 'asc')->get();
@@ -58,8 +58,8 @@ class AuthController extends Controller
             $my = ($y - 1).'-'.$p;
             $data[] = [
                 'period' => $my,
-                'Sales '.$y => $orders->whereBetween('updated_at', [$y.'-'.$p, $y.'-'.($p + 1)])->sum('amount'),
-                'Sales '.($y - 1) => $orders->whereBetween('updated_at', [($y - 1).'-'.$p, ($y - 1).'-'.($p + 1)])->sum('amount'),
+                'Doanh số '.$y => $orders->whereBetween('updated_at', [$y.'-'.$p, $y.'-'.($p + 1)])->sum('amount'),
+                'Doanh số '.($y - 1) => $orders->whereBetween('updated_at', [($y - 1).'-'.$p, ($y - 1).'-'.($p + 1)])->sum('amount'),
             ];
         }
         return response()->json($data);
@@ -71,9 +71,10 @@ class AuthController extends Controller
         $labels = Category::where('parent_id', 0)->get();
         $total = $orders->sum('amount');
         $data = [];
+
         foreach ($orders as $order) {
             foreach ($order->bills as $bill) {
-                $cat_id = id_parent($bill->images->category_id, $labels, 'parent_id', 'id');
+                $cat_id = id_parent($bill->images->category_id, Category::all(), 'parent_id', 'id');
                 foreach ($labels as $label) {
                     if($label->id == $cat_id) {
                         $label->amount = $label->amount !== null ? $label->amount + $bill->product_price * $bill->quantity : $bill->product_price * $bill->quantity ;

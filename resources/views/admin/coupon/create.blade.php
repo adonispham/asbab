@@ -11,9 +11,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="breadcumb-item"><a href="{{ route('admin.coupon.index') }}">Coupons</a></li>
-                        <li class="active">Add Coupon</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="breadcumb-item"><a href="{{ route('admin.coupon.index') }}">Phiếu giảm giá</a></li>
+                        <li class="active">Thêm mã giảm giá</li>
                     </ul>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                     @csrf
                     <div class="col-lg-9">
                         <div class="form-group">
-                            <label>Name:</label>
+                            <label>Chương trình:</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                 autofocus value="{{ old('name') }}" />
                             @error('name')
@@ -30,7 +30,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Code:</label>
+                            <label>Mã giảm giá:</label>
                             <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
                                 value="{{ old('code') }}" />
                             @error('code')
@@ -38,11 +38,11 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Type:</label>
+                            <label>Loại:</label>
                             <select name="type" class="form-control @error('type') is-invalid @enderror">
-                                <option value="">Select type coupon</option>
-                                <option {{ old('type') == 0 ? 'selected' : '' }} value="0">Reduce by money</option>
-                                <option {{ old('type') == 1 ? 'selected' : '' }} value="1">Decrease in percentage
+                                <option value="">Chọn loại hình chiết khấu</option>
+                                <option {{ old('type') == 0 ? 'selected' : '' }} value="0">Tiền mặt</option>
+                                <option {{ old('type') == 1 ? 'selected' : '' }} value="1">Phần trăm
                                 </option>
                             </select>
                             @error('type')
@@ -50,7 +50,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Discount:</label>
+                            <label>Chiết khấu:</label>
                             <input type="text" name="discount" class="form-control @error('discount') is-invalid @enderror"
                                 value="{{ old('discount') }}" />
                             @error('discount')
@@ -58,7 +58,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Quantity:</label>
+                            <label>Số lượng:</label>
                             <input type="text" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
                                 value="{{ old('quantity') }}" />
                             @error('quantity')
@@ -66,7 +66,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Time Out Of:</label>
+                            <label>Hết hàng:</label>
                             <input type="date" name="time_out_of"
                                 class="form-control @error('time_out_of') is-invalid @enderror"
                                 value="{{ old('time_out_of') }}" />
@@ -75,7 +75,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-success text-uppercase" type="submit">Add</button>
+                            <button class="btn btn-success text-uppercase" type="submit">Thêm</button>
                         </div>
                     </div>
                 </form>

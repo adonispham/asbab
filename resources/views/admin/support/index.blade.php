@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}"/>
 @endsection
 
 @section('js')
@@ -17,8 +17,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li>Supports</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang
+                                chủ</a></li>
+                        <li>Hỗ trợ</li>
                     </ul>
                 </div>
             </div>
@@ -27,28 +28,28 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <table class="table table-bordered table-middle table-striped" id="supports-table"
-                            @if(auth()->user()->can('edit support') || auth()->user()->can('delete support'))
-                                @if (auth()->user()->can('reply support') && auth()->user()->can('delete support'))
-                                    data-url="{{ route('admin.support.data', ['permission' => 1]) }}"
-                                @elseif(auth()->user()->can('reply support'))
-                                    data-url="{{ route('admin.support.data', ['permission' => 2]) }}"
-                                @elseif(auth()->user()->can('delete support')) 
-                                    data-url="{{ route('admin.support.data', ['permission' => 3]) }}"
-                                @endif 
-                            @else
-                                data-url="{{ route('admin.support.data', ['permission' => 0]) }}"
+                               @if(auth()->user()->can('trả lời hỗ trợ') || auth()->user()->can('xóa hỗ trợ'))
+                               @if (auth()->user()->can('trả lời hỗ trợ') && auth()->user()->can('xóa hỗ trợ'))
+                               data-url="{{ route('admin.support.data', ['permission' => 1]) }}"
+                               @elseif(auth()->user()->can('trả lời hỗ trợ'))
+                               data-url="{{ route('admin.support.data', ['permission' => 2]) }}"
+                               @elseif(auth()->user()->can('xóa hỗ trợ'))
+                               data-url="{{ route('admin.support.data', ['permission' => 3]) }}"
+                               @endif
+                               @else
+                               data-url="{{ route('admin.support.data', ['permission' => 0]) }}"
                             @endif>
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>User</th>
-                                    <th>Subject</th>
-                                    <th>Require</th>
-                                    <th class="text-center">Status</th>
-                                    @if(auth()->user()->can('reply support') || auth()->user()->can('delete support'))
-                                        <th class="text-center">Access</th>
-                                    @endif
-                                </tr>
+                            <tr>
+                                <th>STT</th>
+                                <th>Người yêu cầu</th>
+                                <th>Chủ đề</th>
+                                <th>Yêu cầu</th>
+                                <th class="text-center">Trạng thái</th>
+                                @if(auth()->user()->can('trả lời hỗ trợ') || auth()->user()->can('xóa hỗ trợ'))
+                                    <th class="text-center">Hành động</th>
+                                @endif
+                            </tr>
                             </thead>
                         </table>
                     </div>

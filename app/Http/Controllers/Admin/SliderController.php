@@ -15,7 +15,7 @@ use Str;
 class SliderController extends Controller
 {
     use StorageImageTrait;
-    
+
     public function index($permission)
     {
         $sliders = Slider::get();
@@ -26,19 +26,19 @@ class SliderController extends Controller
         if ($permission != 0) {
             return DataTables::of($sliders)
                 ->editColumn('image_path', function ($slider) {
-                    return '<img src="'.asset($slider->image_path).'" />';
+                    return '<img src="' . asset($slider->image_path) . '" />';
                 })
                 ->addColumn('action', function ($slider) {
                     switch ($slider->auth_permission) {
                         case '1':
-                            $action = '<a data-href="'.route('admin.slider.edit', ['id' => $slider->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Edit</a>
-                                        <a data-href="'.route('admin.slider.delete', ['id' => $slider->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="' . route('admin.slider.edit', ['id' => $slider->id]) . '" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Sửa</a>
+                                        <a data-href="' . route('admin.slider.delete', ['id' => $slider->id]) . '" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                         case '2':
-                            $action = $action = '<a data-href="'.route('admin.slider.edit', ['id' => $slider->id]).'" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Edit</a>';
+                            $action = '<a data-href="' . route('admin.slider.edit', ['id' => $slider->id]) . '" class="btn btn-info action-edit" data-toggle="modal" href="#editSlider">Sửa</a>';
                             break;
                         case '3':
-                            $action = '<a data-href="'.route('admin.slider.delete', ['id' => $slider->id]).'" class="btn btn-danger action-delete">Delete</a>';
+                            $action = '<a data-href="' . route('admin.slider.delete', ['id' => $slider->id]) . '" class="btn btn-danger action-delete">Xóa</a>';
                             break;
                     }
                     return $action;
@@ -48,23 +48,32 @@ class SliderController extends Controller
         } else {
             return DataTables::of($sliders)
                 ->editColumn('description', function ($slider) {
-                    return '<div class="text-justify">'.$slider->description.'</div>';
+                    return '<div class="text-justify">' . $slider->description . '</div>';
                 })
                 ->editColumn('image_path', function ($slider) {
-                    return '<img src="'.asset($slider->image_path).'" />';
+                    return '<img src="' . asset($slider->image_path) . '" />';
                 })
-                ->rawColumns(['description','image_path'])
+                ->rawColumns(['description', 'image_path'])
                 ->make(true);
         }
     }
 
     public function store(Request $request)
     {
+        $messages = [
+            'name.required' => 'Tiêu đề banner không được để trống.',
+            'name.max' => 'Tiêu đề banner quá dài.',
+            'image_path.required' => 'Hãy chọn ảnh đại diện cho banner.',
+            'image_path.image' => 'Ảnh của banner không hợp lệ.',
+            'image_path.mimes' => 'Ảnh của banner không hợp lệ.',
+            'description.required' => 'Hãy nhập nội dung mô tả banner.',
+        ];
+
         $validator = $request->validate([
-            'name' => ['bail','required','min:1','max:255'],
+            'name' => ['bail', 'required', 'min:1', 'max:255'],
             'image_path' => 'bail|required|image|mimes:jpg,jpeg,png,gif',
             'description' => 'required'
-        ]);
+        ], $messages);
 
         try {
             DB::beginTransaction();
@@ -77,12 +86,12 @@ class SliderController extends Controller
                 'description' => $request->description,
                 'slug' => Str::slug($request->name)
             ]);
-    
+
             DB::commit();
             return response()->json($slider);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()
@@ -103,23 +112,32 @@ class SliderController extends Controller
     public function update(Request $request, $id)
     {
         $slider = Slider::find($id);
+        $messages = [
+            'name.required' => 'Tiêu đề banner không được để trống.',
+            'name.max' => 'Tiêu đề banner quá dài.',
+            'image_path.required' => 'Hãy chọn ảnh đại diện cho banner.',
+            'image_path.image' => 'Ảnh của banner không hợp lệ.',
+            'image_path.mimes' => 'Ảnh của banner không hợp lệ.',
+            'description.required' => 'Hãy nhập nội dung mô tả banner.',
+        ];
+
         $validator = $request->validate([
-            'name' => ['bail','required','min:2','max:255'],
+            'name' => ['bail', 'required', 'min:2', 'max:255'],
             'description' => 'required',
             'image_path' => 'bail|image|mimes:jpg,jpeg,png,gif|max:102400'
-        ]);
+        ], $messages);
         try {
             DB::beginTransaction();
 
             $dataImageUploadUpdate = $this->storageUploadImageTrait($request, 'image_path', "slider");
             $dataSLiderUpdate = [
-                'name' =>  $request->name,
+                'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'description' => $request->description
             ];
 
             if (!empty($dataImageUploadUpdate)) {
-                if(file_exists(public_path($slider->image_path))) {
+                if (file_exists(public_path($slider->image_path))) {
                     unlink(public_path($slider->image_path));
                 }
                 $dataSLiderUpdate['image_path'] = $dataImageUploadUpdate['file_path'];
@@ -131,7 +149,7 @@ class SliderController extends Controller
             return response()->json($slider);
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message: '.$exception->getMessage().' line: '.$exception->getLine());
+            Log::error('Message: ' . $exception->getMessage() . ' line: ' . $exception->getLine());
             return response()->json([
                 'message' => 'There are incorrect values in the form !',
                 'errors' => $validator->getMessageBag()->toArray()
@@ -142,7 +160,7 @@ class SliderController extends Controller
     public function destroy($id)
     {
         $slider = Slider::find($id);
-        if(file_exists(public_path($slider->image_path))) {
+        if (file_exists(public_path($slider->image_path))) {
             unlink(public_path($slider->image_path));
         }
         $slider->delete();

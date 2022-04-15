@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}"/>
 @endsection
 
 @section('js')
@@ -17,9 +17,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li>Comments</li>
-                        <li class="active">Products</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang
+                                chủ</a></li>
+                        <li>Bình luận</li>
+                        <li class="active">Sản phẩm</li>
                     </ul>
                 </div>
             </div>
@@ -28,15 +29,15 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <table class="table table-bordered table-striped" id="product-comments-table"
-                            data-url="{{ route('admin.comment.product.data') }}">
+                               data-url="{{ route('admin.comment.product.data') }}">
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th class="text-center">Comments</th>
-                                    <th class="text-center">Rating</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên sản phẩm</th>
+                                <th class="text-center">Bình luận</th>
+                                <th class="text-center">Đánh giá</th>
+                                <th class="text-center">Hành động</th>
+                            </tr>
                             </thead>
                         </table>
                     </div>

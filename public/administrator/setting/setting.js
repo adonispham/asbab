@@ -12,13 +12,16 @@
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -79,8 +82,8 @@
                     that.find('.alert-danger').removeClass('alert-danger');
                     that.find('[name]').val('')
                     Swal.fire(
-                        'Added!',
-                        'Your config has been added.',
+                        'Đã thêm!',
+                        'Nội dung cài đặt đã được thêm mới.',
                         'success'
                     )
                     $('#setting-table').DataTable().ajax.reload();

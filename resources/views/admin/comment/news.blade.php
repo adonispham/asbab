@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}"/>
 @endsection
 
 @section('js')
@@ -17,9 +17,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li>Comments</li>
-                        <li class="active">News</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang
+                                chủ</a></li>
+                        <li>Bình luận</li>
+                        <li class="active">Tin tức</li>
                     </ul>
                 </div>
             </div>
@@ -28,16 +29,16 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <table class="table table-bordered table-striped" id="news-comments-table"
-                            data-url="{{ route('admin.comment.news.data') }}">
+                               data-url="{{ route('admin.comment.news.data') }}">
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th class="text-center">Comments</th>
-                                    <th class="text-center">View</th>
-                                    <th class="text-center">Like</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>TIêu đề</th>
+                                <th class="text-center">Bình luận</th>
+                                <th class="text-center">Lượt xem</th>
+                                <th class="text-center">Lượt thích</th>
+                                <th class="text-center">Hành động</th>
+                            </tr>
                             </thead>
                         </table>
                     </div>

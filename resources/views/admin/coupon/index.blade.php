@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('administrator/assets/sweetalert2/sweetalert2.min.css') }}"/>
 @endsection
 
 @section('js')
@@ -17,8 +17,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="active">Coupons</li>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang
+                                chủ</a></li>
+                        <li class="active">Phiếu giảm giá</li>
                     </ul>
                 </div>
             </div>
@@ -26,41 +27,41 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-                        @can('add coupon')
+                        @can('thêm phiếu giảm giá')
                             <div class="flex-end center mb-15">
                                 <div class="btn-group text-right">
                                     <a class="btn btn-success" href="{{ route('admin.coupon.create') }}">
-                                        Add New <i class="fa fa-plus"></i>
+                                        Thêm phiếu giảm giá <i class="fa fa-plus"></i>
                                     </a>
                                 </div>
                             </div>
                         @endcan
 
                         <table class="table table-bordered table-striped" id="coupons-table"
-                            @if(auth()->user()->can('edit coupon') || auth()->user()->can('delete coupon') || auth()->user()->can('send coupon'))
-                                @if (auth()->user()->can('edit coupon') && auth()->user()->can('delete coupon') && auth()->user()->can('send coupon'))
-                                    data-url="{{ route('admin.coupon.data', ['permission' => 1]) }}"
-                                @elseif(auth()->user()->can('edit coupon'))
-                                    data-url="{{ route('admin.coupon.data', ['permission' => 2]) }}"
-                                @elseif(auth()->user()->can('delete coupon')) 
-                                    data-url="{{ route('admin.coupon.data', ['permission' => 3]) }}"
-                                @elseif(auth()->user()->can('send coupon'))
-                                    data-url="{{ route('admin.coupon.data', ['permission' => 4]) }}"
-                                @endif 
-                            @else
-                                data-url="{{ route('admin.coupon.data', ['permission' => 0]) }}"
+                               @if(auth()->user()->can('sửa phiếu giảm giá') || auth()->user()->can('xóa phiếu giảm giá') || auth()->user()->can('gửi phiếu giảm giá'))
+                               @if (auth()->user()->can('sửa phiếu giảm giá') && auth()->user()->can('xóa phiếu giảm giá') && auth()->user()->can('gửi phiếu giảm giá'))
+                               data-url="{{ route('admin.coupon.data', ['permission' => 1]) }}"
+                               @elseif(auth()->user()->can('sửa phiếu giảm giá'))
+                               data-url="{{ route('admin.coupon.data', ['permission' => 2]) }}"
+                               @elseif(auth()->user()->can('xóa phiếu giảm giá'))
+                               data-url="{{ route('admin.coupon.data', ['permission' => 3]) }}"
+                               @elseif(auth()->user()->can('gửi phiếu giảm giá'))
+                               data-url="{{ route('admin.coupon.data', ['permission' => 4]) }}"
+                               @endif
+                               @else
+                               data-url="{{ route('admin.coupon.data', ['permission' => 0]) }}"
                             @endif>
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th class="text-center">Code</th>
-                                    <th class="text-center">Discount</th>
-                                    <th class="text-center">Quantity</th>
-                                    @if(auth()->user()->can('edit coupon') || auth()->user()->can('delete coupon'))
-                                        <th class="text-center">Action</th>
-                                    @endif
-                                </tr>
+                            <tr>
+                                <th>STT</th>
+                                <th>Chương trình</th>
+                                <th class="text-center">Mã giảm giá</th>
+                                <th class="text-center">Chiết khấu</th>
+                                <th class="text-center">Số lượng</th>
+                                @if(auth()->user()->can('sửa phiếu giảm giá') || auth()->user()->can('xóa phiếu giảm giá'))
+                                    <th class="text-center">Hành động</th>
+                                @endif
+                            </tr>
                             </thead>
                         </table>
                     </div>

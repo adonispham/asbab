@@ -25,7 +25,7 @@ class CreateOrdersTable extends Migration
             $table->integer('ship_id')->nullable();
             $table->integer('coupon_id')->nullable();
             $table->float('fee_ship', 4, 2);
-            $table->float('amount', 11, 2);
+            $table->float('amount', 20, 2);
             $table->integer('paymethod');
             $table->string('note', 500)->nullable();
             $table->string('reason', 500)->nullable();

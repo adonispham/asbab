@@ -31,15 +31,15 @@
                         @csrf
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Config Key:</label>
+                                <label>Tên:</label>
                                 <input type="text" name="config_key" class="form-control"/>
                             </div>
                             <div class="form-group">
-                                <label>Config Value:</label>
+                                <label>Nội dung:</label>
                                 <input type="text" name="config_value" class="form-control"/>
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-success text-uppercase" type="submit">Add</button>
+                                <button class="btn btn-success text-uppercase" type="submit">Thêm</button>
                             </div>
                         </div>
                     </form>
@@ -50,13 +50,13 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <table class="table table-bordered table-striped" id="setting-table"
-                               @can('edit setting') data-edit="1" @endcan
+                               @can('sửa cài đặt') data-edit="1" @endcan
                                data-url="{{ route('admin.setting.data') }}">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Config Key</th>
-                                <th>Config Value</th>
+                                <th>STT</th>
+                                <th>Tên</th>
+                                <th>Nội dung</th>
                             </tr>
                             </thead>
                         </table>

@@ -13,56 +13,59 @@
                 data: 'id',
                 name: 'id'
             },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'image_path',
-                name: 'image_path',
-                class: 'text-center image'
-            },
-            {
-                data: 'description',
-                name: 'description'
-            }];
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'image_path',
+                    name: 'image_path',
+                    class: 'text-center image'
+                },
+                {
+                    data: 'description',
+                    name: 'description'
+                }];
         } else {
             columns = [{
                 data: 'id',
                 name: 'id'
             },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'image_path',
-                name: 'image_path',
-                class: 'text-center image'
-            },
-            {
-                data: 'description',
-                name: 'description'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            }];
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'image_path',
+                    name: 'image_path',
+                    class: 'text-center image'
+                },
+                {
+                    data: 'description',
+                    name: 'description'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }];
         }
         $('#sliders-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -81,7 +84,7 @@
         $(this).find('.view-item').remove();
     })
 
-    $(document).on('click','#sliders-table .action-edit', function (e) {
+    $(document).on('click', '#sliders-table .action-edit', function (e) {
         let editUrl = $(this).data('href');
         let that = $('#editSlider');
         that.find('[name="description"]').text('');
@@ -114,8 +117,8 @@
             success: function (data) {
                 $('#createSlider').modal('hide');
                 Swal.fire(
-                    'Added!',
-                    'Your slider has been added.',
+                    'Đã thêm!',
+                    'Banner đã được thêm.',
                     'success'
                 )
                 $('#sliders-table').DataTable().ajax.reload();
@@ -149,8 +152,8 @@
             success: function (data) {
                 $('#editSlider').modal('hide');
                 Swal.fire(
-                    'Edited!',
-                    'Your slider has been edited.',
+                    'Đã sửa!',
+                    'Banner của bạn đã sửa thành công.',
                     'success'
                 )
                 $('#sliders-table').DataTable().ajax.reload();
@@ -175,13 +178,14 @@
         e.preventDefault();
         let hrefData = $(this).data('href');
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Bạn có chắc chắn?',
+            text: "Bạn sẽ không lấy lại được dữ liệu!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            cancelButtonText: 'Hủy',
+            confirmButtonText: 'Chắc chắn, xóa!'
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -190,8 +194,8 @@
                     dataType: 'json',
                     success: function (data) {
                         Swal.fire(
-                            'Deleted!',
-                            'Your slider has been deleted.',
+                            'Đã xóa!',
+                            'Banner đã xóa thành công',
                             'success'
                         )
                         $('#sliders-table').DataTable().ajax.reload();

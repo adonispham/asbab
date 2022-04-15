@@ -13,27 +13,27 @@
                 data: 'code',
                 name: 'code'
             },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'phone',
-                name: 'phone'
-            },
-            {
-                data: 'address',
-                name: 'address'
-            },
-            {
-                data: 'status',
-                name: 'status',
-                class: 'text-center'
-            },
-            {
-                data: 'amount',
-                name: 'amount'
-            }];
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'address',
+                    name: 'address'
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    class: 'text-center'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount'
+                }];
         } else {
             columns = [{
                 data: 'check',
@@ -42,44 +42,47 @@
                 orderable: false,
                 searchable: false
             },
-            {
-                data: 'code',
-                name: 'code'
-            },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'phone',
-                name: 'phone'
-            },
-            {
-                data: 'address',
-                name: 'address'
-            },
-            {
-                data: 'status',
-                name: 'status',
-                class: 'text-center'
-            },
-            {
-                data: 'amount',
-                name: 'amount'
-            }];
+                {
+                    data: 'code',
+                    name: 'code'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'address',
+                    name: 'address'
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    class: 'text-center'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount'
+                }];
         }
         $('#orders-table').DataTable({
             processing: true,
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -113,14 +116,14 @@
                     let note_el = $(this).find('[name="note"]');
                     if (ship_id_el.val() == '') {
                         ship_id_el.parents('.form-group').find('.error').remove()
-                        ship_id_el.addClass('alert-danger').parents('.form-group').append('<div class="error">Please choose shipper!</div>');
+                        ship_id_el.addClass('alert-danger').parents('.form-group').append('<div class="error">Hãy chọn người giao hàng!</div>');
                     } else {
                         ship_id_el.removeClass('alert-danger').parents('.form-group').find('.error').remove()
                     }
 
                     if (note_el.val() == '') {
                         note_el.parents('.form-group').find('.error').remove()
-                        note_el.addClass('alert-danger').parents('.form-group').append('<div class="error">Please choose shipper!</div>');
+                        note_el.addClass('alert-danger').parents('.form-group').append('<div class="error">Hãy chọn người giao hàng!</div>');
                     } else {
                         note_el.removeClass('alert-danger').parents('.form-group').find('.error').remove()
                     }
@@ -143,8 +146,8 @@
                 data: d,
                 success: function (data) {
                     Swal.fire(
-                        'Updated',
-                        'Your order has been updated',
+                        'Đã cập nhật',
+                        'Đơn hàng đã cập nhật thành công',
                         'success'
                     ).then(() => {
                         $('#select_shipper').modal('hide');

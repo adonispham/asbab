@@ -54,32 +54,34 @@
 </head>
 
 <body>
-    <div class="coupon">
-        <div class="container">
-            <h4 style="text-align: center">Coupon's code form shop <a style="color: blue" target="_blank"
-                    href="{{ route('asbab.home') }}">www.asbab.dev.com</a></h4>
-        </div>
-        <div class="container" style="background-color: #fff">
-            <h2 class="note">
-                @switch($coupon->typr)
-                    @case(0)
-                        {{ 'Sale off $' . number_format($coupon->discount, 2, '.', ',') }}
-                    @break
-                    @case(1)
-                        {{ 'Sale off ' . $coupon->discount . '%' }}
-                    @break
-                @endswitch
-                for total payment orders.
-            </h2>
-            <p>You have purchased at the shop <a target="_blank" href="{{ route('asbab.home') }}">www.asbab.dev.com</a>!
-                If you already have an account, please <a target="_blank" href="{{ route('asbab.home').'#login_account' }}">log in</a> to your account to purchase and enter the code below to
-                receive a discount. Thank you! Wish you a lot of health and peace in life.</p>
-        </div>
-        <div class="container">
-            <p class="code">Use code: <span class="promo">{{ $coupon->code }}</span> only 100 tickets</p>
-            <p class="expire">Expiration date: {{ date('d/m/Y', strtotime($coupon->time_out_of)) }}</p>
-        </div>
+<div class="coupon">
+    <div class="container">
+        <h4 style="text-align: center">Phiếu giảm giá từ <a style="color: blue" target="_blank"
+                                                                  href="{{ route('asbab.home') }}">www.asbab.dev.com</a>
+        </h4>
     </div>
+    <div class="container" style="background-color: #fff">
+        <h2 class="note">
+            @switch($coupon->typr)
+                @case(0)
+                {{ 'Giảm đến ' . number_format($coupon->discount, 2, '.', ',') .'VNĐ' }}
+                @break
+                @case(1)
+                {{ 'Giảm đến ' . $coupon->discount . '%' }}
+                @break
+            @endswitch
+            cho tổng đơn hàng.
+        </h2>
+        <p>Bạn có thể mua hàng tại <a target="_blank" href="{{ route('asbab.home') }}">www.asbab.dev.com</a>!
+            Nếu bạn đã có tài khoản, hãy <a target="_blank" href="{{ route('asbab.home').'#login_account' }}">đăng
+                nhập</a> để mua hàng và sử dụng mã giảm giá ở dưới để nhận được chiết khấu. Cảm ơn! Mong bạn có thật
+            nhiều sức khỏe và niềm vui trong cuộc sống.</p>
+    </div>
+    <div class="container">
+        <p class="code">Sử dụng mã: <span class="promo">{{ $coupon->code }}</span> chỉ {{ $coupon->quantity  }} phiếu</p>
+        <p class="expire">Ngày hết hạn: {{ date('d/m/Y', strtotime($coupon->time_out_of)) }}</p>
+    </div>
+</div>
 </body>
 
 </html>

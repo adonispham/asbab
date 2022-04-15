@@ -26,7 +26,7 @@ class CommentController extends Controller
                 $products[] = $p;
             }
         }
-         
+
         return DataTables::of($products)
             ->addColumn('stt', function ($product) {
                 return $product->incre;
@@ -41,7 +41,7 @@ class CommentController extends Controller
                 return ($product->rates !== null ? $product->rates->count() : 0);
             })
             ->addColumn('action', function ($product) {
-                return '<a href="'.route('admin.comment.product.details', ['slug' => $product->slug]).'" class="btn btn-info">Details</a>';
+                return '<a href="' . route('admin.comment.product.details', ['slug' => $product->slug]) . '" class="btn btn-info">Chi tiết</a>';
             })
             ->rawColumns(['stt', 'product', 'comments', 'rating', 'action'])
             ->make(true);
@@ -57,9 +57,9 @@ class CommentController extends Controller
                     $c = $comment;
                 }
             }
-            $comm->reply_for_user_name = $c !== null ? ($c->user_id != 0 ? $c->users->name : 'Asbab Furniture Shop') : '';
+            $comm->reply_for_user_name = $c !== null ? ($c->user_id != 0 ? $c->users->name : 'Asbab Furniture') : '';
         }
-        return view('admin.comment.show', compact('comments','product'));
+        return view('admin.comment.show', compact('comments', 'product'));
     }
 
     public function PRDreply(Request $request, $slug)
@@ -70,14 +70,14 @@ class CommentController extends Controller
             'comment' => $request->reply,
             'parent_id' => $request->parent_id
         ]);
-        
+
         return response()->json([
             'message' => 'success',
             'code' => 200
         ]);
     }
 
-    public function PRDdelete(Request $request,$slug) 
+    public function PRDdelete(Request $request, $slug)
     {
         $id = $request->id;
         settype($id, 'integer');
@@ -85,19 +85,17 @@ class CommentController extends Controller
         $comment = ProductComment::find($request->id);
         $comments = ProductComment::all();
         $comment->likes()->delete();
-        $uploadDir = 'images/upload/product_comment/'.$id;
-        
+        $uploadDir = 'images/upload/product_comment/' . $id;
+
         Storage::disk('public')->deleteDirectory($uploadDir);
 
-        foreach ($comments->where('parent_id', '>', 0) as $comm) 
-        {
-           if (id_parent($comm->parent_id, $comments, 'parent_id', 'id', $comment->parent_id) == $request->id)  
-           {
-                $uploadDirSub = 'images/upload/product_comment/'.$comm->id;
+        foreach ($comments->where('parent_id', '>', 0) as $comm) {
+            if (id_parent($comm->parent_id, $comments, 'parent_id', 'id', $comment->parent_id) == $request->id) {
+                $uploadDirSub = 'images/upload/product_comment/' . $comm->id;
                 Storage::disk('public')->deleteDirectory($uploadDirSub);
                 array_push($dataID, $comm->id);
                 $comm->likes()->delete();
-           }
+            }
         }
 
         ProductComment::destroy($dataID);
@@ -118,7 +116,7 @@ class CommentController extends Controller
                 $posts[] = $n;
             }
         }
-         
+
         return DataTables::of($posts)
             ->addColumn('stt', function ($post) {
                 return $post->incre;
@@ -136,7 +134,7 @@ class CommentController extends Controller
                 return ($post->likes !== null ? explode(',', $post->likes)->count() : 0);
             })
             ->addColumn('action', function ($post) {
-                return '<a href="'.route('admin.comment.news.details', ['slug' => $post->slug]).'" class="btn btn-info">Details</a>';
+                return '<a href="' . route('admin.comment.news.details', ['slug' => $post->slug]) . '" class="btn btn-info">Chi tiết</a>';
             })
             ->rawColumns(['stt', 'post', 'comments', 'view', 'like', 'action'])
             ->make(true);
@@ -152,9 +150,9 @@ class CommentController extends Controller
                     $c = $comment;
                 }
             }
-            $comm->reply_for_user_name = $c !== null ? ($c->user_id != 0 ? $c->users->name : 'Asbab Furniture Shop') : '';
+            $comm->reply_for_user_name = $c !== null ? ($c->user_id != 0 ? $c->users->name : 'Asbab Furniture') : '';
         }
-        return view('admin.comment.post', compact('comments','post'));
+        return view('admin.comment.post', compact('comments', 'post'));
     }
 
     public function NEWSreply(Request $request, $slug)
@@ -165,14 +163,14 @@ class CommentController extends Controller
             'comment' => $request->reply,
             'parent_id' => $request->parent_id
         ]);
-        
+
         return response()->json([
             'message' => 'success',
             'code' => 200
         ]);
     }
 
-    public function NEWSdelete(Request $request, $slug) 
+    public function NEWSdelete(Request $request, $slug)
     {
         $id = $request->id;
         settype($id, 'integer');
@@ -180,19 +178,17 @@ class CommentController extends Controller
         $comment = NewsComment::find($request->id);
         $comments = NewsComment::all();
         $comment->likes()->delete();
-        $uploadDir = 'images/upload/news_comment/'.$id;
-        
+        $uploadDir = 'images/upload/news_comment/' . $id;
+
         Storage::disk('public')->deleteDirectory($uploadDir);
 
-        foreach ($comments->where('parent_id', '>', 0) as $comm) 
-        {
-           if (id_parent($comm->parent_id, $comments, 'parent_id', 'id', $comment->parent_id) == $request->id)  
-           {
-                $uploadDirSub = 'images/upload/news_comment/'.$comm->id;
+        foreach ($comments->where('parent_id', '>', 0) as $comm) {
+            if (id_parent($comm->parent_id, $comments, 'parent_id', 'id', $comment->parent_id) == $request->id) {
+                $uploadDirSub = 'images/upload/news_comment/' . $comm->id;
                 Storage::disk('public')->deleteDirectory($uploadDirSub);
                 array_push($dataID, $comm->id);
                 $comm->likes()->delete();
-           }
+            }
         }
 
         NewsComment::destroy($dataID);

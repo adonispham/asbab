@@ -15,6 +15,9 @@ trait CommentTrait {
                     $user->name = 'Asbab Furniture Shop';
                 } else {
                     $user = $sub->users;
+                    if (empty($user->avatar)) {
+                        $user->avatar = 'images/avatar/default.png';
+                    }
                 }
                 $likespanclass = '';
                 $likeIclass = 'far';
@@ -56,7 +59,7 @@ trait CommentTrait {
                 $prev = $page - 1;
                 $paginations .= '<li><a href="#" data-page="'.$prev.'" class="page-link page__prev">Prev</a></li>';
             }
-            for ($i = 1; $i <= $page_count; $i++) { 
+            for ($i = 1; $i <= $page_count; $i++) {
                 $active = $page == $i ? 'active' : '';
                 $paginations .= '<li class="'.$active.'"><a href="#" data-page="'.$i.'" class="page-link page__item">'.$i.'</a></li>';
             }
@@ -64,7 +67,7 @@ trait CommentTrait {
                 $next = $page + 1;
                 $paginations .= '<li><a href="#" data-page="'.$next.'" class="page-link page__next">Next</a></li>';
             }
-        } 
+        }
         return $paginations;
     }
 }

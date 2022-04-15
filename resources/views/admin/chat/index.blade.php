@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('administrator/chat/chat.css') }}" />
+    <link rel="stylesheet" href="{{ asset('administrator/chat/chat.css') }}"/>
 @endsection
 
 @section('js')
@@ -15,9 +15,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="breadcrumb">
-                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Home</a>
+                        <li class="breadcumb-item"><a href="{{ route('admin') }}"><i class="fa fa-home"></i> Trang
+                                chủ</a>
                         </li>
-                        <li class="active">Chat</li>
+                        <li class="active">Tin nhắn</li>
                     </ul>
                 </div>
             </div>
@@ -25,7 +26,7 @@
                 <div id="sidepanel">
                     <div id="search">
                         <label><i class="fa fa-search" aria-hidden="true"></i></label>
-                        <input type="text" placeholder="Search Customer..." />
+                        <input type="text" placeholder="Tìm kiếm..."/>
                     </div>
                     <div id="contacts">
                         <ul>
@@ -43,7 +44,9 @@
                                             @else
                                                 <span class="contact-status"></span>
                                             @endif
-                                            <img src="{{ \App\Models\User::find($userId)->avatar !== null ? asset(\App\Models\User::find($userId)->avatar) : asset('images/avatar/default.jpg') }}" alt="" />
+                                            <img
+                                                src="{{ \App\Models\User::find($userId)->avatar !== null ? asset(\App\Models\User::find($userId)->avatar) : asset('images/avatar/default.jpg') }}"
+                                                alt=""/>
                                             <div class="meta">
                                                 <p class="name">{{ \App\Models\User::find($userId)->name }}</p>
                                                 <p class="preview @if ($chat->read == 0) not-read @endif">{{ $chat->message }}</p>
@@ -58,7 +61,9 @@
                 <div class="content">
                     <div class="contact-profile" data-id="{{ $user != null && $user->id }}">
                         @if ($user !== null)
-                            <img src="{{ $user->avatar !== null ? asset($user->avatar) : asset('images/avatar/default.jpg') }}" alt="" />
+                            <img
+                                src="{{ $user->avatar !== null ? asset($user->avatar) : asset('images/avatar/default.jpg') }}"
+                                alt=""/>
                             <p>{{ $user->name }}</p>
                         @endif
                     </div>
@@ -68,8 +73,9 @@
                                 @foreach ($activeChats as $chat)
                                     <li class="{{ $chat->type == 'admin' ? 'sent' : 'replies' }}">
                                         <span>
-                                            <img src="{{ $chat->type == 'client' ? ($chat->user->avatar !== null ? asset($chat->user->avatar) : asset('images/avatar/default.jpg')) : asset('guest/images/logo/logo.png') }}"
-                                                alt="" />
+                                            <img
+                                                src="{{ $chat->type == 'client' ? ($chat->user->avatar !== null ? asset($chat->user->avatar) : asset('images/avatar/default.jpg')) : asset('guest/images/logo/logo.png') }}"
+                                                alt=""/>
                                         </span>
                                         <p>{{ $chat->message }}</p>
                                     </li>
@@ -80,9 +86,9 @@
                     <form class="message-input" data-action="{{ route('admin.chat.store') }}">
                         @csrf
                         <div class="wrap flex-between">
-                            <input hidden type="text" name="user_id" value="{{ $user !== null ? $user->id : null }}" />
+                            <input hidden type="text" name="user_id" value="{{ $user !== null ? $user->id : null }}"/>
                             <input class="message-description" type="text" name="message"
-                                placeholder="Write your message..." />
+                                   placeholder="Viết tin nhắn..."/>
                             <button class="submit" type="submit"><i class="fa fa-location-arrow"></i></button>
                         </div>
                     </form>

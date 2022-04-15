@@ -2328,7 +2328,7 @@ function () {
         }
     }
 
-    setHeightPrdItem();    
+    setHeightPrdItem();
 
     /*-----------------------------------------------
     3.0 Price Slider Active
@@ -2388,7 +2388,7 @@ function () {
     -----------------------------------------------*/
     if ($('#infinite-scroll').length) {
         function createProductItem(product, baseUrl, idEl) {
-            const abstract = $(product.details).text().split('ABSTRACT:')[1].split('II - DETAILS')[0].trim();
+            const abstract = $(product.details).text().split('MÔ TẢ NGẮN:')[1].split('II - CHI TIẾT')[0].trim();
             const infor = {
                 "id": product.id,
                 "price": format(product.price)
@@ -2399,23 +2399,23 @@ function () {
                                     <div class="prd-item-thumb">
                                         <a><img src="${ baseUrl + '/' + product.feature_image_path }" alt="${ product.slug }" /></a>
                                         <ul class="prd-item-action">
-                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-wishlist"><i class="far fa-heart"></i></a></li> 
-                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-compare"><i class="fa fa-random"></i></a></li> 
-                                        </ul> 
-                                    </div> 
+                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-wishlist"><i class="far fa-heart"></i></a></li>
+                                            <li><a href="#" data-info='${JSON.stringify(infor)}' class="btn-add-compare"><i class="fa fa-random"></i></a></li>
+                                        </ul>
+                                    </div>
                                     <div class="prd-item-infor">
                                         <div class="infor-content">
-                                        <a data-info='${JSON.stringify(infor)}' href="${ baseUrl + '/product/' + product.slug }" class="product-name">${product.name} </a> 
+                                        <a data-info='${JSON.stringify(infor)}' href="${ baseUrl + '/product/' + product.slug }" class="product-name">${product.name} </a>
                                         <p class="infor-price"><span class="old-price"></span>$${ format(product.price) }</p>
-                                    </div> 
+                                    </div>
                                     <div class="infor-rating">
                                         <span class="stars"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span>
-                                    </div> 
-                                        <p class="content-details">${abstract}</p> 
+                                    </div>
+                                        <p class="content-details">${abstract}</p>
                                     <div class="prd-list-btn">
-                                        <a class="fr-btn btn-add-cart" href="#" data-url="${ baseUrl + '/cart/addcart/' + product.id }"> Add To Cart </a> 
-                                    </div> 
-                                </div> 
+                                        <a class="fr-btn btn-add-cart" href="#" data-url="${ baseUrl + '/cart/addcart/' + product.id }"> Add To Cart </a>
+                                    </div>
+                                </div>
                             </div>`;
 
             const gid = `<div class="col-lg-4 col-md-6 single-product">

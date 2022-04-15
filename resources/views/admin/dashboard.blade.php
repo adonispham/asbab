@@ -132,7 +132,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                @can('list order')
+                                @can('xem đơn hàng')
                                     <div class="text-right">
                                         <a class="btn btn-primary btn-shadow" href="{{ route('admin.order.index') }}">Chi tiết</a>
                                     </div>

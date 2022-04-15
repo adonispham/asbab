@@ -107,7 +107,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list news'))
+                @if (auth()->user()->Can('xem tin tức'))
                     <li class="{{ request()->is('admin/news*') ? 'active' : '' }}">
                         <a href="{{ route('admin.news.index') }}">
                             <i class="fa fa-book"></i>
@@ -115,7 +115,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list comment'))
+                @if (auth()->user()->Can('xem bình luận'))
                     <li class="sidebar-parent {{ request()->is('admin/comment*') ? 'active' : '' }}">
                         <a href="#" class="flex-between"><span><i
                                     class="fa fa-comments"></i><span>Bình luận</span></span><span
@@ -132,7 +132,7 @@
                         </ul>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list slider'))
+                @if (auth()->user()->Can('xem banners'))
                     <li class="{{ request()->is('admin/slider*') ? 'active' : '' }}">
                         <a href="{{ route('admin.slider.index') }}">
                             <i class="fa fa-film"></i>
@@ -140,7 +140,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list chat'))
+                @if (auth()->user()->Can('xem tin nhắn'))
                     <li class="{{ request()->is('admin/chat*') ? 'active' : '' }}">
                         <a href="{{ route('admin.chat.index') }}">
                             <i class="fa fa-inbox"></i>
@@ -148,7 +148,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list order'))
+                @if (auth()->user()->Can('xem đơn hàng'))
                     <li class="{{ request()->is('admin/order*') ? 'active' : '' }}">
                         <a href="{{ route('admin.order.index') }}">
                             <i class="fa fa-file-text-o"></i>
@@ -156,7 +156,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list coupon'))
+                @if (auth()->user()->Can('xem phiếu giảm giá'))
                     <li class="{{ request()->is('admin/coupon*') ? 'active' : '' }}">
                         <a href="{{ route('admin.coupon.index') }}">
                             <i class="fa fa-gift"></i>
@@ -180,7 +180,7 @@
                         </a>
                     </li>
                 @endif
-                @if (auth()->user()->Can('list support'))
+                @if (auth()->user()->Can('xem hỗ trợ'))
                     <li class="{{ request()->is('admin/support*') ? 'active' : '' }}">
                         <a href="{{ route('admin.support.index') }}">
                             <i class="fa fa-question-circle"></i>
@@ -218,7 +218,8 @@
     @yield('content')
     <footer class="site-footer">
         <div class="text-center">
-            2021 &copy; AsbabFurniture by CuongPQ.
+            2021 &copy; AsbabFurniture
+            by {{ \App\Models\Setting::where('config_key', 'foot_name')->first()->config_value  }}.
         </div>
     </footer>
 </section>

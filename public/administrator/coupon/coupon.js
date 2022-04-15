@@ -68,13 +68,16 @@
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -93,8 +96,8 @@
             dataType: 'json',
             success: function (data) {
                 Swal.fire(
-                    'Send!',
-                    'Your coupon has been send.',
+                    'Đã gửi!',
+                    'Mã giảm giá đã được gửi.',
                     'success'
                 )
             }
@@ -105,13 +108,14 @@
         e.preventDefault();
         let hrefData = $(this).data('href');
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Bạn có chắc chắn?',
+            text: "Bạn sẽ không lấy lại được dữ liệu!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            cancelButtonText: 'Hủy',
+            confirmButtonText: 'Chắc chắn, xóa!'
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -120,8 +124,8 @@
                     dataType: 'json',
                     success: function (data) {
                         Swal.fire(
-                            'Deleted!',
-                            'Your coupon has been deleted.',
+                            'Đã xóa!',
+                            'Mã giảm giá đã được xóa.',
                             'success'
                         )
                         $('#coupons-table').DataTable().ajax.reload();

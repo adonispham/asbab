@@ -67,13 +67,16 @@
             responsive: true,
             dom: '<"flex-between"lf>t<"flex-between"ip>',
             language: {
-                processing: "<div id='loader'>Dang load nghe bay !</div>",
+                processing: "<div id='loader'>Đang tải dữ liệu !</div>",
                 paginate: {
-                    previous: '← Prev',
-                    next: 'Next →'
+                    previous: '← Trước',
+                    next: 'Sau →'
                 },
-                lengthMenu: '_MENU_ results per page',
-                info: 'Showing _START_ to _END_ of _TOTAL_ results'
+                infoEmpty: '',
+                zeroRecords: 'Không có dữ liệu!',
+                search: 'Tìm',
+                lengthMenu: '_MENU_ kết quả một trang',
+                info: 'Hiển thị _START_ đến _END_ của _TOTAL_ kết quả'
             },
             serverSide: true,
             order: [0, 'desc'],
@@ -87,13 +90,13 @@
         e.preventDefault();
         let hrefData = $(this).data('href');
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Ban có chắc chắn?',
+            text: "Bạn sẽ không thể lấy lại dữ liệu!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Chắc chắn, xóa!'
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -102,8 +105,8 @@
                     dataType: 'json',
                     success: function (data) {
                         Swal.fire(
-                            'Deleted!',
-                            'Your news has been deleted.',
+                            'Đã xóa!',
+                            'Tin tức đã bị xóa.',
                             'success'
                         )
                         $('#news-table').DataTable().ajax.reload();
